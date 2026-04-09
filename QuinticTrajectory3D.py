@@ -13,7 +13,7 @@ class QuinticTrajectory3D:
         self.T = T
         if T <= 0:
             raise ValueError("Dauer T muss > 0 sein.")
-
+    # test
     def quintic_scalar(self, t):
         """Quintic 5. Ordnung für s(t) in [0,1]"""
         tau = np.clip(t, 0, self.T)
