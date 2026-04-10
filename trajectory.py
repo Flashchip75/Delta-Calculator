@@ -38,18 +38,18 @@ class Trajectory:
 
         Returns:
             Dictionary mapping field names to 1D numpy arrays of length pts, with keys:
-            - t              : time
-            - x, y, z        : position
-            - vx, vy, vz     : velocity
-            - ax, ay, az     : acceleration
-            - jx, jy, jz     : jerk
-            - tx, ty, tz     : Frenet tangent vector
-            - nx, ny, nz     : Frenet normal vector
-            - bx, by, bz     : Frenet binormal vector
-            - kappa          : curvature
-            - ftx, fty, ftz  : tangential force components
-            - fnx, fny, fnz  : normal force components
-            - fx,  fy,  fz   : total force components
+            - t              ; time
+            - x, y, z        ; position
+            - vx, vy, vz     ; velocity
+            - ax, ay, az     ; acceleration
+            - jx, jy, jz     ; jerk
+            - tx, ty, tz     ; Frenet tangent vector
+            - nx, ny, nz     ; Frenet normal vector
+            - bx, by, bz     ; Frenet binormal vector
+            - kappa          ; curvature
+            - ftx, fty, ftz  ; tangential force components
+            - fnx, fny, fnz  ; normal force components
+            - fx,  fy,  fz   ; total force components
         """
         v, a, j, T, N, B, K = phys.compute(self.p, self.t)
         fx, fy, fz = force.get_forces(a, T, N)
