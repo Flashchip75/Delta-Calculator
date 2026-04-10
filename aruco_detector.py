@@ -4,9 +4,14 @@ import cv2
 import cv2.aruco as aruco
 import numpy as np
 from numpy.typing import NDArray
-from typing import Optional, Tuple, List, Dict, Any, Union, TypeAlias, Sequence
+from typing import Optional, TypedDict, NotRequired, TypeAlias, Sequence
 
-Detection: TypeAlias = dict[str, int | float | tuple[int, int] | NDArray]
+class Detection(TypedDict):
+    id:        int
+    center:    tuple[int, int]
+    corners:   NDArray
+    timestamp: NotRequired[float]  # only for video
+
 DetectionList: TypeAlias = list[Detection]
 class ArucoDetector:
 
@@ -213,3 +218,27 @@ class ArucoDetector:
         xMM = self.pxToMM(center[0], mmPerPx)
         yMM = self.pxToMM(center[1], mmPerPx)
         return (xMM, yMM)
+    
+    def getPointsMM(self, detections: DetectionList, mmPerPx: float, *ids: int) -> list[list[float]]:
+        """
+        Extract center points in mm for given marker IDs in order.
+
+        Args:
+            detections: Output from process().
+            mmPerPx:    Scale factor from calibrate().
+            *ids:       Marker IDs in the order you want the points.
+
+        Returns:
+            List of [x, y, 0] points in mm, one per ID.
+
+        Raises:
+            ValueError: If a requested ID is not found in detections.
+        """
+        lookup = {d["id"]: d["center"] for d in detections}
+        points = []
+        for markerId in ids:
+            if markerId not in lookup:
+                raise ValueError(f"Marker ID {markerId} not found in detections.")
+            x, y = self.centerPxToMM(lookup[markerId], mmPerPx)
+            points.append([x, y, 0.0])
+        return points

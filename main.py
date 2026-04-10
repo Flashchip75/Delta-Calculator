@@ -2,9 +2,20 @@ from geometry import Bezier, Line
 from physics import PhysicsEngine, FrenetForceCalculator
 from trajectory import Trajectory
 from visualization import Visualizer
+from aruco_detector import ArucoDetector
+from yolo_detector import YoloDetector
 
-# 1. Geometrien (Punkte z.B. aus CAD in Millimetern mm ausgelesen)
-c1 = Line([0, 0, 0], [100, 100, 0])
+ASOURCE = "tests/media/test5.png"
+
+ad = ArucoDetector()
+aDetections, aDisplay = ad.process(ASOURCE)
+
+#mmPerPx = ad.calibrate(ASOURCE, normMM=100.0, calibId=0)
+mmPerPx = 1  # Beispielwert, da Kalibrierung nicht durchgeführt wird
+
+start, end = ad.getPointsMM(aDetections, mmPerPx, 0, 29)
+c1 = Line(start, end)
+#c1 = Line([0, 0, 0], [100, 100, 0])
 
 # 2. Pfad berechnen. scale_m=0.001 rechnet die mm sofort in SI-Meter um!
 # dur_s = 5.0 Sekunden
