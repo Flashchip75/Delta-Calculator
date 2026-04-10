@@ -143,7 +143,7 @@ class ArucoDetector:
         else:
             raise ValueError("No display image to show.")
         
-    def calibrate(self, source: str | NDArray, normMM: float, calibId: int) -> float:
+    def calibrate(self, source: str | NDArray, normMM: int, calibId: int) -> float:
         """
         Calculate a px-to-mm scale factor using two ArUco markers of the same ID.
 
@@ -194,7 +194,7 @@ class ArucoDetector:
 
         return px * mmPerPx
     
-    def centerPxToMM(self, center: tuple[int, int], mmPerPx: float) -> tuple[float, float]:
+    def centerPxToMM(self, center: tuple[int, int], mmPerPx: float) -> tuple[int, int]:
         """
         Convert a center point from pixels to millimeters.
 
@@ -217,9 +217,9 @@ class ArucoDetector:
         
         xMM = self.pxToMM(center[0], mmPerPx)
         yMM = self.pxToMM(center[1], mmPerPx)
-        return (xMM, yMM)
+        return (round(xMM), round(yMM))
     
-    def getPointsMM(self, detections: DetectionList, mmPerPx: float, *ids: int) -> list[list[float]]:
+    def getPointsMM(self, detections: DetectionList, mmPerPx: float, *ids: int) -> list[list[int]]:
         """
         Extract center points in mm for given marker IDs in order.
 
@@ -240,5 +240,5 @@ class ArucoDetector:
             if markerId not in lookup:
                 raise ValueError(f"Marker ID {markerId} not found in detections.")
             x, y = self.centerPxToMM(lookup[markerId], mmPerPx)
-            points.append([x, y, 0.0])
+            points.append([round(x), round(y), 0])
         return points

@@ -10,8 +10,8 @@ ASOURCE = "tests/media/test5.png"
 ad = ArucoDetector("DICT_4X4_100")
 aDetections, aDisplay = ad.process(ASOURCE)
 
-#mmPerPx = ad.calibrate(ASOURCE, normMM=100.0, calibId=0)
-mmPerPx = 1  # Beispielwert, da Kalibrierung nicht durchgeführt wird
+#mmPerPx = ad.calibrate(ASOURCE, normMM=100, calibId=0)
+mmPerPx = 0.341  # Beispielwert, da Kalibrierung nicht durchgeführt wird
 
 start, end = ad.getPointsMM(aDetections, mmPerPx, 0, 29)
 c1 = Line(start, end)
