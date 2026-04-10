@@ -6,12 +6,12 @@ from aruco_detector import ArucoDetector
 from yolo_detector import YoloDetector
 
 ASOURCE = "tests/media/test5.png"
+CSOURCE = "tests/media/calibrationTest.jpg"
 
 ad = ArucoDetector("DICT_4X4_100")
 aDetections, aDisplay = ad.process(ASOURCE)
 
-#mmPerPx = ad.calibrate(ASOURCE, normMM=100, calibId=0)
-mmPerPx = 0.341  # Beispielwert, da Kalibrierung nicht durchgeführt wird
+mmPerPx = ad.calibrate(CSOURCE, normMM=180, calibId=0)
 
 start, end = ad.getPointsMM(aDetections, mmPerPx, 0, 29)
 c1 = Line(start, end)
