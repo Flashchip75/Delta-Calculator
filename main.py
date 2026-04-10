@@ -23,7 +23,12 @@ traj = Trajectory([c1], dur_s=5, pts=100, gain=00.0, blend=0, scale_m=1)
 
 # 3. Physik injizieren (m_kg = 1.0 kg) und Export
 fname = "robot_path.csv"
-P, T = traj.export(fname, PhysicsEngine(), FrenetForceCalculator(m_kg=1))
+
+phys  = PhysicsEngine()
+force = FrenetForceCalculator(m_kg=1)
+
+P, T = traj.export(fname, phys, force, exportCsv=True)
+d    = traj.toDictVar(phys, force)
 
 # 4. Daten plotten
 viz = Visualizer()
