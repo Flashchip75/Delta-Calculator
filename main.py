@@ -7,7 +7,7 @@ from yolo_detector import YoloDetector
 
 ASOURCE = "tests/media/test5.png"
 
-ad = ArucoDetector()
+ad = ArucoDetector("DICT_4X4_100")
 aDetections, aDisplay = ad.process(ASOURCE)
 
 #mmPerPx = ad.calibrate(ASOURCE, normMM=100.0, calibId=0)
@@ -27,7 +27,7 @@ fname = "robot_path.csv"
 phys  = PhysicsEngine()
 force = FrenetForceCalculator(m_kg=1)
 
-P, T = traj.export(fname, phys, force, exportCsv=True)
+P, T = traj.export(fname, phys, force, exportCsv=False)
 d    = traj.toDictVar(phys, force)
 
 # 4. Daten plotten

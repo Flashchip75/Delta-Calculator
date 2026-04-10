@@ -19,7 +19,7 @@ class Trajectory:
 
         self.p, self.t = CubicSpline(sr, pr)(s_adp), s_adp / s_adp[-1] * dur_s
 
-    def export(self, fname, phys, force, exportCsv=False):
+    def export(self, fname, phys, force, exportCsv=True):
         v, a, j, T, N, B, K = phys.compute(self.p, self.t)
         data = np.column_stack((self.t, self.p, v, a, j, T, N, B, K, *force.get_forces(a, T, N)))
         if exportCsv:
