@@ -1,7 +1,7 @@
-from path_berechnung.geometry import Bezier, Line
-from path_berechnung.physics import PhysicsEngine, FrenetForceCalculator
-from path_berechnung.trajectory import Trajectory
-from path_berechnung.visualization import Visualizer
+from geometry import Bezier, Line
+from physics import PhysicsEngine, FrenetForceCalculator
+from trajectory import Trajectory
+from visualization import Visualizer
 
 # 1. Geometrien (Punkte z.B. aus CAD in Millimetern mm ausgelesen)
 c1 = Line([0, 0, 0], [100, 0, 0])
