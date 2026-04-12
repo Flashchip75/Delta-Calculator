@@ -9,6 +9,7 @@ Liest config.txt ein. Stellt Robotergeometrie bereit:
 Kein direkter Aufruf anderer Module.
 """
 
+import os
 import json
 import numpy as np
 from dataclasses import dataclass, field
@@ -49,7 +50,7 @@ class RobotGeometry:
     Laedt config.json und berechnet alle geometrischen Basisgroessen.
     """
 
-    def __init__(self, config_path: str = "config.json"):
+    def __init__(self, config_path: str = os.path.join("..", "config.json")):
         with open(config_path, "r", encoding="utf-8") as f:
             self._cfg = json.load(f)
         self._parse()
