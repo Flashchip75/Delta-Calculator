@@ -1,3 +1,5 @@
+import os
+import json
 import numpy as np
 
 class PhysicsEngine:
@@ -14,6 +16,12 @@ class PhysicsEngine:
 class FrenetForceCalculator:
     def __init__(self, m_kg): self.m = m_kg
     def get_forces(self, a, T, N):
+        config_path = os.path.join("..", "config.json")
+        with open(config_path, 'r') as f:
+            config = json.load(f)
+        gravity_config = config.get('global', {}).get('gravity', [0, 0, 9.81])
+        self.g = np.array(gravity_config)
+
         Ft = self.m * np.sum(a*T, axis=1, keepdims=True) * T
         Fn = self.m * np.sum(a*N, axis=1, keepdims=True) * N
-        return Ft, Fn, self.m * (a + np.array([0, 0, 9.81])) # a + g (beides zwingend in m/s^2), F in Newton
+        return Ft, Fn, self.m * (a + self.g) # a + g (beides zwingend in m/s^2), F in Newton
