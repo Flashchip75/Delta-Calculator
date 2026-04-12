@@ -3,7 +3,7 @@
     "gravity": [0.0, 0.0, -9.81],
     "payload_mass": 0.100,
     "singularity_margin_deg": 5.0,
-    "trajectory_csv": "trajectory.csv"
+    "trajectory_csv": "robot_path.csv"
   },
   "workspace": {
     "resolution": 25,
