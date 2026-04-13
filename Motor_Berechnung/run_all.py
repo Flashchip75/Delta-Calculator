@@ -6,6 +6,8 @@ Steuerungsscript. Führt alle Module der Reihe nach aus.
 
 import os
 import numpy as np
+import pandas as pd
+from pathlib import Path
 from robot_geometry import RobotGeometry
 
 # Ins Script-Verzeichnis wechseln
@@ -22,12 +24,20 @@ def main():
     plot_workspace(pts, robot)
 
     print(f"\n=== 3. Lade Trajektorie ({robot.trajectory_csv}) ===")
-    if not os.path.exists(robot.trajectory_csv):
-        print(f"FEHLER: Die Datei '{robot.trajectory_csv}' wurde nicht gefunden.")
+    currentDir = Path(__file__).parent
+    csvPath = currentDir.parent / robot.output_dir / robot.trajectory_csv
+
+    if not csvPath.exists():
+        print(f"FEHLER: Die Datei '{csvPath}' wurde nicht gefunden.")
+        print(f"Vollständiger Pfad: {csvPath.absolute()}")
         return
     
+    print(f"OK: Lade {csvPath}")
+    df = pd.read_csv(csvPath)
+    print(f"Geladen: {len(df)} Datenpunkte")
+    
     # Lade CSV (skiprows=1 überspringt den Header)
-    matrix = np.loadtxt(robot.trajectory_csv, delimiter=",", skiprows=1)
+    matrix = np.loadtxt(csvPath, delimiter=",", skiprows=1)
     print(f"  Erfolgreich geladen: {matrix.shape[0]} Zeitschritte, {matrix.shape[1]} Spalten")
 
     print("\n=== 4. Inverse Kinematik ===")

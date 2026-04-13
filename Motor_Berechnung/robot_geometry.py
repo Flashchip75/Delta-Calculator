@@ -66,6 +66,7 @@ class RobotGeometry:
         self.payload_mass    = float(glob.get("payload_mass", 0.1))
         self.singularity_rad = np.deg2rad(float(glob.get("singularity_margin_deg", 5.0)))
         self.trajectory_csv  = glob.get("trajectory_csv", "trajectory.csv")
+        self.output_dir      = glob.get('output_dir', 'output')
 
         # Workspace
         ws = cfg.get("workspace", {})
