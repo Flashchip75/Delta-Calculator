@@ -20,6 +20,14 @@
     "blend": 0.0,
     "scale_m": 0.001
   },
+  "cVision":{
+    "reCalibration": true,
+    "aruco_dict": "DICT_4X4_100",
+    "mmToPixel": 0,
+    "calibration_source": "media/calibrationTest.jpg",
+    "calibration_norm_mm": 100,
+    "calibration_id": 0
+  },
   "motors": {
     "A": {
       "position": [0.400, 0.100, -0.100],
