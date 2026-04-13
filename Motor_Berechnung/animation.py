@@ -22,8 +22,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as animation
 import os
 
-from robot_geometry import RobotGeometry
-from inverse_kinematics import load_kinematics
+from .robot_geometry import RobotGeometry
+from .inverse_kinematics import load_kinematics
 
 
 def _draw_frame(ax, robot: RobotGeometry, phi_vec: np.ndarray,

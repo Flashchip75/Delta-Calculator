@@ -8,7 +8,7 @@ import os
 import numpy as np
 import pandas as pd
 from pathlib import Path
-from robot_geometry import RobotGeometry
+from .robot_geometry import RobotGeometry
 
 # Ins Script-Verzeichnis wechseln
 os.chdir(os.path.dirname(os.path.abspath(__file__)))

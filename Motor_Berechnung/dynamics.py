@@ -35,8 +35,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
-from robot_geometry import RobotGeometry
-from inverse_kinematics import load_kinematics, save_kinematics
+from .robot_geometry import RobotGeometry
+from .inverse_kinematics import load_kinematics, save_kinematics
 
 
 # ==============================================================================

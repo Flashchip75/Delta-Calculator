@@ -219,7 +219,7 @@ def plot_trajectory(matrix: np.ndarray, out_dir: str = "output"):
 
 if __name__ == "__main__":
     os.makedirs("output", exist_ok=True)
-    from robot_geometry import RobotGeometry
+    from .robot_geometry import RobotGeometry
     robot = RobotGeometry("config.txt")
 
     # Workspace-Mittelpunkt als Kreiszentrum

@@ -50,7 +50,7 @@ class RobotGeometry:
     Laedt config.json und berechnet alle geometrischen Basisgroessen.
     """
 
-    def __init__(self, configPath: str = os.path.join("..", "config.json")):
+    def __init__(self, configPath: str = Path(__file__).parent.parent / "config.json"):
         with open(configPath, "r", encoding="utf-8") as f:
             self._cfg = json.load(f)
         self._parse()
