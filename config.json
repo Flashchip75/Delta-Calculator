@@ -1,6 +1,7 @@
 {
   "global": {
     "gravity": [0.0, 0.0, -9.81],
+    "mass_kg": 1.0,
     "payload_mass": 0.100,
     "singularity_margin_deg": 5.0,
     "trajectory_csv": "trajectory.csv"
