@@ -16,12 +16,26 @@ configPath = currentDir.parent / "config.json"
 with open(configPath, 'r') as f:
     config = json.load(f)
 
+globalConfig = config.get('global', {})
+pathConfig = config.get('path', {})
+
 # 2. Pfad berechnen. scale_m=0.001 rechnet die mm sofort in SI-Meter um!
 # dur_s = 5.0 Sekunden
-traj = Trajectory([c1], dur_s=5, pts=1000, gain=50.0, blend=0, scale_m=0.001)
+dur_s = pathConfig.get('duration_s')
+pts = pathConfig.get('points')
+gain = pathConfig.get('gain')
+blend = pathConfig.get('blend')
+scale_m = pathConfig.get('scale_m')
+
+if dur_s is None: raise KeyError("Missing config: global.duration_s")
+if pts is None: raise KeyError("Missing config: global.points")
+if gain is None: raise KeyError("Missing config: global.gain")
+if blend is None: raise KeyError("Missing config: global.blend")
+if scale_m is None: raise KeyError("Missing config: global.scale_m")
+
+traj = Trajectory([c1], dur_s=dur_s, pts=pts, gain=gain, blend=blend, scale_m=scale_m)
 
 # 3. Physik injizieren (m_kg = 1.0 kg) und Export
-globalConfig = config.get('global', {})
 gravity = globalConfig.get('gravity')
 fname = globalConfig.get('trajectory_csv')
 mass = globalConfig.get('mass_kg')

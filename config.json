@@ -12,6 +12,13 @@
     "range_y": [-0.4, 0.4],
     "range_z": [-1.3, -0.1]
   },
+  "path":{
+    "duration_s": 5.0,
+    "points": 100,
+    "gain": 0.0,
+    "blend": 0.0,
+    "scale_m": 1.0
+  },
   "motors": {
     "A": {
       "position": [0.400, 0.100, -0.100],
