@@ -15,8 +15,8 @@
   },
   "path":{
     "duration_s": 5.0,
-    "points": 100,
-    "gain": 0.0,
+    "points": 1000,
+    "gain": 50.0,
     "blend": 0.0,
     "scale_m": 0.001
   },
