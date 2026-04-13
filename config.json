@@ -4,7 +4,8 @@
     "mass_kg": 1.0,
     "payload_mass": 0.100,
     "singularity_margin_deg": 5.0,
-    "trajectory_csv": "trajectory.csv"
+    "trajectory_csv": "trajectory.csv",
+    "output_dir": "output"
   },
   "workspace": {
     "resolution": 25,

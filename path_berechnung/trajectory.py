@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import pandas as pd
 from scipy.interpolate import CubicSpline
@@ -19,10 +20,12 @@ class Trajectory:
 
         self.p, self.t = CubicSpline(sr, pr)(s_adp), s_adp / s_adp[-1] * dur_s
 
-    def export(self, fname, phys, force):
+    def export(self, fname, outputDir, phys, force):
         v, a, j, T, N, B, K = phys.compute(self.p, self.t)
         data = np.column_stack((self.t, self.p, v, a, j, T, N, B, K, *force.get_forces(a, T, N)))
+        if not os.path.exists(outputDir):
+            os.makedirs(outputDir)
         pd.DataFrame(data,
                      columns='t x y z vx vy vz ax ay az jx jy jz tx ty tz nx ny nz bx by bz kappa ftx fty ftz fnx fny fnz fx fy fz'.split()).to_csv(
-            fname, index=False)
+            os.path.join(outputDir, fname), index=False)
         return self.p, T

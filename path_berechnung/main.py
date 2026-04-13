@@ -36,14 +36,16 @@ traj = Trajectory([c1], dur_s=dur_s, pts=pts, gain=gain, blend=blend, scale_m=sc
 
 # 3. Physik injizieren (m_kg = 1.0 kg) und Export
 gravity = globalConfig.get('gravity')
-fname = globalConfig.get('trajectory_csv')
 mass = globalConfig.get('mass_kg')
+fname = globalConfig.get('trajectory_csv')
+outputDir = globalConfig.get('output_dir', 'output')
 
 if gravity is None: raise KeyError("Missing config: global.gravity")
 if fname is None: raise KeyError("Missing config: global.trajectory_csv")
 if mass is None: raise KeyError("Missing config: global.mass_kg")
+if outputDir is None: raise KeyError("Missing config: global.output_dir")
 
-P, T = traj.export(fname, PhysicsEngine(), FrenetForceCalculator(m_kg=mass, gravity=gravity))
+P, T = traj.export(fname, outputDir, PhysicsEngine(), FrenetForceCalculator(m_kg=mass, gravity=gravity))
 
 # 4. Daten plotten
 viz = Visualizer()
