@@ -7,8 +7,8 @@ Methode: 3D-Gitter wird abgetastet. Jeder Punkt wird auf IK-Gueltigkeit
 geprueft (alle drei Motoren, Winkelgrenzen, Singularitaet).
 
 Ausgabe:
-  output/workspace_3d.png   – perspektivische 3D-Ansicht
-  output/workspace_side.png – Seitenansicht (XZ- und YZ-Schnitt)
+  output/workspace_3d.png   - perspektivische 3D-Ansicht
+  output/workspace_side.png - Seitenansicht (XZ- und YZ-Schnitt)
 """
 
 import numpy as np
@@ -82,7 +82,7 @@ def plot_workspace(points: np.ndarray, robot: RobotGeometry, out_dir: str = "out
     ax.scatter(*robot.center, color="black", s=70, marker="x", label="Zentrum")
 
     ax.set_xlabel("x [m]"); ax.set_ylabel("y [m]"); ax.set_zlabel("z [m]")
-    ax.set_title("Arbeitsbereich – 3D")
+    ax.set_title("Arbeitsbereich - 3D")
     ax.legend(fontsize=8)
     plt.tight_layout()
     plt.savefig(f"{out_dir}/workspace_3d.png", dpi=150)
@@ -113,7 +113,7 @@ def plot_workspace(points: np.ndarray, robot: RobotGeometry, out_dir: str = "out
         ax.grid(True, alpha=0.3)
         ax.set_aspect("equal")
 
-    plt.suptitle("Arbeitsbereich – Seitenansichten", fontsize=12, fontweight="bold")
+    plt.suptitle("Arbeitsbereich - Seitenansichten", fontsize=12, fontweight="bold")
     plt.tight_layout()
     plt.savefig(f"{out_dir}/workspace_side.png", dpi=150)
     plt.close()

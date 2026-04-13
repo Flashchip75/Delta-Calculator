@@ -152,7 +152,7 @@ class RobotGeometry:
             mc.radial_vec = r_vec / np.linalg.norm(r_vec)
 
     # --------------------------------------------------------------------------
-    # IK – Kugelschnitt-Methode
+    # IK - Kugelschnitt-Methode
     # --------------------------------------------------------------------------
 
     def ik(self, motor_idx: int, end_pos: np.ndarray) -> tuple[bool, float]:
@@ -254,7 +254,7 @@ class RobotGeometry:
 
     def summary(self):
         print("=" * 56)
-        print("  Delta Robot – Konfiguration")
+        print("  Delta Robot - Konfiguration")
         print("=" * 56)
         print(f"  Zentrum      : {self.center}")
         print(f"  Ebene-Normal : {self.plane_normal}")
