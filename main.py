@@ -3,10 +3,10 @@ import path_berechnung.exe_path as exeP
 
 def main():
     print("=== Starte Pfadberechnung ===")
-    exeP.exePath().run()
+    d = exeP.exePath().run()
 
     print("\n=== Starte Motorberechnung ===")
-    exeM.exeMotor().run()
+    exeM.exeMotor().run(d)
 
 if __name__ == "__main__":
     main()

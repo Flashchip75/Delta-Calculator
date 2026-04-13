@@ -24,15 +24,18 @@ class exePath:
         # 3. Physik & Export
         print("=== Berechne Trajektorie & Kräfte ===")
         g = cfg.global_cfg
-        P, T = traj.export(
-            g.trajectory_csv,
-            g.output_dir,
-            PhysicsEngine(),
-            FrenetForceCalculator(m_kg=g.mass_kg, gravity=g.gravity),
-        )
+
+        phys  = PhysicsEngine()
+        force = FrenetForceCalculator(m_kg=g.mass_kg, gravity=g.gravity)
+
+        P, T = traj.export(g.trajectory_csv, g.output_dir,phys,force)
+        d    = traj.toDictVar(phys, force)
+
         
         # 4. Visualisierung
         print("\n=== Visualisiere Ergebnisse ===")
         viz = Visualizer()
         viz.plot_matlab_style(P, T, g.output_dir)
         viz.plot_forces(g.trajectory_csv, g.output_dir)
+
+        return d
