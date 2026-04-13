@@ -1,3 +1,4 @@
+import os
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -12,8 +13,12 @@ class Visualizer:
         plt.legend();
         plt.show()
 
-    def plot_forces(self, fname):
-        df = pd.read_csv(fname)
+    def plot_forces(self, fname, outputDir):
+        if not os.path.exists(outputDir):
+            os.makedirs(outputDir)
+        
+        currentPath = os.path.join(outputDir, fname)
+        df = pd.read_csv(currentPath)
         mags = [np.linalg.norm(df[[f'{p}x', f'{p}y', f'{p}z']].values, axis=1) for p in ('ft', 'fn', 'f')]
         lbls, cols = ['|Ft| [N]', '|Fn| [N]', '|Fges| [N]'], ['g', 'r', 'k']
 

@@ -50,4 +50,4 @@ P, T = traj.export(fname, outputDir, PhysicsEngine(), FrenetForceCalculator(m_kg
 # 4. Daten plotten
 viz = Visualizer()
 viz.plot_matlab_style(P, T)
-viz.plot_forces(fname)
+viz.plot_forces(fname, outputDir)
