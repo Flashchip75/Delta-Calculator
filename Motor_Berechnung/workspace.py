@@ -11,6 +11,7 @@ Ausgabe:
   output/workspace_side.png - Seitenansicht (XZ- und YZ-Schnitt)
 """
 
+import os
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -85,6 +86,8 @@ def plot_workspace(points: np.ndarray, robot: RobotGeometry, out_dir: str = "out
     ax.set_title("Arbeitsbereich - 3D")
     ax.legend(fontsize=8)
     plt.tight_layout()
+    if not os.path.exists(out_dir):
+        os.makedirs(out_dir)
     plt.savefig(f"{out_dir}/workspace_3d.png", dpi=150)
     plt.close()
     print(f"  Gespeichert: {out_dir}/workspace_3d.png")
