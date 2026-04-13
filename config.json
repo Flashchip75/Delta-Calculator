@@ -17,7 +17,7 @@
     "points": 100,
     "gain": 0.0,
     "blend": 0.0,
-    "scale_m": 1.0
+    "scale_m": 0.001
   },
   "motors": {
     "A": {

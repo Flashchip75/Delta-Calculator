@@ -20,7 +20,6 @@ globalConfig = config.get('global', {})
 pathConfig = config.get('path', {})
 
 # 2. Pfad berechnen. scale_m=0.001 rechnet die mm sofort in SI-Meter um!
-# dur_s = 5.0 Sekunden
 dur_s = pathConfig.get('duration_s')
 pts = pathConfig.get('points')
 gain = pathConfig.get('gain')
