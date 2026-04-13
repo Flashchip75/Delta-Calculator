@@ -1,12 +1,12 @@
-import Motor_Berechnung.exe_motor as exem
-import path_berechnung.exe_path as exep
+import Motor_Berechnung.exe_motor as exeM
+import path_berechnung.exe_path as exeP
 
 def main():
     print("=== Starte Pfadberechnung ===")
-    exep.exePath().run()
+    exeP.exePath().run()
 
     print("\n=== Starte Motorberechnung ===")
-    exem.exeMotor().run()
+    exeM.exeMotor().run()
 
 if __name__ == "__main__":
     main()
