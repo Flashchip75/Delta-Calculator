@@ -6,14 +6,15 @@ from .visualization import Visualizer
 
 
 class exePath:
-    def run(self):
+    def run(self,p1:tuple[int,int,int], p2:tuple[int,int,int]):
         # 1. Geometrie
-        c1 = Line([0, 0, 0], [100, 0, 0])
+        print("=== Definiere Pfad-Geometrie ===")
+        c = Line(p1,p2)
 
         # 2. Trajektorie
         p = cfg.path
         traj = Trajectory(
-            [c1],
+            [c],
             dur_s   = p.duration_s,
             pts     = p.points,
             gain    = p.gain,
