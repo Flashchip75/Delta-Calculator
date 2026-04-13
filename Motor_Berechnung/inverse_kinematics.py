@@ -16,7 +16,7 @@ Speichert output/kinematics.npz mit t, phi, omega, alpha, pos.
 
 import numpy as np
 import os
-from robot_geometry import RobotGeometry
+from .robot_geometry import RobotGeometry
 
 
 def _jacobian_matrices(robot: RobotGeometry,
@@ -56,7 +56,7 @@ def compute_kinematics(robot: RobotGeometry,
     Berechnet phi, omega, alpha fuer alle Zeitschritte.
 
     Parameter:
-        matrix : (N, >=7) – Spalten: t, sx,sy,sz, vx,vy,vz, ...
+        matrix : (N, >=7) - Spalten: t, sx,sy,sz, vx,vy,vz, ...
 
     Rueckgabe:
         dict mit t, pos, vel, phi, omega, alpha, valid (alle shape (N,...))

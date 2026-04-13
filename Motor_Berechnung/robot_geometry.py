@@ -50,8 +50,8 @@ class RobotGeometry:
     Laedt config.json und berechnet alle geometrischen Basisgroessen.
     """
 
-    def __init__(self, config_path: str = os.path.join("..", "config.json")):
-        with open(config_path, "r", encoding="utf-8") as f:
+    def __init__(self, configPath: str = Path(__file__).parent.parent / "config.json"):
+        with open(configPath, "r", encoding="utf-8") as f:
             self._cfg = json.load(f)
         self._parse()
         self._build_geometry()
@@ -66,6 +66,7 @@ class RobotGeometry:
         self.payload_mass    = float(glob.get("payload_mass", 0.1))
         self.singularity_rad = np.deg2rad(float(glob.get("singularity_margin_deg", 5.0)))
         self.trajectory_csv  = glob.get("trajectory_csv", "trajectory.csv")
+        self.output_dir      = glob.get('output_dir', 'output')
 
         # Workspace
         ws = cfg.get("workspace", {})
@@ -151,7 +152,7 @@ class RobotGeometry:
             mc.radial_vec = r_vec / np.linalg.norm(r_vec)
 
     # --------------------------------------------------------------------------
-    # IK – Kugelschnitt-Methode
+    # IK - Kugelschnitt-Methode
     # --------------------------------------------------------------------------
 
     def ik(self, motor_idx: int, end_pos: np.ndarray) -> tuple[bool, float]:
@@ -253,7 +254,7 @@ class RobotGeometry:
 
     def summary(self):
         print("=" * 56)
-        print("  Delta Robot – Konfiguration")
+        print("  Delta Robot - Konfiguration")
         print("=" * 56)
         print(f"  Zentrum      : {self.center}")
         print(f"  Ebene-Normal : {self.plane_normal}")

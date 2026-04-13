@@ -1,15 +1,24 @@
 {
   "global": {
     "gravity": [0.0, 0.0, -9.81],
+    "mass_kg": 1.0,
     "payload_mass": 0.100,
     "singularity_margin_deg": 5.0,
-    "trajectory_csv": "trajectory.csv"
+    "trajectory_csv": "trajectory.csv",
+    "output_dir": "output"
   },
   "workspace": {
     "resolution": 25,
     "range_x": [-0.4, 0.4],
     "range_y": [-0.4, 0.4],
     "range_z": [-1.3, -0.1]
+  },
+  "path":{
+    "duration_s": 5.0,
+    "points": 100,
+    "gain": 0.0,
+    "blend": 0.0,
+    "scale_m": 0.001
   },
   "motors": {
     "A": {

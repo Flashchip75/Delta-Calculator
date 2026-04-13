@@ -218,3 +218,7 @@ __marimo__/
 
 # csv files
 *.csv
+
+# excluding output directory
+output/
+Motor_Berechnung/output/
