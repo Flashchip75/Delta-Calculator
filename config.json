@@ -7,6 +7,12 @@
     "trajectory_csv": "trajectory.csv",
     "output_dir": "output"
   },
+  "plotting": {
+    "dpi": 100,
+    "bbox_inches": "tight",
+    "trajectory_plot": "trajectory_plot.png",
+    "forces_plot": "forces_plot.png"
+  },
   "workspace": {
     "resolution": 25,
     "range_x": [-0.4, 0.4],

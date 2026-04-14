@@ -13,6 +13,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from path_berechnung import trajectory
+
 
 # ---------------------------------------------------------------------------
 # Dataclasses — ein Abschnitt pro JSON-Sektion
@@ -32,7 +34,10 @@ class GlobalConfig:
 @dataclass
 class plottingConfig:
     """Plotting-spezifische Parameter -> JSON-Sektion 'plotting'."""
-    dpi: int                        # Auflösung der Plots in dots per inch
+    dpi: int
+    bbox_inches: str
+    trajectory_plot: str             # Dateiname für den Trajektorien-Plot
+    forces_plot: str                # Dateiname für den Kraft-Plot
 
 @dataclass
 class WorkspaceConfig:
@@ -138,7 +143,7 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         raw = json.load(f)
 
     g  = raw.get("global",    {})
-    p  = raw.get("plotting",  {})
+    pl  = raw.get("plotting",  {})
     ws = raw.get("workspace", {})
     p  = raw.get("path",      {})
     cv = raw.get("cVision",   {})
@@ -154,7 +159,10 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
     )
 
     plotting_cfg = plottingConfig(
-        dpi = _require(p, "dpi", "plotting")
+        dpi             = _require(pl, "dpi", "plotting"),
+        bbox_inches     = _require(pl, "bbox_inches", "plotting"),
+        trajectory_plot = _require(pl, "trajectory_plot", "plotting"),
+        forces_plot     = _require(pl, "forces_plot", "plotting"),
     )
 
     workspace_cfg = WorkspaceConfig(
