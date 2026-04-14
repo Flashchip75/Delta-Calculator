@@ -89,7 +89,7 @@ def _torque_lagrange(
 
     # dV/dphi_i = -( m_o * g . ds/dphi  +  m_u * g . dk/dphi )
     #  Vorzeichen: V = m*g.r, dV/dphi = m*g . dr/dphi
-    #  Im Lagrange-Term: tau = ... + dV/dphi (da L = T - V → -dL/dphi = +dV/dphi)
+    #  Im Lagrange-Term: tau = ... + dV/dphi (da L = T - V -> -dL/dphi = +dV/dphi)
     dV_dphi = (float(np.dot(mo * g, ds_dphi))
              + float(np.dot(mu * g, dk_dphi)))
 

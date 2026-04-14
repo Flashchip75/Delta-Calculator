@@ -20,7 +20,7 @@ from pathlib import Path
 
 @dataclass
 class GlobalConfig:
-    """Gemeinsame Felder beider Pipelines → JSON-Sektion 'global'."""
+    """Gemeinsame Felder beider Pipelines -> JSON-Sektion 'global'."""
     gravity: list[float]            # Vektor [x, y, z] in m/s²
     mass_kg: float                  # Nutzlast-Trägermasse in kg
     payload_mass: float             # Nutzlast in kg
@@ -30,8 +30,13 @@ class GlobalConfig:
 
 
 @dataclass
+class plottingConfig:
+    """Plotting-spezifische Parameter -> JSON-Sektion 'plotting'."""
+    dpi: int                        # Auflösung der Plots in dots per inch
+
+@dataclass
 class WorkspaceConfig:
-    """Arbeitsraum-Raster → JSON-Sektion 'workspace'."""
+    """Arbeitsraum-Raster -> JSON-Sektion 'workspace'."""
     resolution: int                 # Punkte pro Achse
     range_x: list[float]            # [min, max] in m
     range_y: list[float]            # [min, max] in m
@@ -40,16 +45,16 @@ class WorkspaceConfig:
 
 @dataclass
 class PathConfig:
-    """Trajektorien-Parameter → JSON-Sektion 'path' (Pipeline 1)."""
+    """Trajektorien-Parameter -> JSON-Sektion 'path' (Pipeline 1)."""
     duration_s: float               # Gesamtdauer in Sekunden
     points: int                     # Anzahl Stützpunkte
     gain: float                     # Blend-Gain
     blend: float                    # Übergangsradius
-    scale_m: float                  # Skalierungsfaktor mm → m (0.001)
+    scale_m: float                  # Skalierungsfaktor mm -> m (0.001)
 
 @dataclass
 class VisionConfig:
-    """Vision-spezifische Parameter → JSON-Sektion 'cVision'."""
+    """Vision-spezifische Parameter -> JSON-Sektion 'cVision'."""
     reCalibration: bool             # Bei True: Kalibrierung vor Erkennung durchführen
     aruco_dict: str                 # ArUco-Dict für Erkennung
     mmToPixel: float                # Gespeicherter px/mm-Wert (verwendet wenn reCalibration=False)
@@ -59,7 +64,7 @@ class VisionConfig:
 
 @dataclass
 class MotorConfig:
-    """Konfiguration eines einzelnen Motors → JSON-Sektion 'motors.<ID>'."""
+    """Konfiguration eines einzelnen Motors -> JSON-Sektion 'motors.<ID>'."""
     position: list[float]           # Montageposition [x, y, z] in m
     axis: str                       # Rotationsachse ("AUTO" oder "X"/"Y"/"Z")
     upper_length: float             # Oberlänge des Arms in m
@@ -72,7 +77,7 @@ class MotorConfig:
 
 @dataclass
 class MotorsConfig:
-    """Alle drei Motoren → JSON-Sektion 'motors'."""
+    """Alle drei Motoren -> JSON-Sektion 'motors'."""
     A: MotorConfig
     B: MotorConfig
     C: MotorConfig
@@ -82,6 +87,7 @@ class MotorsConfig:
 class AppConfig:
     """Haupt-Config-Objekt — enthält alle Sektionen."""
     global_cfg: GlobalConfig
+    plotting: plottingConfig
     workspace: WorkspaceConfig
     path: PathConfig
     cVision: VisionConfig
@@ -132,6 +138,7 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         raw = json.load(f)
 
     g  = raw.get("global",    {})
+    p  = raw.get("plotting",  {})
     ws = raw.get("workspace", {})
     p  = raw.get("path",      {})
     cv = raw.get("cVision",   {})
@@ -144,6 +151,10 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         singularity_margin_deg = _require(g, "singularity_margin_deg", "global"),
         trajectory_csv         = _require(g, "trajectory_csv",         "global"),
         output_dir             = _require(g, "output_dir",             "global"),
+    )
+
+    plotting_cfg = plottingConfig(
+        dpi = _require(p, "dpi", "plotting")
     )
 
     workspace_cfg = WorkspaceConfig(
@@ -178,6 +189,7 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
 
     return AppConfig(
         global_cfg = global_cfg,
+        plotting   = plotting_cfg,
         workspace  = workspace_cfg,
         path       = path_cfg,
         cVision    = vision_cfg,
