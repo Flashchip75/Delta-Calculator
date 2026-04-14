@@ -47,6 +47,15 @@ class PathConfig:
     blend: float                    # Übergangsradius
     scale_m: float                  # Skalierungsfaktor mm → m (0.001)
 
+@dataclass
+class VisionConfig:
+    """Vision-spezifische Parameter → JSON-Sektion 'cVision'."""
+    reCalibration: bool             # Bei True: Kalibrierung vor Erkennung durchführen
+    aruco_dict: str                 # ArUco-Dict für Erkennung
+    mmToPixel: float                # Gespeicherter px/mm-Wert (verwendet wenn reCalibration=False)
+    calibration_source: str         # Bildquelle für Kalibrierung
+    calibration_norm_mm: int        # Referenzlänge in mm für Kalibrierung
+    calibration_id: int             # ArUco-Marker-ID für Kalibrierung
 
 @dataclass
 class MotorConfig:
@@ -75,6 +84,7 @@ class AppConfig:
     global_cfg: GlobalConfig
     workspace: WorkspaceConfig
     path: PathConfig
+    cVision: VisionConfig
     motors: MotorsConfig
 
 
@@ -124,6 +134,7 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
     g  = raw.get("global",    {})
     ws = raw.get("workspace", {})
     p  = raw.get("path",      {})
+    cv = raw.get("cVision",   {})
     m  = raw.get("motors",    {})
 
     global_cfg = GlobalConfig(
@@ -150,6 +161,15 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         scale_m    = _require(p, "scale_m",    "path"),
     )
 
+    vision_cfg = VisionConfig(
+        reCalibration         = _require(cv, "reCalibration",         "cVision"),
+        aruco_dict            = _require(cv, "aruco_dict",            "cVision"),
+        mmToPixel             = _require(cv, "mmToPixel",             "cVision"),
+        calibration_source    = _require(cv, "calibration_source",    "cVision"),
+        calibration_norm_mm   = _require(cv, "calibration_norm_mm",   "cVision"),
+        calibration_id        = _require(cv, "calibration_id",        "cVision"),
+    )
+
     motors_cfg = MotorsConfig(
         A = _load_motor(_require(m, "A", "motors"), "A"),
         B = _load_motor(_require(m, "B", "motors"), "B"),
@@ -160,6 +180,7 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         global_cfg = global_cfg,
         workspace  = workspace_cfg,
         path       = path_cfg,
+        cVision    = vision_cfg,
         motors     = motors_cfg,
     )
 
