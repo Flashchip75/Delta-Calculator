@@ -1,5 +1,4 @@
-import Motor_Berechnung.exe_motor as exeM
-import path_berechnung.exe_path as exeP
+from Oberflaeche.gui.app import App
 
 def main():
     print("=== Starte Pfadberechnung ===")
@@ -12,3 +11,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    # hiermit gui starten
+    # app = App()
+    # app.mainloop()
