@@ -11,7 +11,7 @@ class Visualizer:
         ax.quiver(p[:, 0], p[:, 1], p[:, 2], T[:, 0], T[:, 1], T[:, 2], length=0.08, color='r', alpha=0.6)
         ax.set(xlabel='X [m]', ylabel='Y [m]', zlabel='Z [m]', title='Deltarobot Trajektorie (SI-Einheiten)')
         plt.legend();
-        plt.savefig(os.path.join(outputDir, "trajectory_plot.png"), dpi=150, bbox_inches='tight')
+        plt.savefig(os.path.join(outputDir, "trajectory_plot.png"), dpi=300, bbox_inches='tight')
         #plt.show()
 
     def plot_forces(self, fname, outputDir):
@@ -29,5 +29,5 @@ class Visualizer:
         plt.gca().set(xlabel='Zeit t [s]', ylabel='Kraft F [N]', title='Kraftverläufe (SI)')
         plt.grid(True);
         plt.legend();
-        plt.savefig(os.path.join(outputDir, "forces_plot.png"), dpi=150, bbox_inches='tight')
+        plt.savefig(os.path.join(outputDir, "forces_plot.png"), dpi=300, bbox_inches='tight')
         #plt.show()
