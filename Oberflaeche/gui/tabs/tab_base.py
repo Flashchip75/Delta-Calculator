@@ -6,8 +6,8 @@ class BaseTab(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.columnconfigure(0, weight=0)   # links
-        self.columnconfigure(1, weight=1)   # rechts
+        self.columnconfigure(0, weight=1)  # links
+        self.columnconfigure(1, weight=1)  # rechts
         self.rowconfigure(0, weight=1)
 
         self.left_frame = ttk.Frame(self, padding=10)
