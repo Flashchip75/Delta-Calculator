@@ -7,7 +7,7 @@ Liest Trajektorie aus CSV, berechnet fuer jeden Zeitschritt:
   alpha : Winkelbeschl.      [rad/s²](3,)
 
 Methode differentielle Kinematik (Jacobi):
-  Schleifengleichung differenziert → A * e_dot = B * phi_dot
+  Schleifengleichung differenziert -> A * e_dot = B * phi_dot
   phi_dot = B^-1 * A * e_dot
   phi_ddot aus zentraler Differenz von phi_dot.
 

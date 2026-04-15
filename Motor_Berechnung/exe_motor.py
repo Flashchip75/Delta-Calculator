@@ -75,7 +75,7 @@ class exeMotor:
         plot_motor_results(kin, torque)
 
         # 6. Animation
-        print("\n=== 6. Rendere Animation ===")
-        create_gif(robot, kin)
+        #print("\n=== 6. Rendere Animation ===")
+        #create_gif(robot, kin)
 
         print("\nFertig! Alle Ausgaben sind im Ordner 'output'.")
