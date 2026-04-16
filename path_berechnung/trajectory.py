@@ -93,6 +93,6 @@ class Trajectory:
             p1[2] += offsetZ
             offsetCurves.append(Line(p0, p1))
             
-            print(f"New values after offset: p1={p0}, p2={p1}")
+            print(f"New values after offset: start={p0}, end={p1}")
 
         return offsetCurves
