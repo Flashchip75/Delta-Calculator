@@ -7,6 +7,12 @@
     "trajectory_csv": "trajectory.csv",
     "output_dir": "output"
   },
+  "plotting": {
+    "dpi": 100,
+    "bbox_inches": "tight",
+    "trajectory_plot": "trajectory_plot.png",
+    "forces_plot": "forces_plot.png"
+  },
   "workspace": {
     "resolution": 25,
     "range_x": [-0.4, 0.4],
@@ -18,14 +24,15 @@
     "points": 1000,
     "gain": 50.0,
     "blend": 0.0,
-    "scale_m": 0.001
+    "scale_m": 0.001,
+    "offset_mm": -1000
   },
   "cVision":{
-    "reCalibration": true,
+    "reCalibration": false,
     "aruco_dict": "DICT_4X4_100",
-    "mmToPixel": 0,
+    "mmToPixel": 0.44,
     "calibration_source": "media/calibrationTest.jpg",
-    "calibration_norm_mm": 100,
+    "calibration_norm_mm": 300,
     "calibration_id": 0
   },
   "motors": {

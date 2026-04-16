@@ -4,9 +4,12 @@ import pandas as pd
 from scipy.interpolate import CubicSpline
 from scipy.ndimage import gaussian_filter1d
 
+from .geometry import Line
+
 
 class Trajectory:
-    def __init__(self, curves, dur_s, pts=101, gain=50.0, blend=5.0, scale_m=1.0):
+    def __init__(self, curves, dur_s, pts=101, gain=50.0, blend=5.0, scale_m=1.0, offset_mm=0):
+        curves = self.add_z_offset(curves, offset_mm)
         raw = np.vstack(
             [[c.f(ti) for ti in np.linspace(0, 1, 300)] for c in curves]) * scale_m  # Skalierung auf SI (Meter)!
         pr = raw[np.append([True], np.linalg.norm(np.diff(raw, axis=0), axis=1) > 1e-6)]
@@ -69,3 +72,27 @@ class Trajectory:
             'fnx':   fy[:, 0],     'fny':   fy[:, 1],      'fnz':   fy[:, 2],
             'fx':    fz[:, 0],     'fy':    fz[:, 1],      'fz':    fz[:, 2],
         }
+    
+    def add_z_offset(self, curves, offsetZ: int):
+        """
+        Add an offset to the z axis of a list of lines.
+        
+        Args:
+            curves:  List of Line objects to offset.
+            offsetZ: Offset to add to the z axis in mm.
+        
+        Returns:
+            List of new Line objects with z offset applied.
+        """
+        offsetCurves = []
+        for curve in curves:
+            p0 = curve.p0.copy()
+            p1 = (curve.p0 + curve.dp).copy()
+            
+            p0[2] += offsetZ
+            p1[2] += offsetZ
+            offsetCurves.append(Line(p0, p1))
+            
+            print(f"New values after offset: start={p0}, end={p1}")
+
+        return offsetCurves
