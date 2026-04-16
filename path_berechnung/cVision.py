@@ -5,10 +5,33 @@ from .aruco_detector import ArucoDetector
 from .yolo_detector import YoloDetector
 
 def detect_points(
-        self, source: str
+        source: str
     ) -> tuple[tuple[float, float, float], tuple[float, float, float]]:
-        """Try ArUco first, fall back to YOLO. Returns (p1, p2) in mm."""
+        """Detect two points from an image source using ArUco or YOLO.
 
+        The function first tries to detect ArUco markers in the given source.
+        If fewer than two markers are found, it falls back to YOLO-based object
+        detection. Detected pixel coordinates are converted to millimeters using
+        either a fresh calibration image or a configured conversion factor.
+
+        Args:
+            source: Path or source string passed to the detector for processing.
+
+        Returns:
+            A tuple ``(p1, p2)`` containing two detected 3D points in
+            millimeters. Each point is returned as ``(x, y, z)`` with ``z``
+            set to ``0``.
+
+        Raises:
+            ValueError: If required calibration-related configuration values are
+                invalid, if no ArUco dictionary is configured, or if the stored
+                ``mmToPixel`` value is not greater than zero when recalibration
+                is disabled.
+            FileNotFoundError: If recalibration is enabled and the configured
+                calibration image does not exist.
+            RuntimeError: If fewer than two valid points are detected by both
+                ArUco and YOLO.
+        """
         p = cfg.cVision
 
         if p.aruco_dict is not None:
@@ -45,7 +68,7 @@ def detect_points(
             print(f"  Verwende gespeicherten Wert: {pxToMM:.4f} px/mm")
 
         # Aruco detection
-        ad = ArucoDetector()
+
         detections, _ = ad.process(source)
         if len(detections) >= 2:
             print(f"  ArUco: {len(detections)} Marker gefunden.")
