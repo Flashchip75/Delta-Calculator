@@ -8,7 +8,6 @@ from .workspace import compute_workspace, plot_workspace
 from .inverse_kinematics import compute_kinematics, save_kinematics
 from .dynamics import compute_torques, plot_motor_results
 from .animation import create_gif
-from validation.validate_pathExport import PathExportValidator as exVal
 
 
 class exeMotor:
@@ -63,8 +62,6 @@ class exeMotor:
             matrix = np.loadtxt(csv_path, delimiter=",", skiprows=1)
             print(f"Geladen aus CSV: {matrix.shape[0]} Zeitschritte, {matrix.shape[1]} Spalten")
 
-        exVal(matrix, csv_path, Path(__file__).parent.parent / g.output_dir).run_all()
-
         # 4. Inverse Kinematik
         print("\n=== 4. Inverse Kinematik ===")
         kin = compute_kinematics(robot, matrix)
@@ -78,7 +75,7 @@ class exeMotor:
         plot_motor_results(kin, torque)
 
         # 6. Animation
-        #print("\n=== 6. Rendere Animation ===")
-        #create_gif(robot, kin)
+        print("\n=== 6. Rendere Animation ===")
+        create_gif(robot, kin)
 
         print("\nFertig! Alle Ausgaben sind im Ordner 'output'.")
