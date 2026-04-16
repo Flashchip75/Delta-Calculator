@@ -28,11 +28,11 @@
     "offset_mm": -1000
   },
   "cVision":{
-    "reCalibration": true,
+    "reCalibration": false,
     "aruco_dict": "DICT_4X4_100",
-    "mmToPixel": 0,
+    "mmToPixel": 0.44,
     "calibration_source": "media/calibrationTest.jpg",
-    "calibration_norm_mm": 100,
+    "calibration_norm_mm": 300,
     "calibration_id": 0
   },
   "motors": {
