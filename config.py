@@ -13,11 +13,6 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
-from sympy import O
-
-from path_berechnung import trajectory
-
-
 # ---------------------------------------------------------------------------
 # Dataclasses — ein Abschnitt pro JSON-Sektion
 # ---------------------------------------------------------------------------
