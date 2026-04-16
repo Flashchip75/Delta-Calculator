@@ -13,6 +13,8 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from sympy import O
+
 from path_berechnung import trajectory
 
 
@@ -56,6 +58,7 @@ class PathConfig:
     gain: float                     # Blend-Gain
     blend: float                    # Übergangsradius
     scale_m: float                  # Skalierungsfaktor mm -> m (0.001)
+    offset_mm: int                  # Offset in mm, um Ursprung zu verschieben (z.B. 1000 für 1m über Boden)
 
 @dataclass
 class VisionConfig:
@@ -178,6 +181,7 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         gain       = _require(p, "gain",       "path"),
         blend      = _require(p, "blend",      "path"),
         scale_m    = _require(p, "scale_m",    "path"),
+        offset_mm  = _require(p, "offset_mm",  "path"),
     )
 
     vision_cfg = VisionConfig(

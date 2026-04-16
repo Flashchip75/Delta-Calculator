@@ -7,7 +7,7 @@ from .geometry import Bezier, Line
 from .physics import PhysicsEngine, FrenetForceCalculator
 from .trajectory import Trajectory
 from .visualization import Visualizer
-from path_berechnung import cVision as cv
+from path_berechnung import cVision, trajectory
 
 
 class exePath:
@@ -31,12 +31,11 @@ class exePath:
             print("=== Definiere Pfad-Geometrie (direkte Eingabe) ===")
         elif source is not None:
             print(f"=== Definiere Pfad-Geometrie (Vision: {source}) ===")
-            p1, p2 = cv.detect_points(self, source)
+            p1, p2 = cVision.detect_points(self, source)
         else:
             raise ValueError("Entweder p1/p2 oder source muss angegeben werden.")
 
         # 2. Trajektorie
-        print(f"  p1={p1}, p2={p2}")
         c = Line(p1,p2)
         p = cfg.path
         traj = Trajectory(
@@ -46,6 +45,7 @@ class exePath:
             gain    = p.gain,
             blend   = p.blend,
             scale_m = p.scale_m,
+            offset_mm = p.offset_mm,
         )
 
         # 3. Physik & Export
