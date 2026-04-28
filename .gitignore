@@ -218,3 +218,6 @@ __marimo__/
 
 # csv files
 *.csv
+
+# output files
+output/
