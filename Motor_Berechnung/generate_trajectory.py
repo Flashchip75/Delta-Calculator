@@ -1,5 +1,5 @@
 """
-generate_trajectory.py  –  INTERNES HILFSSKRIPT (wird von run_all.py gerufen)
+generate_trajectory.py  -  INTERNES HILFSSKRIPT (wird von run_all.py gerufen)
 Generiert Spiraltrajektorie mit Minimum-Jerk-Profil und speichert:
   trajectory.csv          Eingangsdaten fuer die Transformationsfunktion
   output/trajectory_plots.png   Grafiken
@@ -209,7 +209,7 @@ def plot_trajectory(matrix: np.ndarray, out_dir: str = "output"):
     ax_xy.set_title("XY-Projektion", fontsize=9)
     ax_xy.set_aspect("equal"); ax_xy.grid(True, alpha=0.3)
 
-    fig.suptitle("Spiraltrajektorie – Minimum-Jerk-Profil",
+    fig.suptitle("Spiraltrajektorie - Minimum-Jerk-Profil",
                  fontsize=13, fontweight="bold")
     path = f"{out_dir}/trajectory_plots.png"
     plt.savefig(path, dpi=150)
@@ -219,12 +219,12 @@ def plot_trajectory(matrix: np.ndarray, out_dir: str = "output"):
 
 if __name__ == "__main__":
     os.makedirs("output", exist_ok=True)
-    from robot_geometry import RobotGeometry
+    from .robot_geometry import RobotGeometry
     robot = RobotGeometry("config.txt")
 
     # Workspace-Mittelpunkt als Kreiszentrum
     z_mid = (robot.ws_range_z[0] + robot.ws_range_z[1]) / 2
-    R_max = 0.08   # Kreisradius [m] – passt sicher in den Workspace
+    R_max = 0.08   # Kreisradius [m] - passt sicher in den Workspace
 
     matrix = generate_spiral(
         center_xy = np.array([0.0, 0.0]),

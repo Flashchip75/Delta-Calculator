@@ -7,7 +7,7 @@ Liest Trajektorie aus CSV, berechnet fuer jeden Zeitschritt:
   alpha : Winkelbeschl.      [rad/s²](3,)
 
 Methode differentielle Kinematik (Jacobi):
-  Schleifengleichung differenziert → A * e_dot = B * phi_dot
+  Schleifengleichung differenziert -> A * e_dot = B * phi_dot
   phi_dot = B^-1 * A * e_dot
   phi_ddot aus zentraler Differenz von phi_dot.
 
@@ -16,7 +16,7 @@ Speichert output/kinematics.npz mit t, phi, omega, alpha, pos.
 
 import numpy as np
 import os
-from robot_geometry import RobotGeometry
+from .robot_geometry import RobotGeometry
 
 
 def _jacobian_matrices(robot: RobotGeometry,
@@ -56,7 +56,7 @@ def compute_kinematics(robot: RobotGeometry,
     Berechnet phi, omega, alpha fuer alle Zeitschritte.
 
     Parameter:
-        matrix : (N, >=7) – Spalten: t, sx,sy,sz, vx,vy,vz, ...
+        matrix : (N, >=7) - Spalten: t, sx,sy,sz, vx,vy,vz, ...
 
     Rueckgabe:
         dict mit t, pos, vel, phi, omega, alpha, valid (alle shape (N,...))
