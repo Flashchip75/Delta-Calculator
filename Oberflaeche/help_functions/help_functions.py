@@ -1,0 +1,1 @@
+# Funktionen die nicht zum erstellen von widgets dienen bspw. schreiben in .json, Fehlermendungen

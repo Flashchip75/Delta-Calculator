@@ -1,0 +1,1 @@
+# Struct zum Speichern der Geometrieiengaben
