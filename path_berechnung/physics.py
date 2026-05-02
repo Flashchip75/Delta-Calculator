@@ -15,15 +15,11 @@ class PhysicsEngine:
         return v, a, np.gradient(a, t, axis=0), T, N, np.cross(T, N), K # K in 1/m, j in m/s^3
 
 class FrenetForceCalculator:
-    def __init__(self, m_kg): self.m = m_kg
-    def get_forces(self, a, T, N):
-        currentDir = Path(__file__).parent
-        configPath = currentDir.parent / "config.json"
-        with open(configPath, 'r') as f:
-            config = json.load(f)
-        gravityConfig = config.get('global', {}).get('gravity', [0, 0, 9.81])
-        self.g = np.array(gravityConfig)
+    def __init__(self, m_kg, gravity):
+        self.m = m_kg
+        self.g = np.array(gravity) if gravity is not None else np.array([0, 0, 9.81])
 
+    def get_forces(self, a, T, N):
         Ft = self.m * np.sum(a*T, axis=1, keepdims=True) * T
         Fn = self.m * np.sum(a*N, axis=1, keepdims=True) * N
         return Ft, Fn, self.m * (a + self.g) # a + g (beides zwingend in m/s^2), F in Newton

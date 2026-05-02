@@ -219,8 +219,8 @@ __marimo__/
 # csv files
 *.csv
 
-# output files
+# excluding output directory
 output/
+Motor_Berechnung/output/
 
-# PA files (LRZ)
-PA (GSP) (Markus Polland)/
+.vscode/
