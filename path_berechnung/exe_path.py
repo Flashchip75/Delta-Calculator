@@ -6,7 +6,6 @@ from .track import Trajectory
 from .physics import PhysicsEngine
 from .PathFrenet import PathFrenet
 from .PathKinematics import PathKinematics
-from .Visualization import Plotter
 from path_berechnung import cVision
 
 
