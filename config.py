@@ -52,17 +52,17 @@ class PathConfig:
     points: int                     # Anzahl Stützpunkte
     gain: float                     # Blend-Gain
     blend: float                    # Übergangsradius
-    scale_m: float                  # Skalierungsfaktor mm -> m (0.001)
-    offset_mm: int                  # Offset in mm, um Ursprung zu verschieben (z.B. 1000 für 1m über Boden)
+    scale_m: float                  # Skalierungsfaktor m -> m (0.001)
+    offset_m: int                  # Offset in m, um Ursprung zu verschieben (z.B. 1000 für 1m über Boden)
 
 @dataclass
 class VisionConfig:
     """Vision-spezifische Parameter -> JSON-Sektion 'cVision'."""
     reCalibration: bool             # Bei True: Kalibrierung vor Erkennung durchführen
     aruco_dict: str                 # ArUco-Dict für Erkennung
-    mmToPixel: float                # Gespeicherter px/mm-Wert (verwendet wenn reCalibration=False)
+    mToPixel: float                # Gespeicherter px/m-Wert (verwendet wenn reCalibration=False)
     calibration_source: str         # Bildquelle für Kalibrierung
-    calibration_norm_mm: int        # Referenzlänge in mm für Kalibrierung
+    calibration_norm_m: int        # Referenzlänge in m für Kalibrierung
     calibration_id: int             # ArUco-Marker-ID für Kalibrierung
 
 @dataclass
@@ -176,15 +176,15 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         gain       = _require(p, "gain",       "path"),
         blend      = _require(p, "blend",      "path"),
         scale_m    = _require(p, "scale_m",    "path"),
-        offset_mm  = _require(p, "offset_mm",  "path"),
+        offset_m  = _require(p, "offset_m",  "path"),
     )
 
     vision_cfg = VisionConfig(
         reCalibration         = _require(cv, "reCalibration",         "cVision"),
         aruco_dict            = _require(cv, "aruco_dict",            "cVision"),
-        mmToPixel             = _require(cv, "mmToPixel",             "cVision"),
+        mToPixel             = _require(cv, "mToPixel",             "cVision"),
         calibration_source    = _require(cv, "calibration_source",    "cVision"),
-        calibration_norm_mm   = _require(cv, "calibration_norm_mm",   "cVision"),
+        calibration_norm_m   = _require(cv, "calibration_norm_m",   "cVision"),
         calibration_id        = _require(cv, "calibration_id",        "cVision"),
     )
 

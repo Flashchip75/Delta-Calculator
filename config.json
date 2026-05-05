@@ -20,19 +20,19 @@
     "range_z": [-0.6, 1.1]
   },
   "path":{
-    "duration_s": 5.0,
+    "duration_s": 3.0,
     "points": 1000,
     "gain": 50.0,
     "blend": 0.0,
     "scale_m": 0.001,
-    "offset_mm": -1000
+    "offset_m": -1000
   },
   "cVision":{
     "reCalibration": false,
     "aruco_dict": "DICT_4X4_100",
-    "mmToPixel": 0.44,
+    "mToPixel": 0.002,
     "calibration_source": "media/calibrationTest.jpg",
-    "calibration_norm_mm": 300,
+    "calibration_norm_m": 1,
     "calibration_id": 0
   },
   "motors": {
