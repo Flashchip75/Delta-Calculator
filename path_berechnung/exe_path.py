@@ -2,6 +2,7 @@ from __future__ import annotations
 import numpy as np
 
 from config import cfg
+from pathlib import Path
 from .track import Trajectory
 from .physics import PhysicsEngine
 from .PathFrenet import PathFrenet
@@ -26,6 +27,7 @@ class exePath:
         """
 
         path = cfg.path
+        g = cfg.global_cfg
 
         # 1. Geometrie
         print("=== Definiere Pfad-Geometrie ===")
@@ -53,5 +55,10 @@ class exePath:
         # 3. Forces
         print("=== Berechne Kraefte ===")
         data = PhysicsEngine.compute(pts, frenet, kin)
+
+        # 4. Export
+        print("=== Exportiere Daten ===")
+        csvPath = Path(__file__).parent.parent / g.output_dir / g.trajectory_csv
+        PhysicsEngine.export_to_csv(data, csvPath)
         
         return data

@@ -3,10 +3,10 @@ import path_berechnung.exe_path as exeP
 
 def main():
     print("=== Starte Pfadberechnung ===")
-    mode = "geometry"
+    mode = "points"
 
-    p1 = [0.4, 0.4, 0]
-    p2 = [-0.4, -0.4, 0]
+    p1 = [0.4, 0.4, -1]
+    p2 = [-0.4, -0.4, -0.5]
 
     jData = [
         {"type": "Line", "pts": [[0.0, 0.0, 0.0], [0.2, 0.0, 0.0]]},
@@ -26,10 +26,10 @@ def main():
         "cvision":   dict(source=source),
     }
 
-    d = exeP.exePath().run(**kwargs[mode])
+    data = exeP.exePath().run(**kwargs[mode])
 
     print("\n=== Starte Motorberechnung ===")
-    exeM.exeMotor().run(d)
+    exeM.exeMotor().run(data=data)
 
 if __name__ == "__main__":
     main()

@@ -11,7 +11,7 @@ from .animation import create_gif
 
 
 class exeMotor:
-    def run(self,d):
+    def run(self,data: dict[str, np.ndarray]):
         g = cfg.global_cfg
         csv_path = Path(__file__).parent.parent / g.output_dir / g.trajectory_csv
 
@@ -28,23 +28,23 @@ class exeMotor:
         # 3. Trajektorie laden
         print(f"\n=== 3. Lade Trajektorie ({g.trajectory_csv}) ===")
 
-        if d is not None:
+        if data is not None:
             print("Versuche Daten aus Pfadberechnung als Variable zu uebergeben, " \
             " ueberspringe CSV-Import.")
             try:
                 matrix = np.column_stack([
-                    d['t'],
-                    d['x'],  d['y'],  d['z'],
-                    d['vx'], d['vy'], d['vz'],
-                    d['ax'], d['ay'], d['az'],
-                    d['jx'], d['jy'], d['jz'],
-                    d['tx'], d['ty'], d['tz'],
-                    d['nx'], d['ny'], d['nz'],
-                    d['bx'], d['by'], d['bz'],
-                    d['kappa'],
-                    d['ftx'], d['fty'], d['ftz'],
-                    d['fnx'], d['fny'], d['fnz'],
-                    d['fx'],  d['fy'],  d['fz'],
+                    data['t'],
+                    data['x'],  data['y'],  data['z'],
+                    data['vx'], data['vy'], data['vz'],
+                    data['ax'], data['ay'], data['az'],
+                    data['jx'], data['jy'], data['jz'],
+                    data['tx'], data['ty'], data['tz'],
+                    data['nx'], data['ny'], data['nz'],
+                    data['bx'], data['by'], data['bz'],
+                    data['kappa'],
+                    data['ftx'], data['fty'], data['ftz'],
+                    data['fnx'], data['fny'], data['fnz'],
+                    data['fx'],  data['fy'],  data['fz'],
                 ])
                 print(f"Geladen aus Variable: {matrix.shape[0]} Zeitschritte, " \
                       f" {matrix.shape[1]} Spalten")
