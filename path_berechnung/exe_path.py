@@ -25,6 +25,8 @@ class exePath:
           4. none                               -> raise ValueError
         """
 
+        path = cfg.path
+
         # 1. Geometrie
         print("=== Definiere Pfad-Geometrie ===")
 
@@ -37,6 +39,7 @@ class exePath:
         elif source is not None:
             print(f"=== Geometrie (Vision: {source}) ===")
             p1, p2 = cVision.detect_points(source)
+            print(f"  Erkannt: p1={p1}, p2={p2}")
             j_data = [{"type": "Line", "pts": [list(p1), list(p2)]}]
         else:
             raise ValueError("Entweder geometry, p1/p2 oder source muss angegeben werden.")
@@ -45,7 +48,7 @@ class exePath:
         print("=== Berechne Trajektorie ===")
         pts = Trajectory(j_data).cloud
         frenet= PathFrenet(pts)
-        kin = PathKinematics(pts, T=5.0)
+        kin = PathKinematics(pts, T=path.duration_s)
 
         # 3. Forces
         print("=== Berechne Kraefte ===")
