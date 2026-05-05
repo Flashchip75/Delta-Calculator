@@ -1,68 +1,54 @@
 from __future__ import annotations
 import numpy as np
-from pathlib import Path
 
 from config import cfg
-from .geometry import Bezier, Line
-from .physics import PhysicsEngine, FrenetForceCalculator
-from .trajectory import Trajectory
-from .visualization import Visualizer
+from .track import Trajectory
+from .physics import PhysicsEngine
+from .PathFrenet import PathFrenet
+from .PathKinematics import PathKinematics
 from path_berechnung import cVision
 
 
 class exePath:
     def run(
         self,
+        geometry: list[dict] | None = None,
         p1: tuple[float, float, float] | None = None,
         p2: tuple[float, float, float] | None = None,
         source: str | None = None,
-    ) -> dict:
+    ) -> dict[str, np.ndarray]:
         """
         Priority:
-          1. p1 & p2 given directly           -> use as-is
-          2. source given                     -> try ArUco, fallback to YOLO
-          3. neither                          -> raise ValueError
+          1. geometry given directly            -> use raw j_data list as-is
+          2. p1 & p2 given directly             -> use as-is
+          3. source given                       -> try ArUco, fallback to YOLO
+          4. none                               -> raise ValueError
         """
 
         # 1. Geometrie
         print("=== Definiere Pfad-Geometrie ===")
 
-        if p1 is not None and p2 is not None:
-            print("=== Definiere Pfad-Geometrie (direkte Eingabe) ===")
+        if geometry is not None:
+            print("=== Geometrie (direkt übergeben) ===")
+            j_data = geometry
+        elif p1 is not None and p2 is not None:
+            print("=== Geometrie (direkte Punkte) ===")
+            j_data = [{"type": "Line", "pts": [list(p1), list(p2)]}]
         elif source is not None:
-            print(f"=== Definiere Pfad-Geometrie (Vision: {source}) ===")
+            print(f"=== Geometrie (Vision: {source}) ===")
             p1, p2 = cVision.detect_points(source)
+            j_data = [{"type": "Line", "pts": [list(p1), list(p2)]}]
         else:
-            raise ValueError("Entweder p1/p2 oder source muss angegeben werden.")
+            raise ValueError("Entweder geometry, p1/p2 oder source muss angegeben werden.")
 
         # 2. Trajektorie
-        c = Line(p1, p2)
-        p = cfg.path
-        traj = Trajectory(
-            [c],
-            dur_s   = p.duration_s,
-            pts     = p.points,
-            gain    = p.gain,
-            blend   = p.blend,
-            scale_m = p.scale_m,
-            offset_mm = p.offset_mm,
-        )
+        print("=== Berechne Trajektorie ===")
+        pts = Trajectory(j_data).cloud
+        frenet= PathFrenet(pts)
+        kin = PathKinematics(pts, T=5.0)
 
-        # 3. Physik & Export
-        print("=== Berechne Trajektorie & Kräfte ===")
-        g = cfg.global_cfg
-
-        phys  = PhysicsEngine()
-        force = FrenetForceCalculator(m_kg=g.mass_kg, gravity=g.gravity)
-
-        P, T = traj.export(g.trajectory_csv, g.output_dir, phys, force)
-        d    = traj.toDictVar(phys, force)
-
+        # 3. Forces
+        print("=== Berechne Kraefte ===")
+        data = PhysicsEngine.compute(pts, frenet, kin)
         
-        # 4. Visualisierung
-        print("\n=== Visualisiere Ergebnisse ===")
-        viz = Visualizer()
-        viz.plot_matlab_style(P, T, g.output_dir)
-        viz.plot_forces(g.trajectory_csv, g.output_dir)
-
-        return d
+        return data
