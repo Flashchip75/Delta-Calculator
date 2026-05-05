@@ -77,3 +77,47 @@ class PhysicsEngine:
             'fnx':   F_n_vec[:, 0], 'fny':   F_n_vec[:, 1], 'fnz':   F_n_vec[:, 2],
             'fx':    F_vec[:, 0],   'fy':    F_vec[:, 1],   'fz':    F_vec[:, 2],
         }
+
+    @staticmethod
+    def export_to_csv(
+        data: dict[str, np.ndarray],
+        filepath: str | Path,
+        delimiter: str = ","
+    ) -> None:
+        """
+        Export a dict of 1D numpy arrays to a CSV file.
+
+        Parameters
+        ----------
+        data : dict[str, np.ndarray]
+            Dictionary with keys as column names and values as 1D arrays (length N).
+        filepath : str | Path
+            Output CSV file path.
+        delimiter : str
+            Column separator (default: ",").
+        """
+
+        filepath = Path(filepath)
+        filepath.parent.mkdir(parents=True, exist_ok=True)
+
+        # --- ensure consistent order ---
+        keys = list(data.keys())
+
+        # --- stack columns ---
+        try:
+            arr = np.column_stack([data[k] for k in keys])
+        except ValueError as e:
+            raise ValueError("All arrays must have same length!") from e
+
+        # --- header ---
+        header = delimiter.join(keys)
+
+        # --- save ---
+        np.savetxt(
+            filepath,
+            arr,
+            delimiter=delimiter,
+            header=header,
+            comments="",
+            fmt="%.6f"
+        )
