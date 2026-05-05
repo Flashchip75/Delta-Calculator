@@ -143,17 +143,17 @@ class ArucoDetector:
         else:
             raise ValueError("No display image to show.")
         
-    def calibrate(self, source: str | NDArray, normMM: int, calibId: int) -> float:
+    def calibrate(self, source: str | NDArray, normM: int, calibId: int) -> float:
         """
-        Calculate a px-to-mm scale factor using two ArUco markers of the same ID.
+        Calculate a px-to-m scale factor using two ArUco markers of the same ID.
 
         Args:
             source:   Image path or NDArray.
-            normMM:  Known real-world distance in mm between the two markers.
+            normM:  Known real-world distance in m between the two markers.
             calibId: ArUco marker ID to search for (expects exactly 2 matches).
 
         Returns:
-            Scale factor in mm/px.
+            Scale factor in m/px.
 
         Raises:
             ValueError: If not exactly 2 markers with calibId are found.
@@ -167,44 +167,44 @@ class ArucoDetector:
 
         (x1, y1), (x2, y2) = points
         distPX = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-        mmPerPx = normMM / distPX
+        mPerPx = normM / distPX
 
-        return mmPerPx
+        return mPerPx
     
-    def pxToMM(self, px: float, mmPerPx: float) -> float:
+    def pxToM(self, px: float, mPerPx: float) -> float:
         """
         Convert a distance from pixels to millimeters using the scale factor.
 
         Args:
             px: Distance in pixels.
-            mmPerPx: Scale factor in mm/px.
+            mPerPx: Scale factor in m/px.
         Returns:
             Distance in millimeters.
         Raises:
-            ValueError: If mmPerPx is invalid or if px is negative or zero.
+            ValueError: If mPerPx is invalid or if px is negative or zero.
         """
-        if mmPerPx <= 0:
-            raise ValueError("Scale factor mmPerPx must be greater than zero.")
-        if mmPerPx == float('inf'):
-            raise ValueError("Scale factor mmPerPx is unreasonably large.")
+        if mPerPx <= 0:
+            raise ValueError("Scale factor mPerPx must be greater than zero.")
+        if mPerPx == float('inf'):
+            raise ValueError("Scale factor mPerPx is unreasonably large.")
         if px < 0:
             raise ValueError("Pixel distance cannot be negative.")
         if px == 0:
             raise ValueError("Pixel distance cannot be zero.")
 
-        return px * mmPerPx
+        return px * mPerPx
     
-    def centerPxToMM(self, center: tuple[int, int], mmPerPx: float) -> tuple[int, int]:
+    def centerPxToM(self, center: tuple[int, int], mPerPx: float) -> tuple[int, int]:
         """
         Convert a center point from pixels to millimeters.
 
         Args:
             center: Tuple of (x, y) in pixels.
-            mmPerPx: Scale factor in mm/px.
+            mPerPx: Scale factor in m/px.
         Returns:
             Tuple of (x, y) in millimeters.
         Raises:
-            ValueError: If center is None, has negative coordinates, or if mmPerPx is invalid.
+            ValueError: If center is None, has negative coordinates, or if mPerPx is invalid.
         """
         if center is None:
             raise ValueError("Center point cannot be None.")
@@ -212,24 +212,24 @@ class ArucoDetector:
             raise ValueError("Center coordinates must be non-negative.")
         if center[0] == 0 and center[1] == 0:
             raise ValueError("Center coordinates cannot both be zero.")
-        if mmPerPx <= 0:
-            raise ValueError("Scale factor mmPerPx must be greater than zero.")
+        if mPerPx <= 0:
+            raise ValueError("Scale factor mPerPx must be greater than zero.")
         
-        xMM = self.pxToMM(center[0], mmPerPx)
-        yMM = self.pxToMM(center[1], mmPerPx)
-        return (round(xMM), round(yMM))
+        xM = self.pxToM(center[0], mPerPx)
+        yM = self.pxToM(center[1], mPerPx)
+        return xM, yM
     
-    def getPointsMM(self, detections: DetectionList, mmPerPx: float, *ids: int) -> list[list[int]]:
+    def getPointsM(self, detections: DetectionList, mPerPx: float, *ids: int) -> list[list[int]]:
         """
-        Extract center points in mm for given marker IDs in order.
+        Extract center points in m for given marker IDs in order.
 
         Args:
             detections: Output from process().
-            mmPerPx:    Scale factor from calibrate().
+            mPerPx:    Scale factor from calibrate().
             *ids:       Marker IDs in the order you want the points.
 
         Returns:
-            List of [x, y, 0] points in mm, one per ID.
+            List of [x, y, 0] points in m, one per ID.
 
         Raises:
             ValueError: If a requested ID is not found in detections.
@@ -239,6 +239,6 @@ class ArucoDetector:
         for markerId in ids:
             if markerId not in lookup:
                 raise ValueError(f"Marker ID {markerId} not found in detections.")
-            x, y = self.centerPxToMM(lookup[markerId], mmPerPx)
-            points.append([round(x), round(y), 0])
+            x, y = self.centerPxToM(lookup[markerId], mPerPx)
+            points.append([x, y, 0])
         return points
