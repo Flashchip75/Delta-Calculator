@@ -100,19 +100,15 @@ class PhysicsEngine:
         filepath = Path(filepath)
         filepath.parent.mkdir(parents=True, exist_ok=True)
 
-        # --- ensure consistent order ---
         keys = list(data.keys())
 
-        # --- stack columns ---
         try:
             arr = np.column_stack([data[k] for k in keys])
         except ValueError as e:
             raise ValueError("All arrays must have same length!") from e
 
-        # --- header ---
         header = delimiter.join(keys)
 
-        # --- save ---
         np.savetxt(
             filepath,
             arr,
