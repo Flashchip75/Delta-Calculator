@@ -36,11 +36,25 @@
     "calibration_id": 0,
     "model_path": "models/yolo26n.pt",
     "visiualisations":{
-      "colorRec": [0, 255, 0],
-      "thicknessRec": 2,
-      "colorCirc": [0, 0, 255],
-      "thicknessCirc": 2,
-      "radiusCirc": 6
+      "Rectangle": {
+        "colorVal": [0, 255, 0],
+        "thicknessVal": 2,
+        "colorRej": [0, 255, 255],
+        "thicknessRej": 1
+      },
+      "Circle": {
+        "colorVal": [0, 0, 255],
+        "thicknessVal": 2,
+        "radiusVal": 6,
+        "colorRej": [0, 255, 255],
+        "thicknessRej": 1,
+        "radiusRej": 6
+      },
+      "MarkerText": {
+        "fontScaleMarker": 0.6,
+        "colorMarker": [0, 255, 0],
+        "lineSizeMarker": 2
+      }
     }
   },
   "motors": {
