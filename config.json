@@ -33,7 +33,15 @@
     "mToPixel": 0.002,
     "calibration_source": "media/calibrationTest.jpg",
     "calibration_norm_m": 1,
-    "calibration_id": 0
+    "calibration_id": 0,
+    "model_path": "models/yolo26n.pt",
+    "visiualisations":{
+      "colorRec": [0, 255, 0],
+      "thicknessRec": 2,
+      "colorCirc": [0, 0, 255],
+      "thicknessCirc": 2,
+      "radiusCirc": 6
+    }
   },
   "motors": {
     "A": {

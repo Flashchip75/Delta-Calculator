@@ -194,7 +194,7 @@ class ArucoDetector:
 
         return px * mPerPx
     
-    def centerPxToM(self, center: tuple[int, int], mPerPx: float) -> tuple[int, int]:
+    def centerPxToM(self, center: tuple[int, int], mPerPx: float) -> tuple[float, float]:
         """
         Convert a center point from pixels to millimeters.
 

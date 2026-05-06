@@ -3,12 +3,16 @@ from ultralytics import YOLO
 from numpy.typing import NDArray
 from typing import Optional, TypeAlias, Sequence, cast
 
+from config import cfg
+
 Detection: TypeAlias = dict[str, int | float | tuple[int, int] | tuple[int, int, int, int] | NDArray]
 DetectionList: TypeAlias = list[Detection]
 
 class YoloDetector:
-    def __init__(self, modelPath: str = "tests/yolo26n.pt") -> None:
-        self._model = YOLO(modelPath)
+    def __init__(self) -> None:
+        self._model     = YOLO(cfg.cVision.model_path)
+        self._vis       = cfg.cVision.visiualisations
+        self._outDir    = cfg.global_cfg.output_dir
 
     def process(self, source: str | NDArray) -> tuple[DetectionList, NDArray]:
         """
@@ -48,14 +52,21 @@ class YoloDetector:
 
     def _drawDetections(self, source: NDArray, detections: DetectionList) -> NDArray:
         display = source.copy()
+
+        colorRec        = self._vis["colorRec"]
+        thicknessRec    = self._vis["thicknessRec"]
+        colorCirc       = self._vis["colorCirc"]
+        thicknessCirc   = self._vis["thicknessCirc"]
+        radiusCirc      = self._vis["radiusCirc"]
+        
         for d in detections:
             x, y, w, h = cast(tuple[int, int, int, int], d["box"])
             cx, cy = cast(tuple[int, int], d["center"])
             cv2.rectangle(display,
                         (x - w // 2, y - h // 2),
                         (x + w // 2, y + h // 2),
-                        (0, 255, 0), 2)
-            cv2.circle(display, (cx, cy), 6, (0, 0, 255), -1)
+                        colorRec, thicknessRec)
+            cv2.circle(display, (cx, cy), radiusCirc, colorCirc, thicknessCirc)
         return display
     
     def displayResults(self, display: NDArray) -> None:
@@ -73,3 +84,21 @@ class YoloDetector:
         cv2.imshow("YOLO Detections", display)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+    def saveResults(self, display: NDArray, fname: str) -> None:
+        """
+        Save the annotated image to disk.
+
+        Args:
+            display: Annotated image array from process().
+            fname: Name of the file to save (e.g. "result.jpg").
+
+        Raises:
+            ValueError: If display is None or empty.
+            OSError: If the image could not be written to the given path.
+        """
+        path = f"{self._outDir}/{fname}"
+        if display is None or display.size == 0:
+            raise ValueError("No display image to save.")
+        if not cv2.imwrite(path, display):
+            raise OSError(f"Could not write image to: {path}")

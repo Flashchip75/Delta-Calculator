@@ -53,17 +53,19 @@ class PathConfig:
     gain: float                     # Blend-Gain
     blend: float                    # Übergangsradius
     scale_m: float                  # Skalierungsfaktor m -> m (0.001)
-    offset_m: int                  # Offset in m, um Ursprung zu verschieben (z.B. 1000 für 1m über Boden)
+    offset_m: int                   # Offset in m, um Ursprung zu verschieben (z.B. 1000 für 1m über Boden)
 
 @dataclass
 class VisionConfig:
     """Vision-spezifische Parameter -> JSON-Sektion 'cVision'."""
     reCalibration: bool             # Bei True: Kalibrierung vor Erkennung durchführen
     aruco_dict: str                 # ArUco-Dict für Erkennung
-    mToPixel: float                # Gespeicherter px/m-Wert (verwendet wenn reCalibration=False)
+    mToPixel: float                 # Gespeicherter px/m-Wert (verwendet wenn reCalibration=False)
     calibration_source: str         # Bildquelle für Kalibrierung
-    calibration_norm_m: int        # Referenzlänge in m für Kalibrierung
+    calibration_norm_m: int         # Referenzlänge in m für Kalibrierung
     calibration_id: int             # ArUco-Marker-ID für Kalibrierung
+    model_path:          str        # Pfad zum YOLO-Modell
+    visiualisations:     dict       # Farben und Stärken für Bounding Boxes und Kreise
 
 @dataclass
 class MotorConfig:
@@ -180,12 +182,14 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
     )
 
     vision_cfg = VisionConfig(
-        reCalibration         = _require(cv, "reCalibration",         "cVision"),
-        aruco_dict            = _require(cv, "aruco_dict",            "cVision"),
-        mToPixel             = _require(cv, "mToPixel",             "cVision"),
-        calibration_source    = _require(cv, "calibration_source",    "cVision"),
-        calibration_norm_m   = _require(cv, "calibration_norm_m",   "cVision"),
-        calibration_id        = _require(cv, "calibration_id",        "cVision"),
+        reCalibration           = _require(cv, "reCalibration",         "cVision"),
+        aruco_dict              = _require(cv, "aruco_dict",            "cVision"),
+        mToPixel                = _require(cv, "mToPixel",              "cVision"),
+        calibration_source      = _require(cv, "calibration_source",    "cVision"),
+        calibration_norm_m      = _require(cv, "calibration_norm_m",    "cVision"),
+        calibration_id          = _require(cv, "calibration_id",        "cVision"),
+        model_path              = _require(cv, "model_path",            "cVision"),
+        visiualisations         = _require(cv, "visiualisations",       "cVision"),
     )
 
     motors_cfg = MotorsConfig(
