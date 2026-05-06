@@ -1,10 +1,11 @@
 import json
-
 import cv2
 import cv2.aruco as aruco
 import numpy as np
 from numpy.typing import NDArray
 from typing import Optional, TypedDict, NotRequired, TypeAlias, Sequence
+
+from config import cfg
 
 class Detection(TypedDict):
     id:        int
@@ -24,7 +25,10 @@ class ArucoDetector:
         if dictionaryId not in DICTIONARIES:
             raise ValueError(f"Unknown dictionary: {dictionaryId}. Choose from {list(DICTIONARIES.keys())}")
         dictionary = aruco.getPredefinedDictionary(DICTIONARIES[dictionaryId])
-        self._detector = aruco.ArucoDetector(dictionary)
+        self._detector  = aruco.ArucoDetector(dictionary)
+        self._visRec       = cfg.cVision.visiualisations["Rectangle"]
+        self._visCirc      = cfg.cVision.visiualisations["Circle"]
+        self._visText      = cfg.cVision.visiualisations["MarkerText"]
 
     def process(self, source: str | NDArray) -> tuple[DetectionList, NDArray]:
         """
@@ -70,19 +74,41 @@ class ArucoDetector:
 
     def _drawDetections(self, source: NDArray, corners: Sequence, centers: list[tuple[int, int]], ids: Optional[NDArray], rejected: Sequence) -> NDArray:
         display = source.copy()
+
+        colorRecVal         = self._visRec["colorVal"]
+        thicknessRecVal     = self._visRec["thicknessVal"]
+        colorCircVal        = self._visCirc["colorVal"]
+        thicknessCircVal    = self._visCirc["thicknessVal"]
+        radiusCircVal       = self._visCirc["radiusVal"]
+        colorCircRej        = self._visCirc["colorRej"]
+        thicknessCircRej    = self._visCirc["thicknessRej"]
+        radiusCircRej       = self._visCirc["radiusRej"]
+        fontScaleMarker     = self._visText["fontScaleMarker"]
+        colorMarker         = self._visText["colorMarker"]
+        lineSizeMarker      = self._visText["lineSizeMarker"]
+
         if ids is not None:
             for corner, markerId, (cx, cy) in zip(corners, ids.flatten(), centers):
                 pts = corner[0].astype(int)
-                cv2.polylines(display, [pts], isClosed=True, color=(255, 0, 0), thickness=2)
+
+                cv2.polylines(display, [pts],
+                              isClosed=True,
+                              color=colorRecVal,
+                              thickness=thicknessRecVal)
+                
                 cx = int(corner[0][:, 0].mean())
                 cy = int(corner[0][:, 1].mean())
-                cv2.circle(display, (cx, cy), 6, (0, 0, 255), -1)
-                cv2.putText(display, str(markerId), (cx + 8, cy - 8),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+
+                cv2.circle(display, (cx, cy), radiusCircVal, colorCircVal, -thicknessCircVal)
+
+                textCx = cx + 8
+                textCy = cy - 8
+                cv2.putText(display, str(markerId), (textCx, textCy),
+                            cv2.FONT_HERSHEY_SIMPLEX, fontScaleMarker, colorMarker, lineSizeMarker)
         for r in rejected:
             cx = int(r[0][:, 0].mean())
             cy = int(r[0][:, 1].mean())
-            cv2.circle(display, (cx, cy), 4, (0, 255, 255), -1)
+            cv2.circle(display, (cx, cy), radiusCircRej, colorCircRej, -thicknessCircRej)
         return display
 
     def _processImage(self, source: NDArray) -> tuple[DetectionList, NDArray]:
@@ -194,7 +220,7 @@ class ArucoDetector:
 
         return px * mPerPx
     
-    def centerPxToM(self, center: tuple[int, int], mPerPx: float) -> tuple[int, int]:
+    def centerPxToM(self, center: tuple[int, int], mPerPx: float) -> tuple[float, float]:
         """
         Convert a center point from pixels to millimeters.
 

@@ -8,19 +8,20 @@ from .physics import PhysicsEngine
 from .PathFrenet import PathFrenet
 from .PathKinematics import PathKinematics
 from path_berechnung import cVision
+from .ProfileManager import ProfileManager
 
 
 class exePath:
     def run(
         self,
-        geometry: list[dict] | None = None,
+        geometry: str | None = None,
         p1: tuple[float, float, float] | None = None,
         p2: tuple[float, float, float] | None = None,
         source: str | None = None,
     ) -> dict[str, np.ndarray]:
         """
         Priority:
-          1. geometry given directly            -> use raw j_data list as-is
+          1. geometry given directly            -> load from JSON via ProfileManager
           2. p1 & p2 given directly             -> use as-is
           3. source given                       -> try ArUco, fallback to YOLO
           4. none                               -> raise ValueError
@@ -34,7 +35,12 @@ class exePath:
 
         if geometry is not None:
             print("=== Geometrie (direkt übergeben) ===")
-            j_data = geometry
+            filepath = path.path_profiles
+            if filepath is None:
+                raise ValueError("Kein Pfad für path_profiles in config.json angegeben.")
+            print(f"  Lade Profil '{geometry}' aus '{filepath}'")
+            manager = ProfileManager(filepath=filepath)
+            j_data = manager.get_profile(geometry)
         elif p1 is not None and p2 is not None:
             print("=== Geometrie (direkte Punkte) ===")
             j_data = [{"type": "Line", "pts": [list(p1), list(p2)]}]

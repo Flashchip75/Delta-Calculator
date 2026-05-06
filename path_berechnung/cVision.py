@@ -1,8 +1,10 @@
 from config import cfg
 from pathlib import Path
+from typing import cast
 
 from .aruco_detector import ArucoDetector
 from .yolo_detector import YoloDetector
+
 
 def detect_points(
         source: str
@@ -68,29 +70,32 @@ def detect_points(
             print(f"  Verwende gespeicherten Wert: {pxToM:.4f} px/m")
 
         # Aruco detection
-
-        detections, _ = ad.process(source)
-        if len(detections) >= 2:
-            print(f"  ArUco: {len(detections)} Marker gefunden.")
-            pts = [ad.centerPxToM(d['center'], pxToM) for d in detections[:2]]
+        arucoDetections, _ = ad.process(source)
+        if len(arucoDetections) >= 2:
+            print(f"  ArUco: {len(arucoDetections)} Marker gefunden.")
+            pts = [ad.centerPxToM(d['center'], pxToM) for d in arucoDetections[:2]]
             p1 = (*pts[0], 0)
             p2 = (*pts[1], 0)
             return p1, p2
 
-        print(f"  ArUco: nur {len(detections)} Marker — versuche YOLO.")
+        print(f"  ArUco: nur {len(arucoDetections)} Marker — versuche YOLO.")
 
         # YOLO fallback
         yd = YoloDetector()
-        detections, _ = yd.process(source)
-        valid = [d for d in detections if d['confidence'] >= 0.5]
+        yoloDetections, _ = yd.process(source)
+        valid = [
+            d for d in yoloDetections
+            if isinstance(d['confidence'], (int, float))
+            and d['confidence'] >= p.conf_threshold
+        ]
         if len(valid) >= 2:
-            print(f"  YOLO: {len(valid)} Objekte gefunden (confidence >= 0.5).")
-            pts = [ad.centerPxToM(d['center'], pxToM) for d in valid[:2]]
+            print(f"  YOLO: {len(valid)} Objekte gefunden (confidence >= {p.conf_threshold}).")
+            pts = [ad.centerPxToM(cast(tuple[int, int], d['center']), pxToM) for d in valid[:2]]
             p1 = (*pts[0], 0)
             p2 = (*pts[1], 0)
             return p1, p2
 
         raise RuntimeError(
             f"Keine zwei Punkte erkannt. "
-            f"ArUco: {len(detections)}, YOLO (>=0.5): {len(valid)}"
+            f"ArUco: {len(arucoDetections)}, YOLO (>= {p.conf_threshold}): {len(valid)}"
         )
