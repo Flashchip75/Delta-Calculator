@@ -7,13 +7,14 @@ from matplotlib.figure import Figure
 
 
 class PlotFrame(ttk.Frame):
-    def __init__(self, parent, plot_configs=None, default_plot=None, title="Plot", kin_struct=None):
+    def __init__(self, parent, plot_configs=None, default_plot=None,
+                 title="Plot", kin_struct=None, geo_struct=None, path_struct=None):
+
         super().__init__(parent)
 
-        if kin_struct is None:
-            raise ValueError("KinStruct fehlt! Übergib kin_struct beim Erstellen des PlotFrames.")
-
         self.kin_struct = kin_struct
+        self.geo_struct = geo_struct
+        self.path_struct = path_struct
         self.plot_configs = plot_configs or {}
         self.default_plot = default_plot
         self.title = title
@@ -93,47 +94,41 @@ class PlotFrame(ttk.Frame):
     # ------------------------------------------------------
 
     def plot_path(self):
-        data = self._load_data()
+        data = self.path_struct.trajectory
 
         x = [p.x for p in data]
         y = [p.y for p in data]
         z = [p.z for p in data]
 
         self.ax.plot(x, y, z)
-        self.ax.set_title("TCP Path")
-        self.ax.set_xlabel("X")
-        self.ax.set_ylabel("Y")
-        self.ax.set_zlabel("Z")
         self.canvas.draw()
 
     # ------------------------------------------------------
 
     def plot_vel(self):
-        data = self._load_data()
+        data = self.kin_struct.trajectory
 
         t = [p.t for p in data]
         vx = [p.vx for p in data]
         vy = [p.vy for p in data]
         vz = [p.vz for p in data]
 
-        self.ax.plot(t, vx, label="vx")
-        self.ax.plot(t, vy, label="vy")
-        self.ax.plot(t, vz, label="vz")
+        self.ax.plot(t, vx)
+        self.ax.plot(t, vy)
+        self.ax.plot(t, vz)
 
-        self.ax.set_title("Geschwindigkeit über Zeit")
-        self.ax.set_xlabel("t")
-        self.ax.set_ylabel("v")
-        self.ax.legend()
         self.canvas.draw()
 
     # ------------------------------------------------------
 
     def plot_geometry(self):
-        self.ax.set_title("Geometrie Plot")
-        self.ax.text2D(
-            0.3,
-            0.5,
-            "Geometrie folgt später",
-            transform=self.ax.transAxes
-        )
+        geo = self.geo_struct
+
+        self.ax.set_title("Geometrie")
+
+        for name, motor in geo.motors.items():
+            x, y, z = motor.position
+            self.ax.scatter(x, y, z, label=name)
+
+        self.ax.legend()
         self.canvas.draw()
