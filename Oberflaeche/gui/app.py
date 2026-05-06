@@ -1,9 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from Oberflaeche.gui.tabs.tab_geometrie import GeometrieTab
-from Oberflaeche.gui.tabs.tab_pathdef import PathDefTab
-from Oberflaeche.gui.tabs.tab_export import ExportTab
+from Oberflaeche.gui.designelemente.input_tabgroup import InputTabGroup
 from Oberflaeche.gui.designelemente.plot_frames import PlotFrame
 from Oberflaeche.help_functions.struct_kin_data import write_kin_struct
 
@@ -24,19 +22,11 @@ class App(tk.Tk):
         main_frame.columnconfigure(1, weight=2)
         main_frame.rowconfigure(0, weight=1)
 
-        notebook = ttk.Notebook(main_frame)
-        notebook.grid(row=0, column=0, sticky="nsew")
+        self.input_tabgroup = InputTabGroup(main_frame)
+        self.input_tabgroup.grid(row=0, column=0, sticky="nsew")
 
         plot_area = ttk.Frame(main_frame, padding=10)
         plot_area.grid(row=0, column=1, sticky="nsew")
-
-        self.tab_geometrie = GeometrieTab(notebook)
-        self.tab_pathdef = PathDefTab(notebook)
-        self.tab_export = ExportTab(notebook)
-
-        notebook.add(self.tab_geometrie, text="Geometrie")
-        notebook.add(self.tab_pathdef, text="Path Definition")
-        notebook.add(self.tab_export, text="Export")
 
         self.plot_frame = PlotFrame(
             plot_area,

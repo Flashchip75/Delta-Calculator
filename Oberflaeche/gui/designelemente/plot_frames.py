@@ -1,5 +1,4 @@
 import os
-import json
 import tkinter as tk
 from tkinter import ttk
 
@@ -14,72 +13,51 @@ class PlotFrame(ttk.Frame):
         if kin_struct is None:
             raise ValueError("KinStruct fehlt! Übergib kin_struct beim Erstellen des PlotFrames.")
 
-        self.kin_struct = kin_struct  # 👈 Pflicht
-
+        self.kin_struct = kin_struct
         self.plot_configs = plot_configs or {}
         self.default_plot = default_plot
         self.title = title
 
-        self.selected_plot = tk.StringVar()
+        self.figures = {}
+        self.axes = {}
+        self.canvases = {}
 
-        self._build_toolbar()
-        self._build_canvas()
-        self._init_default_plot()
-
-    # ------------------------------------------------------
-
-    # ------------------------------------------------------
-    # ------------------- Rechte Plotseite Widget -----------------------------
-    # ------------------------------------------------------
-
-    def _get_default_filepath(self):
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-
-        base_dir = os.path.dirname(os.path.dirname(current_dir))
-
-        return os.path.join(base_dir, "delta_robot_testfahrt.json")
+        self._build_plot_tabs()
+        self._init_plots()
 
     # ------------------------------------------------------
 
-    def _build_toolbar(self):
-        toolbar = ttk.Frame(self)
-        toolbar.pack(fill="x", padx=5, pady=5)
+    def _build_plot_tabs(self):
+        self.notebook = ttk.Notebook(self)
+        self.notebook.pack(fill="both", expand=True)
 
-        ttk.Label(toolbar, text="Plot:").pack(side="left", padx=(0, 5))
+        for plot_name, config in self.plot_configs.items():
+            tab = ttk.Frame(self.notebook)
+            self.notebook.add(tab, text=plot_name)
 
-        self.plot_selector = ttk.Combobox(
-            toolbar,
-            textvariable=self.selected_plot,
-            values=list(self.plot_configs.keys()),
-            state="readonly"
-        )
-        self.plot_selector.pack(side="left", fill="x", expand=True)
-        self.plot_selector.bind("<<ComboboxSelected>>", self._on_plot_change)
+            figure = Figure(figsize=(6, 5), dpi=100)
 
-    # ------------------------------------------------------
+            if config.get("is_3d", False):
+                ax = figure.add_subplot(111, projection="3d")
+            else:
+                ax = figure.add_subplot(111)
 
-    def _build_canvas(self):
-        self.figure = Figure(figsize=(6, 5), dpi=100)
-        self.ax = self.figure.add_subplot(111)
+            canvas = FigureCanvasTkAgg(figure, master=tab)
+            canvas.get_tk_widget().pack(fill="both", expand=True)
 
-        self.canvas = FigureCanvasTkAgg(self.figure, master=self)
-        self.canvas.draw()
-        self.canvas.get_tk_widget().pack(fill="both", expand=True)
+            self.figures[plot_name] = figure
+            self.axes[plot_name] = ax
+            self.canvases[plot_name] = canvas
 
     # ------------------------------------------------------
 
-    def _init_default_plot(self):
-        if not self.plot_configs:
-            return
+    def _init_plots(self):
+        for plot_name in self.plot_configs:
+            self.show_plot(plot_name)
 
-        plot_name = self.default_plot or next(iter(self.plot_configs))
-        self.selected_plot.set(plot_name)
-        self.show_plot(plot_name)
-
-    # ------------------------------------------------------
-
-    def _on_plot_change(self, _event=None):
-        self.show_plot(self.selected_plot.get())
+        if self.default_plot in self.plot_configs:
+            index = list(self.plot_configs.keys()).index(self.default_plot)
+            self.notebook.select(index)
 
     # ------------------------------------------------------
 
@@ -88,17 +66,19 @@ class PlotFrame(ttk.Frame):
         if not config:
             return
 
-        self._set_axes(is_3d=config.get("is_3d", False))
+        self.figure = self.figures[plot_name]
+        self.ax = self.axes[plot_name]
+        self.canvas = self.canvases[plot_name]
+
+        self.ax.clear()
+
         getattr(self, config["method"])()
 
     # ------------------------------------------------------
 
-    def _set_axes(self, is_3d=False):
-        self.figure.clf()
-        if is_3d:
-            self.ax = self.figure.add_subplot(111, projection="3d")
-        else:
-            self.ax = self.figure.add_subplot(111)
+    def refresh_all(self):
+        for plot_name in self.plot_configs:
+            self.show_plot(plot_name)
 
     # ------------------------------------------------------
 
@@ -108,16 +88,16 @@ class PlotFrame(ttk.Frame):
 
         return self.kin_struct.trajectory
 
-# ------------------------------------------------------
-#------------------- Plot options -----------------------------
-# ------------------------------------------------------
+    # ------------------------------------------------------
+    # Plot options
+    # ------------------------------------------------------
 
     def plot_path(self):
         data = self._load_data()
 
-        x = [p["x"] for p in data]
-        y = [p["y"] for p in data]
-        z = [p["z"] for p in data]
+        x = [p.x for p in data]
+        y = [p.y for p in data]
+        z = [p.z for p in data]
 
         self.ax.plot(x, y, z)
         self.ax.set_title("TCP Path")
@@ -125,7 +105,6 @@ class PlotFrame(ttk.Frame):
         self.ax.set_ylabel("Y")
         self.ax.set_zlabel("Z")
         self.canvas.draw()
-
 
     # ------------------------------------------------------
 
@@ -146,9 +125,15 @@ class PlotFrame(ttk.Frame):
         self.ax.set_ylabel("v")
         self.ax.legend()
         self.canvas.draw()
+
     # ------------------------------------------------------
 
     def plot_geometry(self):
         self.ax.set_title("Geometrie Plot")
-        self.ax.text2D(0.3, 0.5, "Geometrie folgt später", transform=self.ax.transAxes)
+        self.ax.text2D(
+            0.3,
+            0.5,
+            "Geometrie folgt später",
+            transform=self.ax.transAxes
+        )
         self.canvas.draw()
