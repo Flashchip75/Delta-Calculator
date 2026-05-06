@@ -29,7 +29,7 @@ class ArucoDetector:
         self._detector  = aruco.ArucoDetector(dictionary)
         self._visRec       = cfg.cVision.visiualisations["Rectangle"]
         self._visCirc      = cfg.cVision.visiualisations["Circle"]
-        self._visText      = cfg.cVision.visiualisations["Text"]
+        self._visText      = cfg.cVision.visiualisations["MarkerText"]
 
     def process(self, source: str | NDArray) -> tuple[DetectionList, NDArray]:
         """
