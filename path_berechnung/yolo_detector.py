@@ -53,20 +53,20 @@ class YoloDetector:
     def _drawDetections(self, source: NDArray, detections: DetectionList) -> NDArray:
         display = source.copy()
 
-        colorRec        = self._vis["colorRec"]
-        thicknessRec    = self._vis["thicknessRec"]
-        colorCirc       = self._vis["colorCirc"]
-        thicknessCirc   = self._vis["thicknessCirc"]
-        radiusCirc      = self._vis["radiusCirc"]
-        
+        colorRecVal         = self._vis["colorRecVal"]
+        thicknessRecVal     = self._vis["thicknessRecVal"]
+        colorCircVal        = self._vis["colorCircVal"]
+        thicknessCircVal    = self._vis["thicknessCircVal"]
+        radiusCircVal       = self._vis["radiusCircVal"]
+
         for d in detections:
             x, y, w, h = cast(tuple[int, int, int, int], d["box"])
             cx, cy = cast(tuple[int, int], d["center"])
             cv2.rectangle(display,
                         (x - w // 2, y - h // 2),
                         (x + w // 2, y + h // 2),
-                        colorRec, thicknessRec)
-            cv2.circle(display, (cx, cy), radiusCirc, colorCirc, thicknessCirc)
+                        colorRecVal, thicknessRecVal)
+            cv2.circle(display, (cx, cy), radiusCircVal, colorCircVal, -thicknessCircVal)
         return display
     
     def displayResults(self, display: NDArray) -> None:
