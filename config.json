@@ -35,6 +35,7 @@
     "calibration_norm_m": 1,
     "calibration_id": 0,
     "model_path": "models/yolo26n.pt",
+    "conf_threshold": 0.5,
     "visiualisations":{
       "Rectangle": {
         "colorVal": [0, 255, 0],

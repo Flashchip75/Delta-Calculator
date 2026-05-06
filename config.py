@@ -64,8 +64,9 @@ class VisionConfig:
     calibration_source: str         # Bildquelle für Kalibrierung
     calibration_norm_m: int         # Referenzlänge in m für Kalibrierung
     calibration_id: int             # ArUco-Marker-ID für Kalibrierung
-    model_path:          str        # Pfad zum YOLO-Modell
-    visiualisations:     dict       # Farben und Stärken für Bounding Boxes und Kreise
+    model_path: str                 # Pfad zum YOLO-Modell
+    conf_threshold: float           # Mindestvertrauen für YOLO-Erkennung
+    visiualisations: dict           # Farben und Stärken für Bounding Boxes und Kreise
 
 @dataclass
 class MotorConfig:
@@ -189,6 +190,7 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         calibration_norm_m      = _require(cv, "calibration_norm_m",    "cVision"),
         calibration_id          = _require(cv, "calibration_id",        "cVision"),
         model_path              = _require(cv, "model_path",            "cVision"),
+        conf_threshold          = _require(cv, "conf_threshold",        "cVision"),
         visiualisations         = _require(cv, "visiualisations",       "cVision"),
     )
 
