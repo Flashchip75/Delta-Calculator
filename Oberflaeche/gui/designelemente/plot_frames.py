@@ -8,10 +8,14 @@ from matplotlib.figure import Figure
 
 
 class PlotFrame(ttk.Frame):
-    def __init__(self, parent, filepath=None, plot_configs=None, default_plot=None, title="Plot"):
+    def __init__(self, parent, plot_configs=None, default_plot=None, title="Plot", kin_struct=None):
         super().__init__(parent)
 
-        self.filepath = filepath or self._get_default_filepath()
+        if kin_struct is None:
+            raise ValueError("KinStruct fehlt! Übergib kin_struct beim Erstellen des PlotFrames.")
+
+        self.kin_struct = kin_struct  # 👈 Pflicht
+
         self.plot_configs = plot_configs or {}
         self.default_plot = default_plot
         self.title = title
@@ -99,8 +103,10 @@ class PlotFrame(ttk.Frame):
     # ------------------------------------------------------
 
     def _load_data(self):
-        with open(self.filepath, "r", encoding="utf-8") as f:
-            return json.load(f)
+        if self.kin_struct is None:
+            raise ValueError("Kein KinStruct vorhanden!")
+
+        return self.kin_struct.trajectory
 
 # ------------------------------------------------------
 #------------------- Plot options -----------------------------
@@ -126,20 +132,20 @@ class PlotFrame(ttk.Frame):
     def plot_vel(self):
         data = self._load_data()
 
-        t = [p["t"] for p in data]
-        vx = [p["vx"] for p in data]
-        vy = [p["vy"] for p in data]
-        vz = [p["vz"] for p in data]
+        t = [p.t for p in data]
+        vx = [p.vx for p in data]
+        vy = [p.vy for p in data]
+        vz = [p.vz for p in data]
 
         self.ax.plot(t, vx, label="vx")
         self.ax.plot(t, vy, label="vy")
         self.ax.plot(t, vz, label="vz")
+
         self.ax.set_title("Geschwindigkeit über Zeit")
         self.ax.set_xlabel("t")
         self.ax.set_ylabel("v")
         self.ax.legend()
         self.canvas.draw()
-
     # ------------------------------------------------------
 
     def plot_geometry(self):
