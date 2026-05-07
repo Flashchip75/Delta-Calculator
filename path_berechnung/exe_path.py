@@ -22,6 +22,7 @@ class exePath:
           1. p1 & p2 given directly           -> use as-is
           2. source given                     -> try ArUco, fallback to YOLO
           3. neither                          -> raise ValueError
+          4.
         """
 
         # 1. Geometrie
