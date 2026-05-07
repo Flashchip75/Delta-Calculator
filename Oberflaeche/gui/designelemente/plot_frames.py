@@ -12,6 +12,7 @@ class PlotFrame(ttk.Frame):
 
         super().__init__(parent)
 
+# Datahandling anpassen auf Klassen und Objektlogik
         self.kin_struct = kin_struct
         self.geo_struct = geo_struct
         self.path_struct = path_struct
@@ -28,6 +29,7 @@ class PlotFrame(ttk.Frame):
 
     # ------------------------------------------------------
 
+# Aufbau der Tabstruktur für Widget
     def _build_plot_tabs(self):
         self.notebook = ttk.Notebook(self)
         self.notebook.pack(fill="both", expand=True)
@@ -52,6 +54,7 @@ class PlotFrame(ttk.Frame):
 
     # ------------------------------------------------------
 
+# initialisierung der Plots
     def _init_plots(self):
         for plot_name in self.plot_configs:
             self.show_plot(plot_name)
@@ -62,6 +65,7 @@ class PlotFrame(ttk.Frame):
 
     # ------------------------------------------------------
 
+# Anzeigen des gewählten Plots
     def show_plot(self, plot_name):
         config = self.plot_configs.get(plot_name)
         if not config:
@@ -77,12 +81,14 @@ class PlotFrame(ttk.Frame):
 
     # ------------------------------------------------------
 
+# Aktualisieren aller Plots
     def refresh_all(self):
         for plot_name in self.plot_configs:
             self.show_plot(plot_name)
 
     # ------------------------------------------------------
 
+# Daten laden aus struktur mit zukünftige Datahandling über Klasse
     def _load_data(self):
         if self.kin_struct is None:
             raise ValueError("Kein KinStruct vorhanden!")
@@ -93,6 +99,7 @@ class PlotFrame(ttk.Frame):
     # Plot options
     # ------------------------------------------------------
 
+# Plottet pfad auf 3d Axis
     def plot_path(self):
         data = self.path_struct.trajectory
 
@@ -105,6 +112,7 @@ class PlotFrame(ttk.Frame):
 
     # ------------------------------------------------------
 
+# plotte geschwindigkeit auf 2d plot
     def plot_vel(self):
         data = self.kin_struct.trajectory
 
@@ -121,6 +129,7 @@ class PlotFrame(ttk.Frame):
 
     # ------------------------------------------------------
 
+# Zeigt provisorisch die Position der Motoren im Raum
     def plot_geometry(self):
         geo = self.geo_struct
 

@@ -1,6 +1,8 @@
 from tkinter import ttk
 from Oberflaeche.gui.tabs.tab_base import BaseTab
 
+# Eingabetab links zur Pfaddefinition
+
 class PathDefTab(BaseTab):
     def build_left(self):
         ttk.Label(self.left_frame, text="Pfad").pack(anchor="w")

@@ -17,9 +17,12 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
+# Erstellung der generellen Struktur der App
+
         self.title("Delta Roboter GUI")
         self.geometry("1200x700")
 
+# Erstellung der dataclass unnötig nach anpassen der logik auf Klassen
         self.geo_struct = write_geo_struct()
         self.kin_struct = write_kin_struct("delta_robot_testfahrt.json")
         self.path_struct = write_path_struct("delta_robot_testfahrt.json")
@@ -32,7 +35,7 @@ class App(tk.Tk):
         main_frame.rowconfigure(0, weight=1)
 
 
-        # Left side tabgroup
+        # Left side tabgroup (Eigaben)
         self.input_tabgroup = InputTabGroup(main_frame)
         self.input_tabgroup.grid(row=0, column=0, sticky="nsew")
 
@@ -52,5 +55,5 @@ class App(tk.Tk):
             kin_struct=self.kin_struct,
             geo_struct=self.geo_struct,
             path_struct=self.path_struct,
-        )
+        ) # Erstellen und setzten des Plotframe widget auf rechte Seite
         self.plot_frame.pack(fill="both", expand=True)
