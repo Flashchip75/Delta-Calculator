@@ -52,18 +52,22 @@ class PathConfig:
     points: int                     # Anzahl Stützpunkte
     gain: float                     # Blend-Gain
     blend: float                    # Übergangsradius
-    scale_m: float                  # Skalierungsfaktor mm -> m (0.001)
-    offset_mm: int                  # Offset in mm, um Ursprung zu verschieben (z.B. 1000 für 1m über Boden)
+    scale_m: float                  # Skalierungsfaktor m -> m (0.001)
+    offset_m: int                   # Offset in m, um Ursprung zu verschieben (z.B. 1000 für 1m über Boden)
+    path_profiles: str              # Dateiname der Pfadgeometrie-Profile (relativ zum Projekt-Root)
 
 @dataclass
 class VisionConfig:
     """Vision-spezifische Parameter -> JSON-Sektion 'cVision'."""
     reCalibration: bool             # Bei True: Kalibrierung vor Erkennung durchführen
     aruco_dict: str                 # ArUco-Dict für Erkennung
-    mmToPixel: float                # Gespeicherter px/mm-Wert (verwendet wenn reCalibration=False)
+    mToPixel: float                 # Gespeicherter px/m-Wert (verwendet wenn reCalibration=False)
     calibration_source: str         # Bildquelle für Kalibrierung
-    calibration_norm_mm: int        # Referenzlänge in mm für Kalibrierung
+    calibration_norm_m: int         # Referenzlänge in m für Kalibrierung
     calibration_id: int             # ArUco-Marker-ID für Kalibrierung
+    model_path: str                 # Pfad zum YOLO-Modell
+    conf_threshold: float           # Mindestvertrauen für YOLO-Erkennung
+    visiualisations: dict           # Farben und Stärken für Bounding Boxes und Kreise
 
 @dataclass
 class MotorConfig:
@@ -171,21 +175,25 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
     )
 
     path_cfg = PathConfig(
-        duration_s = _require(p, "duration_s", "path"),
-        points     = _require(p, "points",     "path"),
-        gain       = _require(p, "gain",       "path"),
-        blend      = _require(p, "blend",      "path"),
-        scale_m    = _require(p, "scale_m",    "path"),
-        offset_mm  = _require(p, "offset_mm",  "path"),
+        duration_s      = _require(p, "duration_s",     "path"),
+        points          = _require(p, "points",         "path"),
+        gain            = _require(p, "gain",           "path"),
+        blend           = _require(p, "blend",          "path"),
+        scale_m         = _require(p, "scale_m",        "path"),
+        offset_m        = _require(p, "offset_m",       "path"),
+        path_profiles   = _require(p, "path_profiles",  "path"),
     )
 
     vision_cfg = VisionConfig(
-        reCalibration         = _require(cv, "reCalibration",         "cVision"),
-        aruco_dict            = _require(cv, "aruco_dict",            "cVision"),
-        mmToPixel             = _require(cv, "mmToPixel",             "cVision"),
-        calibration_source    = _require(cv, "calibration_source",    "cVision"),
-        calibration_norm_mm   = _require(cv, "calibration_norm_mm",   "cVision"),
-        calibration_id        = _require(cv, "calibration_id",        "cVision"),
+        reCalibration           = _require(cv, "reCalibration",         "cVision"),
+        aruco_dict              = _require(cv, "aruco_dict",            "cVision"),
+        mToPixel                = _require(cv, "mToPixel",              "cVision"),
+        calibration_source      = _require(cv, "calibration_source",    "cVision"),
+        calibration_norm_m      = _require(cv, "calibration_norm_m",    "cVision"),
+        calibration_id          = _require(cv, "calibration_id",        "cVision"),
+        model_path              = _require(cv, "model_path",            "cVision"),
+        conf_threshold          = _require(cv, "conf_threshold",        "cVision"),
+        visiualisations         = _require(cv, "visiualisations",       "cVision"),
     )
 
     motors_cfg = MotorsConfig(
