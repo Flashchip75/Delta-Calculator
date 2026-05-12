@@ -1,12 +1,19 @@
-from tkinter import ttk
 from Oberflaeche.gui.tabs.tab_base import BaseTab
+from Oberflaeche.gui.designelemente.geo_input import GeoInput
 from Oberflaeche.gui.designelemente.plot_frames import PlotFrame
+from Oberflaeche.help_functions.struct_geo_data import GeoData
 
 
 class GeometrieTab(BaseTab):
+    def __init__(self, parent):
+        self.plot_frame = None
+        self.geo_input = None
+        self.geo_data = GeoData()
+        super().__init__(parent)
+
     def build_left(self):
-        ttk.Label(self.left_frame, text="Geometrie").pack(anchor="w")
-        ttk.Label(self.left_frame, text="Eingaben").pack(anchor="w")
+        self.geo_input = GeoInput(self.left_frame, self.geo_data)
+        self.geo_input.pack(fill="both", expand=True, anchor="n")
 
     def build_right(self):
         self.plot_frame = PlotFrame(
