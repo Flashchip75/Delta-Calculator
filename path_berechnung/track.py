@@ -59,5 +59,9 @@ class Trajectory:
         # Erzeuge eine kombinierte Punktewolke für die gesamte Trajektorie
         if self.segments:
             self.cloud = np.vstack([seg["cloud"] for seg in self.segments])
+            # Duplikate entfernen
+            diff = np.linalg.norm(np.diff(self.cloud, axis=0), axis=1)
+            mask = np.insert(diff > 1e-9, 0, True)
+            self.cloud = self.cloud[mask]
         else:
             self.cloud = np.array([])
