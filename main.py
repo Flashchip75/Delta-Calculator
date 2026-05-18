@@ -6,18 +6,19 @@ import path_berechnung.exe_path as exeP
 
 def main():
     print("=== Starte Pfadberechnung ===")
-    mode = "geometry"
+    mode = "gcode"
 
-    jData = "profile_3"
     p1 = [0.4, 0.4, -1]
     p2 = [-0.4, -0.4, -0.5]
     source = "media/test2.png"
+    gcode = "test.gcode"
 
     # --- Switch ---
     kwargs = {
-        "geometry": dict(geometry=jData),
+        "geometry": dict(geometry=source),
         "points":   dict(p1=p1, p2=p2),
-        "cvision":   dict(source=source),
+        "cvision":  dict(source=source),
+        "gcode":    dict(gcode=gcode),
     }
 
     g = cfg.global_cfg
