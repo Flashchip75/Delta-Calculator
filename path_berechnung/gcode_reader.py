@@ -7,7 +7,7 @@ def read_gcode(filepath) -> list:
 class gcode_reader:
     def __init__(self, filepath: str):
         self.filepath = filepath
-        self._unit_scale: float = 0.001  # default: mm → m
+        self._unit_scale: float = 0.001  # default: mm -> m
 
     def gcode_to_profile(self) -> list:
         with open(self.filepath) as f:
@@ -19,11 +19,11 @@ class gcode_reader:
         for l in parser.lines:
             # Track unit mode as it changes throughout the file
             if l.command == ("G", 21):
-                self._unit_scale = 0.001   # mm → m
+                self._unit_scale = 0.001   # mm -> m
                 print("G21: Units set to mm")
                 continue
             if l.command == ("G", 20):
-                self._unit_scale = 0.0254  # inch → m
+                self._unit_scale = 0.0254  # inch -> m
                 print("G20: Units set to inch")
                 continue
 
