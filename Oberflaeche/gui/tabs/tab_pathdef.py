@@ -8,8 +8,8 @@ from Oberflaeche.gui.designelemente.custom_widgets.grouping_widgets import *
 
 class PathDefTab(BaseTab):
     def build_left(self):
-        ttk.Label(self.left_frame, text="Pfad").pack(anchor="w")
-        ttk.Label(self.left_frame, text="Eingaben").pack(anchor="w")
+        ttk.Label(self, text="Pfad").pack(anchor="w")
+        ttk.Label(self, text="Eingaben").pack(anchor="w")
 
         # Example variable and lambda function for writing properties to arbitrary locations
         self.x_test = (10, 20)
@@ -32,20 +32,20 @@ class PathDefTab(BaseTab):
 
             folder.unlock()
 
-        num_line4 = NumberLine(self.left_frame, "Pos4", 4, uc.UnitLength(), defaults=(1, 2, 3, 4))
+        num_line4 = NumberLine(self, "Pos4", 4, uc.UnitLength(), defaults=(1, 2, 3, 4))
         num_line4.pack(fill=tk.X)
-        num_line3 = NumberLine(self.left_frame, "Pos3", 3, uc.UnitTime(), colored=True, onLineChangedFunction=printAction)
+        num_line3 = NumberLine(self, "Pos3", 3, uc.UnitTime(), colored=True, onLineChangedFunction=printAction)
         num_line3.pack(fill=tk.X)
-        num_line2 = NumberLine(self.left_frame, "Pos2", 2, uc.UnitVelocity(), writePropertiesFunction=write_x)
+        num_line2 = NumberLine(self, "Pos2", 2, uc.UnitVelocity(), writePropertiesFunction=write_x)
         num_line2.pack(fill=tk.X)
-        num_line1 = NumberLine(self.left_frame, "Pos1", 1, colored=True, colorShift=0.5)
+        num_line1 = NumberLine(self, "Pos1", 1, colored=True, colorShift=0.5)
         num_line1.pack(fill=tk.X)
-        blank_line = PropertyLine(self.left_frame, "Blank")
+        blank_line = PropertyLine(self, "Blank")
         blank_line.pack(fill=tk.X)
-        int_line = IncrementorLine(self.left_frame, "Int")
+        int_line = IncrementorLine(self, "Int")
         int_line.pack(fill=tk.X)
 
-        folder = FolderFrame(self.left_frame, "Folder", False, True)
+        folder = FolderFrame(self, "Folder", False, True)
         folder.pack(fill=tk.X)
         subframe = folder.contentFrame
 
@@ -59,7 +59,7 @@ class PathDefTab(BaseTab):
         dict_line.pack(fill=tk.X)
 
         printButton = tk.Button(
-            self.left_frame,
+            self,
             text="Print",
             command=printAction,
         )

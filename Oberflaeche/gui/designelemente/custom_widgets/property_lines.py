@@ -84,7 +84,7 @@ class NumberLine(PropertyLine):
         # (Needed for filling a given width with multiple fields)
         self.inputContainer = tk.Frame(
             self,
-            bg="#000000",
+            bg="#ffffff",
             width=150,
             name="lineInputFrame(" + labelText.replace(" ", "_") + ")"
         )
@@ -147,7 +147,7 @@ class IncrementorLine(PropertyLine):
         # (Needed for filling a given width with multiple fields)
         self.inputContainer = tk.Frame(
             self,
-            bg="#000000",
+            bg="#ffffff",
             width=150,
             name="lineInputFrame(" + labelText.replace(" ", "_") + ")"
         )
@@ -238,7 +238,7 @@ class TextLine(PropertyLine):
         # (Needed for filling a given width with multiple fields)
         self.inputContainer = tk.Frame(
             self,
-            bg="#000000",
+            bg="#ffffff",
             width=221,
             name="lineInputFrame(" + labelText.replace(" ", "_") + ")"
         )
@@ -283,7 +283,7 @@ class DropdownLine(PropertyLine):
         # (Needed for filling a given width with multiple fields)
         self.inputContainer = tk.Frame(
             self,
-            bg="#000000",
+            bg="#ffffff",
             width=221,
             name="lineInputFrame(" + labelText.replace(" ", "_") + ")"
         )
