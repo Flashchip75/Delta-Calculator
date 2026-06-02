@@ -188,11 +188,13 @@ class Visualizer:
     def plot_motor_angles(self, all_results):
         omega_all = self.dynamics_solver.compute_all_motor_omega(all_results)
         alpha_all = self.dynamics_solver.compute_all_motor_alpha(omega_all)
+        torque_all = self.dynamics_solver.compute_all_motor_torque(all_results, alpha_all)
 
         t = []
         phi_1, phi_2, phi_3 = [], [], []
         omega_1, omega_2, omega_3 = [], [], []
         alpha_1, alpha_2, alpha_3 = [], [], []
+        M_1, M_2, M_3 = [], [], []
 
         for i, results in enumerate(all_results):
             t.append(self.trajectory.points[i]["time"])
@@ -209,58 +211,11 @@ class Visualizer:
             alpha_2.append(alpha_all[i][1])
             alpha_3.append(alpha_all[i][2])
 
-        fig, axs = plt.subplots(3, 1, figsize=(10, 10), sharex=True)
+            M_1.append(torque_all[i][0])
+            M_2.append(torque_all[i][1])
+            M_3.append(torque_all[i][2])
 
-        axs[0].plot(t, phi_1, label="phi_1")
-        axs[0].plot(t, phi_2, label="phi_2")
-        axs[0].plot(t, phi_3, label="phi_3")
-        axs[0].set_ylabel("Winkel [rad]")
-        axs[0].grid()
-        axs[0].legend()
-
-        axs[1].plot(t, omega_1, label="omega_1")
-        axs[1].plot(t, omega_2, label="omega_2")
-        axs[1].plot(t, omega_3, label="omega_3")
-        axs[1].set_ylabel("omega [rad/s]")
-        axs[1].grid()
-        axs[1].legend()
-
-        axs[2].plot(t, alpha_1, label="alpha_1")
-        axs[2].plot(t, alpha_2, label="alpha_2")
-        axs[2].plot(t, alpha_3, label="alpha_3")
-        axs[2].set_ylabel("alpha [rad/s²]")
-        axs[2].set_xlabel("t [s]")
-        axs[2].grid()
-        axs[2].legend()
-
-        plt.tight_layout()
-        # plt.show()
-
-    def save_motor_angles_plot(self, all_results, filename="motor_angles.png"):
-        omega_all = self.dynamics_solver.compute_all_motor_omega(all_results)
-        alpha_all = self.dynamics_solver.compute_all_motor_alpha(omega_all)
-
-        t = []
-        phi_1, phi_2, phi_3 = [], [], []
-        omega_1, omega_2, omega_3 = [], [], []
-        alpha_1, alpha_2, alpha_3 = [], [], []
-
-        for i, results in enumerate(all_results):
-            t.append(self.trajectory.points[i]["time"])
-
-            phi_1.append(results[0]["angle_rad"] if results[0]["reachable"] else np.nan)
-            phi_2.append(results[1]["angle_rad"] if results[1]["reachable"] else np.nan)
-            phi_3.append(results[2]["angle_rad"] if results[2]["reachable"] else np.nan)
-
-            omega_1.append(omega_all[i][0])
-            omega_2.append(omega_all[i][1])
-            omega_3.append(omega_all[i][2])
-
-            alpha_1.append(alpha_all[i][0])
-            alpha_2.append(alpha_all[i][1])
-            alpha_3.append(alpha_all[i][2])
-
-        fig, axs = plt.subplots(3, 1, figsize=(10, 10), sharex=True)
+        fig, axs = plt.subplots(4, 1, figsize=(10, 12), sharex=True)
 
         axs[0].plot(t, phi_1, label="phi_1")
         axs[0].plot(t, phi_2, label="phi_2")
@@ -282,10 +237,87 @@ class Visualizer:
         axs[2].plot(t, alpha_2, label="alpha_2")
         axs[2].plot(t, alpha_3, label="alpha_3")
         axs[2].set_ylabel("alpha [rad/s²]")
-        axs[2].set_xlabel("t [s]")
         axs[2].set_title("Winkelbeschleunigung")
         axs[2].grid(True)
         axs[2].legend()
+
+        axs[3].plot(t, M_1, label="M_1")
+        axs[3].plot(t, M_2, label="M_2")
+        axs[3].plot(t, M_3, label="M_3")
+        axs[3].set_ylabel("M [Nm]")
+        axs[3].set_xlabel("t [s]")
+        axs[3].set_title("Motordrehmoment")
+        axs[3].grid(True)
+        axs[3].legend()
+
+        plt.tight_layout()
+        # plt.show()
+
+
+    def save_motor_angles_plot(self, all_results, filename="motor_angles.png"):
+        omega_all = self.dynamics_solver.compute_all_motor_omega(all_results)
+        alpha_all = self.dynamics_solver.compute_all_motor_alpha(omega_all)
+        torque_all = self.dynamics_solver.compute_all_motor_torque(all_results, alpha_all)
+
+        t = []
+        phi_1, phi_2, phi_3 = [], [], []
+        omega_1, omega_2, omega_3 = [], [], []
+        alpha_1, alpha_2, alpha_3 = [], [], []
+        M_1, M_2, M_3 = [], [], []
+
+        for i, results in enumerate(all_results):
+            t.append(self.trajectory.points[i]["time"])
+
+            phi_1.append(results[0]["angle_rad"] if results[0]["reachable"] else np.nan)
+            phi_2.append(results[1]["angle_rad"] if results[1]["reachable"] else np.nan)
+            phi_3.append(results[2]["angle_rad"] if results[2]["reachable"] else np.nan)
+
+            omega_1.append(omega_all[i][0])
+            omega_2.append(omega_all[i][1])
+            omega_3.append(omega_all[i][2])
+
+            alpha_1.append(alpha_all[i][0])
+            alpha_2.append(alpha_all[i][1])
+            alpha_3.append(alpha_all[i][2])
+
+            M_1.append(torque_all[i][0])
+            M_2.append(torque_all[i][1])
+            M_3.append(torque_all[i][2])
+
+        fig, axs = plt.subplots(4, 1, figsize=(10, 12), sharex=True)
+
+        axs[0].plot(t, phi_1, label="phi_1")
+        axs[0].plot(t, phi_2, label="phi_2")
+        axs[0].plot(t, phi_3, label="phi_3")
+        axs[0].set_ylabel("phi [rad]")
+        axs[0].set_title("Motorwinkel")
+        axs[0].grid(True)
+        axs[0].legend()
+
+        axs[1].plot(t, omega_1, label="omega_1")
+        axs[1].plot(t, omega_2, label="omega_2")
+        axs[1].plot(t, omega_3, label="omega_3")
+        axs[1].set_ylabel("omega [rad/s]")
+        axs[1].set_title("Winkelgeschwindigkeit")
+        axs[1].grid(True)
+        axs[1].legend()
+
+        axs[2].plot(t, alpha_1, label="alpha_1")
+        axs[2].plot(t, alpha_2, label="alpha_2")
+        axs[2].plot(t, alpha_3, label="alpha_3")
+        axs[2].set_ylabel("alpha [rad/s²]")
+        axs[2].set_title("Winkelbeschleunigung")
+        axs[2].grid(True)
+        axs[2].legend()
+
+        axs[3].plot(t, M_1, label="M_1")
+        axs[3].plot(t, M_2, label="M_2")
+        axs[3].plot(t, M_3, label="M_3")
+        axs[3].set_ylabel("M [Nm]")
+        axs[3].set_xlabel("t [s]")
+        axs[3].set_title("Motordrehmoment")
+        axs[3].grid(True)
+        axs[3].legend()
 
         fig.tight_layout()
 

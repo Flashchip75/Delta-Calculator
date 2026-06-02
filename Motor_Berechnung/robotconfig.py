@@ -76,7 +76,11 @@ class RobotConfig:
             "lower_mass": float(motor_data["lower_mass"]),
             "theta_min": float(motor_data["theta_min"]),
             "theta_max": float(motor_data["theta_max"]),
-            "i": int(motor_data.get("i", 0)),
+            "i": int(motor_data["i"]),
+        
+            "eta": float(motor_data.get("eta", 0.85)),
+            "Jm": float(motor_data.get("Jm", 0.0)),
+            "Jg": float(motor_data.get("Jg", 0.0))
         }
 
     def create_motors_object(self, motors_data):
