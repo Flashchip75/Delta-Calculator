@@ -1,94 +1,77 @@
-import json
 import numpy as np
 from math_utilities import unit
 
 class RobotConfig:
-    def __init__(self, config_path):
-        config_data = self.load_json(config_path)
+    def __init__(self, config_path=None):
+        self.global_data = {
+            "gravity": np.array([0.0, 0.0, -9.81], dtype=float),
+            "mass_kg": 1.0,
+            "payload_mass": 0.100,
+            "singularity_margin_deg": 5.0,
+            "trajectory_csv": "woelke.csv",
+            "output_dir": "output"
+        }
 
-        self.global_data = self.create_global_object(config_data["global"])
-        self.workspace = self.create_workspace_object(config_data["workspace"])
-        # Zentrumsbestimmung vor den Motoren (wird für "AUTO" axis benötigt)
-        positions = [
-            self.create_vector_object_from_list(config_data["motors"][m]["position"], f"motors.{m}.position")
-            for m in ["A", "B", "C"]
+        self.workspace = {
+            "resolution": 25,
+            "range_x": {"min": -0.4, "max": 0.4},
+            "range_y": {"min": -0.4, "max": 0.4},
+            "range_z": {"min": -1.3, "max": -0.1}
+        }
+
+        pos_A = np.array([0.900, 0.000, 1.500], dtype=float)
+        pos_B = np.array([-0.450, 0.779, 1.500], dtype=float)
+        pos_C = np.array([-0.450, -0.779, 1.500], dtype=float)
+
+        self.robot_center = np.mean([pos_A, pos_B, pos_C], axis=0)
+
+        self.motors = [
+            {
+                "name": "A",
+                "position": pos_A,
+                "axis": unit(np.array([0.000, 1.000, 0.000], dtype=float)),
+                "upper_length": 1.000,
+                "upper_mass": 0.600,
+                "lower_length": 2.000,
+                "lower_mass": 0.150,
+                "theta_min": -180.0,
+                "theta_max": 180.0,
+                "i": 20,
+                "eta": 0.85,
+                "Jm": 0.0,
+                "Jg": 0.0
+            },
+            {
+                "name": "B",
+                "position": pos_B,
+                "axis": unit(np.array([-0.866, -0.500, 0.000], dtype=float)),
+                "upper_length": 1.000,
+                "upper_mass": 0.600,
+                "lower_length": 2.000,
+                "lower_mass": 0.150,
+                "theta_min": -180.0,
+                "theta_max": 180.0,
+                "i": 20,
+                "eta": 0.85,
+                "Jm": 0.0,
+                "Jg": 0.0
+            },
+            {
+                "name": "C",
+                "position": pos_C,
+                "axis": unit(np.array([0.866, -0.500, 0.000], dtype=float)),
+                "upper_length": 1.000,
+                "upper_mass": 0.600,
+                "lower_length": 2.000,
+                "lower_mass": 0.150,
+                "theta_min": -180.0,
+                "theta_max": 180.0,
+                "i": 20,
+                "eta": 0.85,
+                "Jm": 0.0,
+                "Jg": 0.0
+            }
         ]
-        self.robot_center = np.mean(positions, axis=0)
-
-        self.motors = self.create_motors_object(config_data["motors"])
 
         self.upper_arm_length = self.motors[0]["upper_length"]
         self.lower_arm_length = self.motors[0]["lower_length"]
-
-    def load_json(self, path):
-        with open(path, "r", encoding="utf-8") as file:
-            return json.load(file)
-
-    def create_vector_object_from_list(self, values, name):
-        if len(values) != 3:
-            raise ValueError(f"{name} muss genau 3 Werte enthalten")
-        return np.array(values, dtype=float)
-
-    def create_range_object(self, values, name):
-        if len(values) != 2:
-            raise ValueError(f"{name} muss genau 2 Werte enthalten")
-        return {
-            "min": float(values[0]),
-            "max": float(values[1]),
-        }
-
-    def create_global_object(self, global_data):
-        return {
-            "gravity": self.create_vector_object_from_list(global_data["gravity"], "global.gravity"),
-            "payload_mass": float(global_data["payload_mass"]),
-            "singularity_margin_deg": float(global_data["singularity_margin_deg"]),
-            "trajectory_csv": str(global_data["trajectory_csv"]),
-        }
-
-    def create_workspace_object(self, workspace_data):
-        return {
-            "resolution": int(workspace_data["resolution"]),
-            "range_x": self.create_range_object(workspace_data["range_x"], "workspace.range_x"),
-            "range_y": self.create_range_object(workspace_data["range_y"], "workspace.range_y"),
-            "range_z": self.create_range_object(workspace_data["range_z"], "workspace.range_z"),
-        }
-
-    def create_motor_object(self, name, motor_data):
-        position = self.create_vector_object_from_list(motor_data["position"], f"motors.{name}.position")
-        
-        if motor_data.get("axis") == "AUTO":
-            v = position - self.robot_center
-            axis = np.array([-v[1], v[0], 0.0], dtype=float)
-            if np.linalg.norm(axis) < 1e-6:
-                axis = np.array([1.0, 0.0, 0.0])
-        else:
-            axis = self.create_vector_object_from_list(motor_data["axis"], f"motors.{name}.axis")
-            
-        axis = unit(axis)
-
-        return {
-            "name": name,
-            "position": position,
-            "axis": axis,
-            "upper_length": float(motor_data["upper_length"]),
-            "upper_mass": float(motor_data["upper_mass"]),
-            "lower_length": float(motor_data["lower_length"]),
-            "lower_mass": float(motor_data["lower_mass"]),
-            "theta_min": float(motor_data["theta_min"]),
-            "theta_max": float(motor_data["theta_max"]),
-            "i": int(motor_data["i"]),
-        
-            "eta": float(motor_data.get("eta", 0.85)),
-            "Jm": float(motor_data.get("Jm", 0.0)),
-            "Jg": float(motor_data.get("Jg", 0.0))
-        }
-
-    def create_motors_object(self, motors_data):
-        return [
-            self.create_motor_object("A", motors_data["A"]),
-            self.create_motor_object("B", motors_data["B"]),
-            self.create_motor_object("C", motors_data["C"]),
-        ]
-
-    def compute_robot_center(self):
-        return np.mean([motor["position"] for motor in self.motors], axis=0)
