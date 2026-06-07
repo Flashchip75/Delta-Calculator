@@ -4,8 +4,14 @@
     "mass_kg": 1.0,
     "payload_mass": 0.100,
     "singularity_margin_deg": 5.0,
-    "trajectory_csv": "trajectory.csv",
+    "trajectory_csv": "roboter_dynamik.csv",
     "output_dir": "output"
+  },
+  "plotting": {
+    "dpi": 100,
+    "bbox_inches": "tight",
+    "trajectory_plot": "trajectory_plot.png",
+    "forces_plot": "forces_plot.png"
   },
   "workspace": {
     "resolution": 25,
@@ -18,46 +24,50 @@
     "points": 1000,
     "gain": 50.0,
     "blend": 0.0,
-    "scale_m": 0.001
+    "scale_m": 0.001,
+    "offset_mm": -1000
   },
   "cVision":{
-    "reCalibration": true,
+    "reCalibration": false,
     "aruco_dict": "DICT_4X4_100",
-    "mmToPixel": 0,
+    "mmToPixel": 0.44,
     "calibration_source": "media/calibrationTest.jpg",
-    "calibration_norm_mm": 100,
+    "calibration_norm_mm": 300,
     "calibration_id": 0
   },
   "motors": {
     "A": {
-      "position": [0.400, 0.100, -0.100],
-      "axis": "AUTO",
-      "upper_length": 0.700,
+      "position": [0.900, 0.000, 1.500],
+      "axis": [0.000, 1.000, 0.000],
+      "upper_length": 1.000,
       "upper_mass": 0.600,
-      "lower_length": 1.00,
+      "lower_length": 2.000,
       "lower_mass": 0.150,
-      "theta_min": 5.0,
-      "theta_max": 90.0
+      "theta_min": -180.0,
+      "theta_max": 180.0,
+      "i": 50
     },
     "B": {
-      "position": [-0.50, 0.260, 0.00],
-      "axis": "AUTO",
-      "upper_length": 0.800,
-      "upper_mass": 0.300,
-      "lower_length": 1.00,
+      "position": [-0.450, 0.779, 1.500],
+      "axis": [-0.866, -0.500, 0.000],
+      "upper_length": 1.000,
+      "upper_mass": 0.600,
+      "lower_length": 2.000,
       "lower_mass": 0.150,
-      "theta_min": 5.0,
-      "theta_max": 90.0
+      "theta_min": -180.0,
+      "theta_max": 180.0,
+      "i": 50
     },
     "C": {
-      "position": [-0.150, -0.260, -0.120],
-      "axis": "AUTO",
-      "upper_length": 0.700,
-      "upper_mass": 0.300,
-      "lower_length": 1.00,
+      "position": [-0.450, -0.779, 1.500],
+      "axis": [0.866, -0.500, 0.000],
+      "upper_length": 1.000,
+      "upper_mass": 0.600,
+      "lower_length": 2.000,
       "lower_mass": 0.150,
-      "theta_min": 5.0,
-      "theta_max": 90.0
+      "theta_min": -180.0,
+      "theta_max": 180.0,
+      "i": 50
     }
   }
 }
