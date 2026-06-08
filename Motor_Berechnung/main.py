@@ -18,6 +18,7 @@ def main():
 
     kinematics_solver.print_reachable_summary(trajectory.path_points, all_results)
     kinematics_solver.print_unreachable_points(trajectory.path_points, all_results)
+    kinematics_solver.debug_plot_offset_trajectory(trajectory.path_points)
 
     # 4. Dynamik Solver initialisieren (für plot_motor_angles und export)
     dynamics_solver = DynamicsSolver(robot_config, trajectory)

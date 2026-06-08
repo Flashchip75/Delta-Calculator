@@ -81,12 +81,27 @@ class KinematicsSolver:
 
     def solve_point(self, A):
         results = []
+        A = np.array(A, dtype=float)
+
         for motor in self.motors:
             try:
-                result = self.solve_single_arm_ik(A, motor)
+                ef_offset_radius = motor.get("EF_offset_radius", 0.0)
+                ef_offset_angle = motor.get("EF_offset_angle", 0.0)
+
+                ef_offset = np.array([
+                    ef_offset_radius * np.cos(ef_offset_angle),
+                    ef_offset_radius * np.sin(ef_offset_angle),
+                    0.0], dtype=float)
+
+                A_motor = A + ef_offset
+
+                result = self.solve_single_arm_ik(A_motor, motor)
                 result["name"] = motor["name"]
                 result["reachable"] = True
                 result["error"] = None
+                result["target_point_with_offset"] = A_motor
+                result["ef_offset"] = ef_offset
+
             except Exception as error:
                 result = {
                     "name": motor["name"],
@@ -101,8 +116,12 @@ class KinematicsSolver:
                     "lower_rod_vector": None,
                     "lower_rod_direction": None,
                     "lower_rod_length": None,
+                    "target_point_with_offset": None,
+                    "ef_offset": None,
                 }
+
             results.append(result)
+
         return results
 
     def solve_trajectory(self, path_points):
@@ -143,3 +162,64 @@ class KinematicsSolver:
         print(f"Voll erreichbar      : {fully_reachable_points}")
         print(f"Nichterreichbar      : {total_points - fully_reachable_points}")
         print()
+
+    def debug_plot_offset_trajectory(self, path_points):
+        import matplotlib.pyplot as plt
+    
+        path_points = np.array(path_points, dtype=float)
+    
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection="3d")
+    
+        # Originale Endeffektor-Bahn
+        ax.plot(
+            path_points[:, 0],
+            path_points[:, 1],
+            path_points[:, 2],
+            label="Originale Bahn A"
+        )
+    
+        # Offset-Bahn pro Motor
+        for motor in self.motors:
+            radius = motor.get("EF_offset_radius", 0.0)
+            angle = motor.get("EF_offset_angle", 0.0)
+    
+            ef_offset = np.array([
+                radius * np.cos(angle),
+                radius * np.sin(angle),
+                0.0
+            ], dtype=float)
+    
+            offset_points = path_points + ef_offset
+    
+            ax.plot(
+                offset_points[:, 0],
+                offset_points[:, 1],
+                offset_points[:, 2],
+                label=f"Offset-Bahn Motor {motor['name']}"
+            )
+    
+            # Motorposition markieren
+            B = motor["position"]
+            ax.scatter(B[0], B[1], B[2], marker="o")
+            ax.text(B[0], B[1], B[2], f"Motor {motor['name']}")
+    
+            # Offset-Richtung am ersten Punkt anzeigen
+            A0 = path_points[0]
+            A0_offset = A0 + ef_offset
+    
+            ax.plot(
+                [A0[0], A0_offset[0]],
+                [A0[1], A0_offset[1]],
+                [A0[2], A0_offset[2]],
+                linestyle="--"
+            )
+    
+        ax.set_xlabel("X [m]")
+        ax.set_ylabel("Y [m]")
+        ax.set_zlabel("Z [m]")
+        ax.set_title("Debug: Roboterfahrt mit Endeffektor-Offset")
+        ax.legend()
+        ax.grid(True)
+    
+        plt.show()
