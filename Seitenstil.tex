@@ -1,0 +1,31 @@
+% Kopf- und Fußzeilen ------------------------------------------------------
+\pagestyle{scrheadings}
+
+% Kopf- und Fußzeile auch auf Kapitelanfangsseiten -------------------------
+\renewcommand*{\chapterpagestyle}{scrheadings}
+
+% Schriftform der Kopfzeile ------------------------------------------------
+\renewcommand{\headfont}{%
+\normalfont
+}
+
+% Kopfzeile ----------------------------------------------------------------
+\ihead{Projektarbeit Deltaroboter}
+\chead{}
+\ohead{\includegraphics[scale=1]{Bilder/oth-regensburg-logo.jpg}}
+%
+\setlength{\headheight}{21mm} % Höhe der Kopfzeile
+\setheadsepline[text]{0.4pt} % Trennlinie unter Kopfzeile
+
+% Fußzeile -----------------------------------------------------------------
+\ifoot{\headmark}
+\cfoot{\today}
+\ofoot{\pagemark}
+
+
+% erzeugt ein wenig mehr Platz hinter einem Punkt --------------------------
+\frenchspacing 
+
+\clubpenalty = 10000
+\widowpenalty = 10000 
+\displaywidowpenalty = 10000

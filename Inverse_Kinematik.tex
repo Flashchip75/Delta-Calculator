@@ -1,0 +1,141 @@
+
+Die inverse Kinematik berechnet einen vorgebenen Pfad des Endeffektors die benötigten Winkelstellungen der drei Motoren des Deltaroboters. 
+Für jeden Motorarm wird dabei separat bestimmt, unter welchem Winkel sich der obere Arm befinden muss, damit der zugehörige Punkt am Endeffektor erreicht werden kann.
+
+Der Zielpunkt des Endeffektors wird im Programm mit dem Punkt \(A\) beschrieben. 
+Da jeder Motor an einem anderen Verbindungspunkt des Endeffektors angreift, wird für jeden Motor zunächst ein Offset berücksichtigt:
+
+\[
+A_i = A + \Delta A_i
+\]
+
+Dabei ist \(A_i\) der Zielpunkt für den jeweiligen Motor \(i\), \(A\) der Mittelpunkt des Endeffektors und \(\Delta A_i\) der motorabhängige Versatz.
+
+Die Position des Motors wird mit \(B\) bezeichnet. Zusätzlich besitzt jeder Motor eine Drehachse \(n_B\). 
+Aus der Motorgeometrie ergeben sich damit:
+
+\[
+B =
+\begin{bmatrix}
+x_{B} \\ y_{B} \\ z_{B}
+\end{bmatrix},
+\qquad
+n_{B} =
+\frac{1}{\lVert n_{B} \rVert}
+\begin{bmatrix}
+n_x \\ n_y \\ n_z
+\end{bmatrix}
+\]
+
+Der obere Arm besitzt die Länge \(l_o\), der untere Arm die Länge \(l_u\). 
+Der gesuchte Ellbogenpunkt \(E_i\) muss daher zwei Bedingungen erfüllen:
+
+\[
+\lVert E - B \rVert = l_o
+\]
+
+\[
+\lVert E - A_i \rVert = l_u
+\]
+
+Geometrisch entspricht dies dem Verschnitt eines Kreises mit einer Kugel. 
+Der Kreis liegt hierbei um den Motorpunkt \(B\) mit dem Radius \(l_o\) und dem Normalenvektor \(n_{B}\), die zweite Kugel liegt um den Zielpunkt \(A_i\) mit dem Radius \(l_u\). 
+Es ergeben sich zwei Schnittpunkte wo der Ellbogenpunkt liegen kann.
+
+\[
+E_1, \quad E_2
+\]
+
+Da der Deltaroboter nach unten arbeitet, wird der Punkt mit der kleineren \(z\)-Koordinate ausgewählt:
+
+\[
+E =
+\begin{cases}
+E_1, & \text{falls } z_{E_1} < z_{E_2} \\
+E_2, & \text{sonst}
+\end{cases}
+\]
+
+Damit ist die Position des Ellbogens vollständig bestimmt. 
+Aus dem Ellbogenpunkt kann nun der Richtungsvektor des oberen Arms berechnet werden:
+
+\[
+\vec{r}_o = E - B
+\]
+
+\[
+\hat{r}_o = \frac{\vec{r}_o}{\lVert \vec{r}_o \rVert}
+\]
+
+Ebenso ergibt sich der Richtungsvektor des unteren Arms aus:
+
+\[
+\vec{r}_u = E - A_i
+\]
+
+\[
+\hat{r}_u = \frac{\vec{r}_u}{\lVert \vec{r}_u \rVert}
+\]
+
+Zur Berechnung des Motorwinkels wird eine lokale Bezugsebene am Motor definiert. 
+Die Nullrichtung zeigt vom Roboterzentrum \(C\) zum Motorpunkt \(B\):
+
+\[
+\vec{r}_0 = B - C
+\]
+
+Da diese Richtung senkrecht zur Motorachse liegen muss, wird sie zunächst auf die Motorebene projiziert:
+
+\[
+\vec{r}_{0,\perp}
+=
+\vec{r}_0
+-
+(\vec{r}_0 \cdot n_B)n_B
+\]
+
+Anschließend wird die Richtung normiert:
+
+\[
+\hat{r}_{0,\perp}
+=
+\frac{\vec{r}_{0,\perp}}{\lVert \vec{r}_{0,\perp} \rVert}
+\]
+
+Eine zweite lokale Achse wird über das Kreuzprodukt gebildet:
+
+\[
+\hat{r}_{90}
+=
+\frac{n_B \times \hat{r}_{0,\perp}}
+{\lVert n_B \times \hat{r}_{0,\perp} \rVert}
+\]
+
+Der Vektor vom Motorzentrum zum Ellbogenpunkt lautet:
+
+\[
+\vec{r}_E = E - B
+\]
+
+Dieser Vektor wird auf die beiden lokalen Richtungen projiziert:
+
+\[
+x_\text{lokal} = \vec{r}_E \cdot \hat{r}_{0,\perp}
+\]
+
+\[
+y_\text{lokal} = \vec{r}_E \cdot \hat{r}_{90}
+\]
+
+Der Motorwinkel ergibt sich anschließend mit der Arkustangens-Funktion:
+
+\[
+\vartheta = \operatorname{atan2}(y_\text{lokal}, x_\text{lokal})
+\]
+
+Dieser Ablauf wird für alle drei Motoren durchgeführt. 
+Das Ergebnis der inversen Kinematik ist somit eine Liste der drei Motorwinkel.
+Falls für einen Punkt kein gültiger Schnitt der geometrischen Bedingungen gefunden wird, wird dieser Punkt als nicht erreichbar markiert. 
+Damit kann geprüft werden, ob eine vorgegebene Bahn vollständig innerhalb des Arbeitsraums des Roboters liegt.
+
+

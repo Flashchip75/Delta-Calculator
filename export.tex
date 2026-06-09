@@ -1,0 +1,22 @@
+Zur Weiterverwendung der berechneten Bewegungsdaten in der GUI und bei der Motorsteuerung wurde eine Exportfunktion implementiert, welche sämtliche Ergebnisse der kinematischen und dynamischen Berechnungen in einer CSV-Datei speichert.
+
+Zunächst werden aus den Ergebnissen der inversen Kinematik die zeitabhängigen Motorwinkel $\varphi_i$ aller drei Antriebe übernommen. Auf Grundlage dieser Winkelverläufe werden die Winkelgeschwindigkeiten $\omega_i$, Winkelbeschleunigungen $\alpha_i$, sowie die Motordrehmomente \(M_i\) wie in Kapitel \ref{Dynamik} für die Motoren berechnet.
+
+
+Für jeden Zeitpunkt der vorgegebenen Bahn wird ein Datensatz erzeugt. Dieser enthält die Position des Endeffektors, die Positionen der drei Ellbogenpunkte, die berechneten Motorwinkel der jeweiligen Motoren sowie die daraus resultierenden Winkelgeschwindigkeiten, Winkelbeschleunigungen und Motordrehmomente.
+
+Die gespeicherten Größen umfassen:
+
+\begin{itemize}
+    \item Zeit $t$
+    \item Endeffektorposition $(x,y,z)$
+    \item Ellbogenpositionen aller drei Arme (x,y,z)
+    \item Motorwinkel $\varphi_1,\varphi_2,\varphi_3$
+    \item Winkelgeschwindigkeiten $\omega_1,\omega_2,\omega_3$
+    \item Winkelbeschleunigungen $\alpha_1,\alpha_2,\alpha_3$
+    \item Motordrehmomente $M_1,M_2,M_3$
+\end{itemize}
+
+Falls ein Bahnpunkt aufgrund geometrischer Einschränkungen des Roboters nicht erreichbar ist, werden die entsprechenden Einträge mit einem ungültigen Wert (\texttt{NaN}) gekennzeichnet. Dadurch bleiben die Datensätze vollständig und können dennoch eindeutig ausgewertet werden.
+
+Nach der Zusammenstellung aller Datensätze wird automatisch ein Ausgabeverzeichnis erzeugt und die Tabelle als CSV-Datei gespeichert. Der absolute Dateipfad der erzeugten Datei wird anschließend zurückgegeben, sodass die Ergebnisse direkt für weitere Verarbeitungsschritte verwendet werden können.

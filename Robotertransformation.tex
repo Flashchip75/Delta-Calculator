@@ -1,0 +1,144 @@
+\documentclass[12pt, oneside, a4paper]{scrreprt}
+\usepackage[manualmark,headsepline,footsepline]{scrlayer-scrpage}
+
+\usepackage{dirtytalk}
+\usepackage[german]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage[final]{pdfpages}
+\usepackage{hyperref}
+\usepackage{pdfcomment}
+\usepackage{csquotes}
+\usepackage[justification=centering]{caption}
+
+\usepackage{siunitx}  
+\sisetup{locale = DE,separate-uncertainty}  
+
+\usepackage[backend=biber]{biblatex}
+\addbibresource{xmpl.bib}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=newest}
+\usetikzlibrary{plotmarks}
+\usetikzlibrary{arrows.meta}
+\usepgfplotslibrary{patchplots}
+\usepackage{grffile}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\pgfplotsset{plot coordinates/math parser=false}
+\newlength\fwidth
+
+\usepackage{listings}
+\usepackage{xcolor}
+\lstset{ 
+  language=Matlab,
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=10pt,
+  backgroundcolor=\color{gray!10},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  frame=single,
+  tabsize=2,
+  captionpos=b,
+  breaklines=true,
+  breakatwhitespace=false,
+  keywordstyle=\color{blue},
+  commentstyle=\color{green!50!black},
+  stringstyle=\color{orange}
+}
+
+\RedeclareSectionCommand[
+  beforeskip=0pt,
+  afterskip=20pt
+]{chapter}
+\usepackage{lmodern} 
+\usepackage{xcolor}
+\colorlet{chapter}{black!75}
+\addtokomafont{chapter}{\color{chapter}}
+\makeatletter
+\renewcommand*{\chapterformat}{%
+  \begingroup
+  \setlength{\unitlength}{1mm} 
+  \begin{picture}(20,20)(0,5) 
+  \setlength{\fboxsep}{0pt} 
+  \put(20,20){\line(1,0){\dimexpr 
+  \textwidth-20\unitlength\relax\@gobble}} 
+  \put(0,0){\makebox(15,20)[r]{% 
+  \fontsize{18\unitlength}{28\unitlength}\selectfont\thechapter 
+  \kern-.04em}} 
+  \end{picture}
+  \newline
+  \endgroup
+}
+
+\setlength\parindent{0pt}
+
+\input{Seitenstil}
+
+\begin{document}
+
+%\begin{titlepage}
+%
+%	\begin{tabular}{l r} 
+%      \includegraphics[width=0.4\textwidth]{Bilder/oth-regensburg-logo.jpg}
+%      &
+%	\end{tabular}
+%
+%   \begin{minipage} [c] [7cm] [b] {\textwidth}
+%      \Huge{
+%         \begin{center}
+%            \textbf{Projektarbeit Deltaroboter}\\[0.8cm]
+%            {\large Prof. Peter Gschwendner}\\ [1cm]
+%          \end{center}
+%       }
+%   \end{minipage}
+%
+%   \vspace{0.3cm}
+%
+%   \begin{minipage} [c] [11.5cm] [b] {\textwidth}
+%    \begin{center} 
+%       \vspace{0.3cm}
+%       \textbf{Gruppe 47}\\
+%       Jonas Hofmann, 3439760\\
+%       Mark Körner, 3439913\\
+%       \today
+%       \vspace{0.5cm}
+%	\end{center}
+%   \end{minipage}
+%
+%\end{titlepage}
+
+%\tableofcontents
+%\addtocontents{toc}{\protect\thispagestyle{empty}}
+%\thispagestyle{empty}
+\newpage
+\setcounter{page}{1}
+
+\chapter{Roboter Transformation}
+
+\section{Aufgabenstellung}
+\input{Einleitung.tex}
+
+\section{Roboterdefinition}
+\input{Definition_Roboter.tex}
+
+\section{Inverse Kinematik}
+\input{Inverse_Kinematik.tex}
+
+\section{Dynamik über Energiebilanz}
+\input{Dynamik.tex}
+\label{Dynamik}
+
+\section{Export zur Motorsteuerung}
+\input{export.tex}
+
+
+\printbibliography
+
+\end{document}
