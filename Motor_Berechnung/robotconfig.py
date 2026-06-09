@@ -41,7 +41,7 @@ class RobotConfig:
                 "Jm": 0.0,
                 "Jg": 0.0,
                 "EF_offset_angle": 0,
-                "EF_offset_radius": 0.004
+                "EF_offset_radius": 0.0045
             },
             {
                 "name": "B",
@@ -58,7 +58,7 @@ class RobotConfig:
                 "Jm": 0.0,
                 "Jg": 0.0,
                 "EF_offset_angle": 2.0943951023931953, # 120 grad
-                "EF_offset_radius": 0.004
+                "EF_offset_radius": 0.0045
             },
             {
                 "name": "C",
@@ -75,7 +75,7 @@ class RobotConfig:
                 "Jm": 0.0,
                 "Jg": 0.0,
                 "EF_offset_angle": -2.0943951023931953, # -120 grad
-                "EF_offset_radius": 0.004
+                "EF_offset_radius": 0.0045
             }
         ]
 

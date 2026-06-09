@@ -1,6 +1,7 @@
 import csv
 import numpy as np
 import os 
+from pathlib import Path
 
 class DataExporter:
     def __init__(self, trajectory, dynamics_solver):
@@ -20,11 +21,11 @@ class DataExporter:
         fieldnames = list(rows[0].keys())
 
     
-        output_dir = "output"
-        csv_dir = os.path.join(output_dir, "csv")
-        os.makedirs(csv_dir, exist_ok=True)
+        output_dir = Path(__file__).resolve().parent / "output"
+        csv_dir = output_dir / "csv"
+        csv_dir.mkdir(parents=True, exist_ok=True)
     
-        filepath = os.path.join(csv_dir, filename)
+        filepath = csv_dir / filename
     
         with open(filepath, "w", newline="", encoding="utf-8") as file:
             writer = csv.DictWriter(file, fieldnames=fieldnames)
@@ -32,6 +33,10 @@ class DataExporter:
             writer.writerows(rows)
     
         print(f"CSV gespeichert: {filepath}")
+        
+
+        return os.path.abspath(filepath)
+
 
     def build_data(self, all_results):
         omega_all = self.dynamics_solver.compute_all_motor_omega(all_results)
