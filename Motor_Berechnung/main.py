@@ -4,16 +4,19 @@ from kinematics import KinematicsSolver
 from dynamics import DynamicsSolver
 from visualization import Visualizer
 from export import DataExporter
+from pathlib import Path
 
 def main():
+    ROOT = Path(__file__).resolve().parent.parent
+
     # 1. Konfiguration laden
     robot_config = RobotConfig()                    # Erzeugt Roboter, mit allen Attributen und alle globale daten
     #print(robot_config.global_data["mass_kg"])     # Auslesebeispiel
 
-    # 2. Trajektorie laden
-    trajectory = Trajectory(robot_config.global_data["trajectory_csv"])  # Ließt Trajectory Datei aus, Argument für Funktion ist der Datei Pfad der csv. (bei Mark der relative, bei Annika der absolute)
-    # trajectory = Trajectory("woelke.csv")          
+    trajectory_path = ROOT / robot_config.global_data["trajectory_csv"]
 
+    # 2. Trajektorie laden
+    trajectory = Trajectory(trajectory_path)  # Ließt Trajectory Datei aus, Argument für Funktion ist der Datei Pfad der csv. (bei Mark der relative, bei Annika der absolute)
 
     # 3. Inverse Kinematik berechnen
     kinematics_solver = KinematicsSolver(robot_config)
