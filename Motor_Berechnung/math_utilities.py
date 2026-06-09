@@ -78,3 +78,69 @@ def get_circle_basis(normal):
     w = unit(np.cross(normal, v))
 
     return v, w
+
+#==================================
+def build_orthonormal_basis_from_vector(direction_vector):
+    z_axis = np.array(direction_vector, dtype=float)
+
+    z_norm = np.linalg.norm(z_axis)
+    if z_norm < 1e-12:
+        raise ValueError("Richtungsvektor ist ungültig.")
+
+    z_axis = z_axis / z_norm
+
+    # Hilfsvektor wählen
+    if abs(z_axis[0]) < 0.9:
+        helper = np.array([1.0, 0.0, 0.0], dtype=float)
+    else:
+        helper = np.array([0.0, 1.0, 0.0], dtype=float)
+
+    # Erster senkrechter Vektor
+    x_axis = np.cross(helper, z_axis)
+
+    x_norm = np.linalg.norm(x_axis)
+    if x_norm < 1e-12:
+        raise ValueError("x_axis konnte nicht berechnet werden.")
+
+    x_axis = x_axis / x_norm
+
+    # Zweiter senkrechter Vektor
+    y_axis = np.cross(z_axis, x_axis)
+
+    y_norm = np.linalg.norm(y_axis)
+    if y_norm < 1e-12:
+        raise ValueError("y_axis konnte nicht berechnet werden.")
+
+    y_axis = y_axis / y_norm
+
+    return x_axis, y_axis
+
+import numpy as np
+
+#==================================
+def gradient(values, time):
+
+    values = np.array(values, dtype=float)
+    time = np.array(time, dtype=float)
+
+    if len(values) != len(time):
+        raise ValueError("values und time müssen gleich lang sein.")
+
+    if len(values) < 2:
+        raise ValueError("Mindestens zwei Werte notwendig.")
+
+    derivative = np.zeros_like(values, dtype=float)
+
+    # Vorwärtsdifferenz
+    derivative[0] = ( values[1] - values[0]) / (time[1] - time[0])
+
+    # Zentrale Differenz
+    for i in range(1, len(values) - 1):
+        derivative[i] = (values[i + 1] - values[i - 1]) / (time[i + 1] - time[i - 1])
+
+    # Rückwärtsdifferenz
+    derivative[-1] = (values[-1] - values[-2]) / (time[-1] - time[-2])
+
+    return derivative
+
+
