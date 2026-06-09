@@ -22,8 +22,8 @@ def main():
     kinematics_solver = KinematicsSolver(robot_config)
 
     all_results = kinematics_solver.solve_trajectory(trajectory.path_points)        # Berechnet Motorwinkel für alle Pfadpunkte
-    kinematics_solver.print_reachable_summary(trajectory.path_points, all_results)
-    kinematics_solver.print_unreachable_points(trajectory.path_points, all_results)
+    #kinematics_solver.print_reachable_summary(trajectory.path_points, all_results)
+    #kinematics_solver.print_unreachable_points(trajectory.path_points, all_results)
     #kinematics_solver.debug_plot_offset_trajectory(trajectory.path_points)
 
     # 4. Dynamik Solver initialisieren (für plot_motor_angles und export)
@@ -34,7 +34,7 @@ def main():
     exporter.export_results_to_csv(all_results, filename="results.csv") # CSV Export
     
     # 6. Visualisierung
-    visualizer = Visualizer(robot_config, trajectory, dynamics_solver)
+    #visualizer = Visualizer(robot_config, trajectory, dynamics_solver)
     
     #visualizer.plot_motor_angles(all_results)
     #visualizer.save_motor_angles_plot(all_results, filename="motor_angles.png")

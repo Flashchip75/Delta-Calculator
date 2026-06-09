@@ -1,5 +1,5 @@
 import numpy as np
-from math_utilities import (
+from Motor_Berechnung.math_utilities import (
     sphere_sphere_intersection,
     plane_plane_intersection,
     line_circle_intersection,

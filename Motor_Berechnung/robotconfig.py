@@ -1,5 +1,5 @@
 import numpy as np
-from math_utilities import unit
+from Motor_Berechnung.math_utilities import unit
 
 class RobotConfig:
     def __init__(self, config_path=None):

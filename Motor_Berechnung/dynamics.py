@@ -1,6 +1,6 @@
 import numpy as np
-from math_utilities import build_orthonormal_basis_from_vector
-from math_utilities import gradient
+from Motor_Berechnung.math_utilities import build_orthonormal_basis_from_vector
+from Motor_Berechnung.math_utilities import gradient
 import matplotlib.pyplot as plt
 
 class DynamicsSolver:
