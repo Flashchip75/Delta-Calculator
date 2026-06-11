@@ -1,33 +1,16 @@
-import os
-import matplotlib.pyplot as plt
-import pandas as pd
-import numpy as np
+import matplotlib.pyplot as plt, numpy as np
+from matplotlib.animation import FuncAnimation
 
-
-class Visualizer:
-    def plot_matlab_style(self, p, T, outputDir):
-        ax = plt.figure().add_subplot(111, projection='3d')
-        ax.plot(p[:, 0], p[:, 1], p[:, 2], 'b-', marker='.', markersize=3, label='Pfad [m]')
-        ax.quiver(p[:, 0], p[:, 1], p[:, 2], T[:, 0], T[:, 1], T[:, 2], length=0.08, color='r', alpha=0.6)
-        ax.set(xlabel='X [m]', ylabel='Y [m]', zlabel='Z [m]', title='Deltarobot Trajektorie (SI-Einheiten)')
-        plt.legend();
-        plt.savefig(os.path.join(outputDir, "trajectory_plot.png"), dpi=150, bbox_inches='tight')
-        #plt.show()
-
-    def plot_forces(self, fname, outputDir):
-        if not os.path.exists(outputDir):
-            os.makedirs(outputDir)
-        
-        currentPath = os.path.join(outputDir, fname)
-        df = pd.read_csv(currentPath)
-        mags = [np.linalg.norm(df[[f'{p}x', f'{p}y', f'{p}z']].values, axis=1) for p in ('ft', 'fn', 'f')]
-        lbls, cols = ['|Ft| [N]', '|Fn| [N]', '|Fges| [N]'], ['g', 'r', 'k']
-
-        plt.figure(figsize=(10, 5))
-        for m, l, c in zip(mags, lbls, cols):
-            plt.plot(df['t'], m, label=l, color=c, lw=1.5, ls='--' if c == 'k' else '-')
-        plt.gca().set(xlabel='Zeit t [s]', ylabel='Kraft F [N]', title='Kraftverläufe (SI)')
-        plt.grid(True);
-        plt.legend();
-        plt.savefig(os.path.join(outputDir, "forces_plot.png"), dpi=150, bbox_inches='tight')
-        #plt.show()
+class Plotter:
+    @staticmethod
+    def show(t, s, v, a, pts, T, N, kappa, F_mag, F_vec):
+        fig1, (ax1, ax3) = plt.subplots(2, 1, figsize=(10, 8))
+        ax1.plot(t, s, label='s(t)'); ax1.plot(t, v, label='v(t)'); ax1.plot(t, a, '--', label='a(t)'); ax1.legend()
+        ax3.plot(t, F_mag, 'k', label='|F|'); [ax3.plot(t, F_vec[:,i], label=f'F_{"xyz"[i]}') for i in range(3)]; ax3.legend()
+        fig2 = plt.figure(); ax3d = fig2.add_subplot(111, projection='3d')
+        def update(i):
+            ax3d.cla(); ax3d.plot(*pts.T, color='gray', alpha=0.3); p, k = pts[i], kappa[i]
+            ax3d.quiver(*p, *T[i], color='r', length=0.08); ax3d.quiver(*p, *N[i], color='b', length=0.08)
+            if k>0.1: th=np.linspace(0,2*np.pi,50); ax3d.plot(*(p+(1/k)*N[i] + (1/k)*(np.outer(np.cos(th),T[i])+np.outer(np.sin(th),N[i]))).T, color='g')
+            ax3d.set(xlim=(-.1,.5), ylim=(-.1,.5), zlim=(0,.5), title=f"t={t[i]:.2f}s | Gesamtkraft: {F_mag[i]:.2f} N")
+        ani = FuncAnimation(fig2, update, frames=range(0, len(t), 15), interval=30, repeat=True); plt.show()

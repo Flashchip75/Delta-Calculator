@@ -6,8 +6,8 @@ Erstellt ein GIF des Deltaroboters entlang der Trajektorie.
 Zeigt pro Frame:
   - Motorpositionen (Marker)
   - Motorachsen (kurze Pfeile)
-  - Oberarme (Motor → Gelenk)
-  - Unterarme (Gelenk → Endeffektor)
+  - Oberarme (Motor -> Gelenk)
+  - Unterarme (Gelenk -> Endeffektor)
   - Endeffektor-Spur
 
 Eingabe: output/kinematics.npz

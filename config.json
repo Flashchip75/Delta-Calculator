@@ -7,57 +7,91 @@
     "trajectory_csv": "trajectory.csv",
     "output_dir": "output"
   },
+  "plotting": {
+    "dpi": 100,
+    "bbox_inches": "tight",
+    "trajectory_plot": "trajectory_plot.png",
+    "forces_plot": "forces_plot.png"
+  },
   "workspace": {
     "resolution": 25,
-    "range_x": [-0.4, 0.4],
-    "range_y": [-0.4, 0.4],
-    "range_z": [-1.3, -0.1]
+    "range_x": [-0.3, 0.3],
+    "range_y": [-0.3, 0.3],
+    "range_z": [-0.6, 1.1]
   },
   "path":{
-    "duration_s": 5.0,
+    "duration_s": 3.0,
     "points": 1000,
     "gain": 50.0,
     "blend": 0.0,
-    "scale_m": 0.001
+    "scale_m": 0.001,
+    "offset_m": -1000,
+    "path_profiles": "path_profiles.json"
   },
   "cVision":{
-    "reCalibration": true,
+    "reCalibration": false,
     "aruco_dict": "DICT_4X4_100",
-    "mmToPixel": 0,
+    "mToPixel": 0.002,
     "calibration_source": "media/calibrationTest.jpg",
-    "calibration_norm_mm": 100,
-    "calibration_id": 0
+    "calibration_norm_m": 1,
+    "calibration_id": 0,
+    "model_path": "models/yolo26n.pt",
+    "conf_threshold": 0.5,
+    "visiualisations":{
+      "Rectangle": {
+        "colorVal": [0, 255, 0],
+        "thicknessVal": 2,
+        "colorRej": [0, 255, 255],
+        "thicknessRej": 1
+      },
+      "Circle": {
+        "colorVal": [0, 0, 255],
+        "thicknessVal": 2,
+        "radiusVal": 6,
+        "colorRej": [0, 255, 255],
+        "thicknessRej": 1,
+        "radiusRej": 6
+      },
+      "MarkerText": {
+        "fontScaleMarker": 0.6,
+        "colorMarker": [0, 255, 0],
+        "lineSizeMarker": 2
+      }
+    }
   },
   "motors": {
     "A": {
-      "position": [0.400, 0.100, -0.100],
-      "axis": "AUTO",
-      "upper_length": 0.700,
+      "position": [0.900, 0.000, 1.500],
+      "axis": [0.000, 1.000, 0.000],
+      "upper_length": 1.000,
       "upper_mass": 0.600,
-      "lower_length": 1.00,
+      "lower_length": 2.000,
       "lower_mass": 0.150,
-      "theta_min": 5.0,
-      "theta_max": 90.0
+      "theta_min": -180.0,
+      "theta_max": 180.0,
+      "i": 50
     },
     "B": {
-      "position": [-0.50, 0.260, 0.00],
-      "axis": "AUTO",
-      "upper_length": 0.800,
-      "upper_mass": 0.300,
-      "lower_length": 1.00,
+      "position": [-0.450, 0.779, 1.500],
+      "axis": [-0.866, -0.500, 0.000],
+      "upper_length": 1.000,
+      "upper_mass": 0.600,
+      "lower_length": 2.000,
       "lower_mass": 0.150,
-      "theta_min": 5.0,
-      "theta_max": 90.0
+      "theta_min": -180.0,
+      "theta_max": 180.0,
+      "i": 50
     },
     "C": {
-      "position": [-0.150, -0.260, -0.120],
-      "axis": "AUTO",
-      "upper_length": 0.700,
-      "upper_mass": 0.300,
-      "lower_length": 1.00,
+      "position": [-0.450, -0.779, 1.500],
+      "axis": [0.866, -0.500, 0.000],
+      "upper_length": 1.000,
+      "upper_mass": 0.600,
+      "lower_length": 2.000,
       "lower_mass": 0.150,
-      "theta_min": 5.0,
-      "theta_max": 90.0
+      "theta_min": -180.0,
+      "theta_max": 180.0,
+      "i": 50
     }
   }
 }
