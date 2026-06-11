@@ -9,14 +9,10 @@ from .PathFrenet import PathFrenet
 from .ProfileManager import ProfileManager
 from .DynamicsManager import DynamicsManager
 from .Visualization import Plotter
+from .jsonConverter import UIProfileConverter
 
 
 class exePath:
-    def __init__(self):
-        # WICHTIG: Speichert die Referenz der Matplotlib-Animation.
-        # Ohne diese Zuweisung löscht Python das Animations-Objekt sofort im Hintergrund
-        # und das Fenster bleibt weiß bzw. friert ein!
-        self.ani = None
     def run(
         self,
         geometry: str | None = None,
@@ -57,6 +53,15 @@ class exePath:
 
         # 2. Trajektorie & Dynamik (New Logic)
         print("=== Berechne Trajektorie & Dynamik ===")
+
+        # if geometry already comes as UI objects instead of JSON:
+        if isinstance(j_data, list) and len(j_data) > 0 and not isinstance(j_data[0], dict):
+            print("=== Konvertiere UI-Daten -> j_data ===")
+
+            converter = UIProfileConverter(default_N=100)
+
+            # you must provide time laws list here!
+            j_data = converter.convert_flat(j_data, time_laws)
 
         self.validate_path_continuity(j_data)
 
