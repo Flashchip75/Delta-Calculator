@@ -1,8 +1,8 @@
 import numpy as np
 from math_utilities import unit
 
-class RobotConfig:
-    def __init__(self, config_path=None):
+class _RobotConfig:
+    def __init__(self):
         self.global_data = {
             "gravity": np.array([0.0, 0.0, -9.81], dtype=float),
             "mass_kg": 1.0,
@@ -81,3 +81,16 @@ class RobotConfig:
 
         self.upper_arm_length = self.motors[0]["upper_length"]
         self.lower_arm_length = self.motors[0]["lower_length"]
+
+    def set_val(self, key, value):
+        """Hilfsfunktion für die GUI, um Werte in dicts oder als direkte Attribute zu schreiben."""
+        if hasattr(self, "global_data") and key in self.global_data:
+            self.global_data[key] = value
+        elif hasattr(self, "workspace") and key in self.workspace:
+            self.workspace[key] = value
+        else:
+            setattr(self, key, value)
+
+# Erstelle ein globales Singleton-Objekt.
+# Dieses Objekt (als Objekt statt Klasse) kann nun projektweit importiert werden.
+robot_config = _RobotConfig()
