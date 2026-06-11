@@ -8,7 +8,7 @@ class RobotConfig:
             "mass_kg": 1.0,
             "payload_mass": 0.100,
             "singularity_margin_deg": 5.0,
-            "trajectory_csv": "woelke.csv",
+            "trajectory_csv": "roboter_dynamik.csv",
             "output_dir": "output"
         }
 

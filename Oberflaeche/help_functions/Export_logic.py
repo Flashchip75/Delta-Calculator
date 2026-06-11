@@ -14,7 +14,6 @@ class ExportLogic:
         self.results_csv_path = None
 
     def calc_all_callback(self):
-        print("Calc All gestartet")
 
         ROOT = Path(__file__).resolve().parents[2]
         robot_config = RobotConfig() #Später schon erstellt
@@ -34,8 +33,9 @@ class ExportLogic:
 
         self.results_csv_path = Path(filepath)
         self.write_csv_path_to_line()
+    # TODO: Grafik anzeigen callback
+    # TODO: Prüfen ob Path vorhanden
 
-        print(f"Calc All fertig: {self.results_csv_path}")
 
     def write_csv_path_to_line(self):
         if self.results_csv_path is None:
@@ -43,3 +43,4 @@ class ExportLogic:
 
         self.tab.csv_line.input.delete(0, "end")
         self.tab.csv_line.input.insert(0, str(self.results_csv_path))
+    # TODO: Funktion zum Pfad in line einfügen

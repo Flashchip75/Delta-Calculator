@@ -12,6 +12,12 @@ class PlotFrame(ttk.Frame):
 
         super().__init__(parent)
 
+# TODO: Anpassen an Aktuelles File Handling
+# Geo: config Objekt
+# Path: keine ahnung
+# Kinematic: CSV
+
+
 # Datahandling anpassen auf Klassen und Objektlogik
         self.kin_struct = kin_struct
         self.geo_struct = geo_struct
