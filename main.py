@@ -6,19 +6,14 @@ import path_berechnung.exe_path as exeP
 
 def main():
     print("=== Starte Pfadberechnung ===")
-    mode = "geometry"
+    mode = "gcode"
 
-    p1 = [0.4, 0.4, -1]
-    p2 = [-0.4, -0.4, -0.5]
-    source = "media/test2.png"
-    geometry = "profile_1"
+    geometry = "full_circle"
     gcode = "test.gcode"
 
     # --- Switch ---
     kwargs = {
         "geometry": dict(geometry=geometry),
-        "points":   dict(p1=p1, p2=p2),
-        "cvision":  dict(source=source),
         "gcode":    dict(gcode=gcode),
     }
 
