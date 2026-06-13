@@ -5,6 +5,11 @@ from Oberflaeche.help_functions.Export_logic import ExportLogic
 
 
 class ExportTab(BaseTab):
+    class ExportTab(BaseTab):
+
+        def __init__(self, parent):
+            self.plot_frame = None
+            super().__init__(parent)
 
     def build_left(self):
         ttk.Label(self, text="Export").pack(anchor="w")

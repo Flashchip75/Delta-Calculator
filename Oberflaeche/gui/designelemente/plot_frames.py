@@ -1,22 +1,16 @@
 import csv
 from pathlib import Path
-import tkinter as tk
-from tkinter import ttk, messagebox
+from tkinter import ttk
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
 
 class PlotFrame(ttk.Frame):
-    def __init__(self, parent, data_dir, config=None, default_plot="Geometrie"):
+    def __init__(self, parent, default_plot="Geometrie"):
         super().__init__(parent)
 
-        self.data_dir = Path(data_dir)
-        self.config = config
-
-        self.path_csv = self.data_dir / "roboter_dynamik.csv"
-        self.results_csv = self.data_dir / "results.csv"
-
+        self.config = None
         self.path_data = []
         self.results_data = []
 
@@ -29,14 +23,10 @@ class PlotFrame(ttk.Frame):
                 "method": self.plot_path,
                 "is_3d": True
             },
-            "Geschwindigkeit": {
-                "method": self.plot_velocity,
-                "is_3d": False
-            },
             "Motorwinkel": {
                 "method": self.plot_motor_angles,
                 "is_3d": False
-            },
+            }
         }
 
         self.default_plot = default_plot
@@ -46,8 +36,6 @@ class PlotFrame(ttk.Frame):
         self.canvases = {}
 
         self._build_plot_tabs()
-        self.load_data()
-        self.show_all_plots()
         self._select_default_plot()
 
     # ------------------------------------------------------
@@ -82,29 +70,28 @@ class PlotFrame(ttk.Frame):
             self.notebook.select(index)
 
     # ------------------------------------------------------
-    # Daten laden
+    # Callbacks
     # ------------------------------------------------------
 
-    def load_data(self):
+    def update_geometry_plot(self, config):
+        self.config = config
+        self.show_plot("Geometrie")
 
-        try:
-            self.path_data = self._load_csv(self.path_csv)
-            self.results_data = self._load_csv(self.results_csv)
+    def update_path_plot(self, csv_path):
+        self.path_data = self._load_csv(csv_path)
+        self.show_plot("Pfad 3D")
 
-        except Exception as error:
-            messagebox.showerror("Plot-Daten konnten nicht geladen werden", str(error))
+    def update_motor_angle_plot(self, csv_path):
+        self.results_data = self._load_csv(csv_path)
+        self.show_plot("Motorwinkel")
 
-    def _load_csv(self, path):
-        if not path.exists():
-            raise FileNotFoundError(f"Datei nicht gefunden: {path}")
+    # ------------------------------------------------------
+    # CSV Hilfsfunktionen
+    # ------------------------------------------------------
 
-        with open(path, "r", encoding="utf-8", newline="") as file:
-            reader = csv.DictReader(file)
-
-            if reader.fieldnames is None:
-                raise ValueError(f"CSV hat keine Kopfzeile: {path}")
-
-            return list(reader)
+    def _load_csv(self, csv_path):
+        with open(Path(csv_path), "r", encoding="utf-8", newline="") as file:
+            return list(csv.DictReader(file))
 
     def _col(self, data, name):
         return [float(row[name]) for row in data]
@@ -113,12 +100,9 @@ class PlotFrame(ttk.Frame):
     # Plot-Steuerung
     # ------------------------------------------------------
 
-    def show_all_plots(self):
-        for plot_name in self.plot_configs:
-            self.show_plot(plot_name)
-
     def show_plot(self, plot_name):
         config = self.plot_configs.get(plot_name)
+
         if config is None:
             return
 
@@ -127,16 +111,7 @@ class PlotFrame(ttk.Frame):
 
         ax.clear()
 
-        try:
-            config["method"](ax)
-        except Exception as error:
-            ax.text2D(
-                0.05,
-                0.5,
-                f"Plot konnte nicht erstellt werden:\n{error}",
-                transform=ax.transAxes
-            )
-            print(f"Fehler in Plot '{plot_name}':", error)
+        config["method"](ax)
 
         canvas.draw_idle()
 
@@ -146,16 +121,13 @@ class PlotFrame(ttk.Frame):
 
     def plot_geometry(self, ax):
         if self.config is None:
-            ax.text2D(0.1, 0.5, "Keine config übergeben", transform=ax.transAxes)
             return
 
-        motors = self.config.motors
-
-        for motor in motors:
+        for motor in self.config.motors:
             name = motor["name"]
             x, y, z = motor["position"]
 
-            ax.scatter(x, y, z, label=f"Motor {name}")
+            ax.scatter(x, y, z, label=name)
             ax.text(x, y, z, name)
 
         ax.set_title("Geometrie")
@@ -164,33 +136,25 @@ class PlotFrame(ttk.Frame):
         ax.set_zlabel("z")
         ax.legend()
 
-
     def plot_path(self, ax):
+        if not self.path_data:
+            return
+
         x = self._col(self.path_data, "x")
         y = self._col(self.path_data, "y")
         z = self._col(self.path_data, "z")
 
         ax.plot(x, y, z)
 
-        ax.set_title("3D-Pfad")
+        ax.set_title("Pfad")
         ax.set_xlabel("x")
         ax.set_ylabel("y")
         ax.set_zlabel("z")
 
-    def plot_velocity(self, ax):
-        t = self._col(self.path_data, "t")
-
-        ax.plot(t, self._col(self.path_data, "vx"), label="vx")
-        ax.plot(t, self._col(self.path_data, "vy"), label="vy")
-        ax.plot(t, self._col(self.path_data, "vz"), label="vz")
-
-        ax.set_title("Geschwindigkeit")
-        ax.set_xlabel("t")
-        ax.set_ylabel("v")
-        ax.legend()
-        ax.grid(True)
-
     def plot_motor_angles(self, ax):
+        if not self.results_data:
+            return
+
         t = self._col(self.results_data, "t")
 
         ax.plot(t, self._col(self.results_data, "phi_1"), label="phi_1")

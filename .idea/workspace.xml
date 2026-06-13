@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Export-Logik angebunden und CSV-Pfad im Export-Tab anzeigen">
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Motor_Berechnung/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Motor_Berechnung/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/input_tabgroup.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/input_tabgroup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

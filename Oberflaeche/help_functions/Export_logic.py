@@ -5,6 +5,7 @@ from Motor_Berechnung.trajectory import Trajectory
 from Motor_Berechnung.kinematics import KinematicsSolver
 from Motor_Berechnung.dynamics import DynamicsSolver
 from Motor_Berechnung.export import DataExporter
+from Oberflaeche.gui.designelemente.plot_frames import PlotFrame
 
 
 class ExportLogic:
@@ -33,6 +34,13 @@ class ExportLogic:
 
         self.results_csv_path = Path(filepath)
         self.write_csv_path_to_line()
+
+        print("plot_frame:", self.tab.plot_frame)
+        print("csv:", self.results_csv_path)
+
+        self.tab.plot_frame.update_motor_angle_plot(
+            self.results_csv_path
+        )
     # TODO: Grafik anzeigen callback
     # TODO: Prüfen ob Path vorhanden
 

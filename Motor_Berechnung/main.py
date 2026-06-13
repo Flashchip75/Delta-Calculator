@@ -31,7 +31,7 @@ def main():
 
     # 5. Export
     exporter = DataExporter(trajectory, dynamics_solver)                
-    exporter.export_results_to_csv(all_results, filename="results.csv") # CSV Export
+    exporter.export_results_to_csv(all_results, filename="results2.csv") # CSV Export
     
     # 6. Visualisierung
     #visualizer = Visualizer(robot_config, trajectory, dynamics_solver)

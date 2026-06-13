@@ -6,7 +6,7 @@ from Oberflaeche.gui.tabs.tab_export import ExportTab
 
 
 class InputTabGroup(ttk.Frame):
-    def __init__(self, parent):
+    def __init__(self, parent, plot_frame=None):
         super().__init__(parent)
 
         self.notebook = ttk.Notebook(self)
@@ -19,3 +19,6 @@ class InputTabGroup(ttk.Frame):
         self.notebook.add(self.tab_geometrie, text="Geometrie")
         self.notebook.add(self.tab_pathdef, text="Path Definition")
         self.notebook.add(self.tab_export, text="Export")
+
+        # PlotFrame Referenz speichern
+        self.tab_export.plot_frame = plot_frame
