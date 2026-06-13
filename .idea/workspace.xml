@@ -2,13 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Motor_Berechnung/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Motor_Berechnung/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/input_tabgroup.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/input_tabgroup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,7 +24,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="GUI-Annika" />
+        <entry key="$PROJECT_DIR$" value="GUI-Leonard" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -215,6 +211,16 @@
     <MESSAGE value="Dummy version Export tab" />
     <MESSAGE value="Export-Logik angebunden und CSV-Pfad im Export-Tab anzeigen" />
     <option name="LAST_COMMIT_MESSAGE" value="Export-Logik angebunden und CSV-Pfad im Export-Tab anzeigen" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/Delta_Calculator$GUI_main.coverage" NAME="GUI_main Coverage Results" MODIFIED="1776765522382" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Oberflaeche" />

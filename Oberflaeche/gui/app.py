@@ -40,4 +40,6 @@ class App(tk.Tk):
         )
 
         self.plot_frame.pack(fill="both", expand=True)
+        self.input_tabgroup.tab_geometrie.plot_frame = self.plot_frame
+        self.input_tabgroup.tab_geometrie.robot_config = self.robot_config
         self.input_tabgroup.tab_export.plot_frame = self.plot_frame

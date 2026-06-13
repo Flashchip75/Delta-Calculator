@@ -123,17 +123,38 @@ class PlotFrame(ttk.Frame):
         if self.config is None:
             return
 
-        for motor in self.config.motors:
-            name = motor["name"]
+        motors = self.config.motors
+
+        motor_positions = []
+
+        for motor in motors:
             x, y, z = motor["position"]
 
-            ax.scatter(x, y, z, label=name)
-            ax.text(x, y, z, name)
+            motor_positions.append((x, y, z))
+
+            ax.scatter(x, y, z, s=50)
+            ax.text(x, y, z, motor["name"])
+
+        # TCP grob in der Mitte der Motoren
+        tcp_x = sum(p[0] for p in motor_positions) / 3
+        tcp_y = sum(p[1] for p in motor_positions) / 3
+        tcp_z = 0
+
+        ax.scatter(tcp_x, tcp_y, tcp_z, s=70, label="TCP")
+
+        for x, y, z in motor_positions:
+            ax.plot(
+                [x, tcp_x],
+                [y, tcp_y],
+                [z, tcp_z],
+                "--"
+            )
 
         ax.set_title("Geometrie")
-        ax.set_xlabel("x")
-        ax.set_ylabel("y")
-        ax.set_zlabel("z")
+        ax.set_xlabel("x [m]")
+        ax.set_ylabel("y [m]")
+        ax.set_zlabel("z [m]")
+
         ax.legend()
 
     def plot_path(self, ax):
