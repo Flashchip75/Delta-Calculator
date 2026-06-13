@@ -215,4 +215,4 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
 # ---------------------------------------------------------------------------
 # Singleton — wird beim ersten Import einmalig geladen
 # ---------------------------------------------------------------------------
-cfg: AppConfig = load_config()
+#cfg: AppConfig = load_config()
