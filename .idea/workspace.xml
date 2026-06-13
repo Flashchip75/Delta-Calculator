@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Refactor GUI communication using callback-based plot updates">
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/app.py" afterDir="false" />
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="centralized RobotConfig usage">
       <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/input_tabgroup.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/input_tabgroup.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -202,7 +200,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781359217063</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="centralized RobotConfig usage">
+      <option name="closed" value="true" />
+      <created>1781360879421</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1781360879421</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -230,13 +236,15 @@
     <MESSAGE value="Export-Logik angebunden und CSV-Pfad im Export-Tab anzeigen" />
     <MESSAGE value="callback for geometry plot" />
     <MESSAGE value="Refactor GUI communication using callback-based plot updates" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor GUI communication using callback-based plot updates" />
+    <MESSAGE value="centralized RobotConfig usage" />
+    <option name="LAST_COMMIT_MESSAGE" value="centralized RobotConfig usage" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py</url>
+          <line>1</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

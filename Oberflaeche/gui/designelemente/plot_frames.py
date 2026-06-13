@@ -1,4 +1,5 @@
 import csv
+import math
 from pathlib import Path
 from tkinter import ttk
 
@@ -123,31 +124,81 @@ class PlotFrame(ttk.Frame):
         if self.config is None:
             return
 
-        motor_positions = []
+        motors = self.config.motors
+        bases = [motor["position"] for motor in motors]
 
-        for motor in self.config.motors:
-            x, y, z = motor["position"]
+        center_x = sum(p[0] for p in bases) / len(bases)
+        center_y = sum(p[1] for p in bases) / len(bases)
+
+        upper_angle_deg = 135
+        upper_angle = math.radians(upper_angle_deg)
+
+        elbows = []
+
+        for motor in motors:
+            base = motor["position"]
+            upper_length = motor["upper_length"]
+
+            radial = [center_x - base[0], center_y - base[1]]
+            radial_len = (radial[0] ** 2 + radial[1] ** 2) ** 0.5
+
+            if radial_len == 0:
+                continue
+
+            radial_unit = [radial[0] / radial_len, radial[1] / radial_len]
+
+            elbow = [
+                base[0] + radial_unit[0] * upper_length * math.cos(upper_angle),
+                base[1] + radial_unit[1] * upper_length * math.cos(upper_angle),
+                base[2] - upper_length * math.sin(upper_angle),
+            ]
+
+            elbows.append((motor, elbow))
+
+        avg_lower_length = sum(m["lower_length"] for m in motors) / len(motors)
+
+        avg_xy_dist = sum(
+            ((elbow[0] - center_x) ** 2 + (elbow[1] - center_y) ** 2) ** 0.5
+            for _, elbow in elbows
+        ) / len(elbows)
+
+        tcp_z = elbows[0][1][2] - max(avg_lower_length ** 2 - avg_xy_dist ** 2, 0) ** 0.5
+        tcp = [center_x, center_y, tcp_z]
+
+        ax.scatter(tcp[0], tcp[1], tcp[2], s=70, label="TCP")
+        ax.text(tcp[0], tcp[1], tcp[2], "TCP")
+
+        for motor, elbow in elbows:
             name = motor["name"]
+            base = motor["position"]
 
-            motor_positions.append((x, y, z))
+            ax.scatter(base[0], base[1], base[2], s=50, label=f"Motor {name}")
+            ax.text(base[0], base[1], base[2], name)
 
-            ax.scatter(x, y, z, s=50)
-            ax.text(x, y, z, name)
+            ax.scatter(elbow[0], elbow[1], elbow[2], s=35)
+            ax.text(elbow[0], elbow[1], elbow[2], f"E{name}")
 
-        tcp_x = sum(p[0] for p in motor_positions) / len(motor_positions)
-        tcp_y = sum(p[1] for p in motor_positions) / len(motor_positions)
-        tcp_z = 0
+            ax.plot(
+                [base[0], elbow[0]],
+                [base[1], elbow[1]],
+                [base[2], elbow[2]],
+                linewidth=2
+            )
 
-        ax.scatter(tcp_x, tcp_y, tcp_z, s=70, label="TCP")
-
-        for x, y, z in motor_positions:
-            ax.plot([x, tcp_x], [y, tcp_y], [z, tcp_z], "--")
+            ax.plot(
+                [elbow[0], tcp[0]],
+                [elbow[1], tcp[1]],
+                [elbow[2], tcp[2]],
+                linestyle="--",
+                linewidth=2
+            )
 
         ax.set_title("Geometrie")
         ax.set_xlabel("x [m]")
         ax.set_ylabel("y [m]")
         ax.set_zlabel("z [m]")
         ax.legend()
+
     def plot_path(self, ax):
         if not self.path_data:
             return

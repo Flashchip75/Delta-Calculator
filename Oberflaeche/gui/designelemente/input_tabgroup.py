@@ -4,7 +4,6 @@ from Oberflaeche.gui.tabs.tab_geometrie import GeometrieTab
 from Oberflaeche.gui.tabs.tab_pathdef import PathDefTab
 from Oberflaeche.gui.tabs.tab_export import ExportTab
 
-
 class InputTabGroup(ttk.Frame):
     def __init__(self, parent, robot_config, on_show_geometry=None, on_results_created=None):
         super().__init__(parent)
@@ -14,6 +13,7 @@ class InputTabGroup(ttk.Frame):
 
         self.tab_geometrie = GeometrieTab(
             self.notebook,
+            robot_config=robot_config,
             on_show_geometry=on_show_geometry
         )
 
