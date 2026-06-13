@@ -3,10 +3,8 @@ from Oberflaeche.gui.tabs.tab_base import BaseTab
 
 
 class GeometrieTab(BaseTab):
-
-    def __init__(self, parent):
-        self.plot_frame = None
-        self.robot_config = None
+    def __init__(self, parent, on_show_geometry=None):
+        self.on_show_geometry = on_show_geometry
         super().__init__(parent)
 
     def build_left(self):
@@ -20,7 +18,5 @@ class GeometrieTab(BaseTab):
         ).pack(fill="x", pady=5)
 
     def show_geometry_callback(self):
-        if self.plot_frame is not None and self.robot_config is not None:
-            self.plot_frame.update_geometry_plot(
-                self.robot_config
-            )
+        if self.on_show_geometry is not None:
+            self.on_show_geometry()

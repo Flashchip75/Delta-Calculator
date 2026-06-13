@@ -5,16 +5,17 @@ from Oberflaeche.help_functions.Export_logic import ExportLogic
 
 
 class ExportTab(BaseTab):
-    class ExportTab(BaseTab):
-
-        def __init__(self, parent):
-            self.plot_frame = None
-            super().__init__(parent)
+    def __init__(self, parent, on_results_created=None):
+        self.on_results_created = on_results_created
+        super().__init__(parent)
 
     def build_left(self):
         ttk.Label(self, text="Export").pack(anchor="w")
 
-        self.logic = ExportLogic(self)
+        self.logic = ExportLogic(
+            self,
+            on_results_created=self.on_results_created
+        )
 
         calc_button = ttk.Button(self, text="Calc All", command=self.logic.calc_all_callback)
         calc_button.pack(fill="x")

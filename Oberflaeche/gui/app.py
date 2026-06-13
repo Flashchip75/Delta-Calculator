@@ -16,7 +16,6 @@ class App(tk.Tk):
         self.geometry("1200x700")
 
         self.project_root = Path(__file__).resolve().parents[2]
-
         self.robot_config = RobotConfig()
 
         main_frame = ttk.Frame(self)
@@ -26,11 +25,6 @@ class App(tk.Tk):
         main_frame.columnconfigure(1, weight=2)
         main_frame.rowconfigure(0, weight=1)
 
-        # Eingaben links
-        self.input_tabgroup = InputTabGroup(main_frame)
-        self.input_tabgroup.grid(row=0, column=0, sticky="nsew")
-
-        # Plotbereich rechts
         plot_area = ttk.Frame(main_frame, padding=10)
         plot_area.grid(row=0, column=1, sticky="nsew")
 
@@ -38,8 +32,17 @@ class App(tk.Tk):
             parent=plot_area,
             default_plot="Geometrie"
         )
-
         self.plot_frame.pack(fill="both", expand=True)
-        self.input_tabgroup.tab_geometrie.plot_frame = self.plot_frame
-        self.input_tabgroup.tab_geometrie.robot_config = self.robot_config
-        self.input_tabgroup.tab_export.plot_frame = self.plot_frame
+
+        self.input_tabgroup = InputTabGroup(
+            main_frame,
+            on_show_geometry=self.show_geometry_plot,
+            on_results_created=self.show_motor_angle_plot
+        )
+        self.input_tabgroup.grid(row=0, column=0, sticky="nsew")
+
+    def show_geometry_plot(self):
+        self.plot_frame.update_geometry_plot(self.robot_config)
+
+    def show_motor_angle_plot(self, results_csv_path):
+        self.plot_frame.update_motor_angle_plot(results_csv_path)

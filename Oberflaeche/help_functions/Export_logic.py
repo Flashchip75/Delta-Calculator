@@ -10,8 +10,9 @@ from Oberflaeche.gui.designelemente.plot_frames import PlotFrame
 
 class ExportLogic:
 
-    def __init__(self, tab):
+    def __init__(self, tab, on_results_created=None):
         self.tab = tab
+        self.on_results_created = on_results_created
         self.results_csv_path = None
 
     def calc_all_callback(self):
@@ -35,12 +36,9 @@ class ExportLogic:
         self.results_csv_path = Path(filepath)
         self.write_csv_path_to_line()
 
-        print("plot_frame:", self.tab.plot_frame)
-        print("csv:", self.results_csv_path)
+        if self.on_results_created is not None:
+            self.on_results_created(self.results_csv_path)
 
-        self.tab.plot_frame.update_motor_angle_plot(
-            self.results_csv_path
-        )
     # TODO: Grafik anzeigen callback
     # TODO: Prüfen ob Path vorhanden
 
