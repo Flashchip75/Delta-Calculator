@@ -5,7 +5,8 @@ from Oberflaeche.help_functions.Export_logic import ExportLogic
 
 
 class ExportTab(BaseTab):
-    def __init__(self, parent, on_results_created=None):
+    def __init__(self, parent, robot_config, on_results_created=None):
+        self.robot_config = robot_config
         self.on_results_created = on_results_created
         super().__init__(parent)
 
@@ -14,6 +15,7 @@ class ExportTab(BaseTab):
 
         self.logic = ExportLogic(
             self,
+            robot_config=self.robot_config,
             on_results_created=self.on_results_created
         )
 

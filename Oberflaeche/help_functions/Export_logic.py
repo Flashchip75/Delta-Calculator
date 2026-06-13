@@ -5,20 +5,19 @@ from Motor_Berechnung.trajectory import Trajectory
 from Motor_Berechnung.kinematics import KinematicsSolver
 from Motor_Berechnung.dynamics import DynamicsSolver
 from Motor_Berechnung.export import DataExporter
-from Oberflaeche.gui.designelemente.plot_frames import PlotFrame
 
 
 class ExportLogic:
-
-    def __init__(self, tab, on_results_created=None):
+    def __init__(self, tab, robot_config, on_results_created=None):
         self.tab = tab
+        self.robot_config = robot_config
         self.on_results_created = on_results_created
         self.results_csv_path = None
 
     def calc_all_callback(self):
 
         ROOT = Path(__file__).resolve().parents[2]
-        robot_config = RobotConfig() #Später schon erstellt
+        robot_config = self.robot_config
         trajectory_path = ROOT / robot_config.global_data["trajectory_csv"] # Pfad korrigieren
         trajectory = Trajectory(trajectory_path)
 

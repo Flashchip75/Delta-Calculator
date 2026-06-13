@@ -36,6 +36,7 @@ class App(tk.Tk):
 
         self.input_tabgroup = InputTabGroup(
             main_frame,
+            robot_config=self.robot_config,
             on_show_geometry=self.show_geometry_plot,
             on_results_created=self.show_motor_angle_plot
         )

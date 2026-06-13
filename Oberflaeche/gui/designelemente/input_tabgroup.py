@@ -6,7 +6,7 @@ from Oberflaeche.gui.tabs.tab_export import ExportTab
 
 
 class InputTabGroup(ttk.Frame):
-    def __init__(self, parent, on_show_geometry=None, on_results_created=None):
+    def __init__(self, parent, robot_config, on_show_geometry=None, on_results_created=None):
         super().__init__(parent)
 
         self.notebook = ttk.Notebook(self)
@@ -21,6 +21,7 @@ class InputTabGroup(ttk.Frame):
 
         self.tab_export = ExportTab(
             self.notebook,
+            robot_config=robot_config,
             on_results_created=on_results_created
         )
 
