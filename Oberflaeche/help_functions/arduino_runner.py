@@ -19,7 +19,7 @@ class ArduinoRunner:
     - omega_3_rad_s
     """
 
-    def __init__(self, port, baudrate=115200, slowdown_factor=1, on_log=None):
+    def __init__(self, port, baudrate=115200, slowdown_factor=1, on_log=None,on_finished=None):
         self.port = port
         self.baudrate = baudrate
         self.slowdown_factor = slowdown_factor
@@ -28,6 +28,7 @@ class ArduinoRunner:
         self.running = False
         self.thread = None
         self.ser = None
+        self.on_finished = on_finished
 
     def start(self, results_path):
         """
@@ -61,21 +62,22 @@ class ArduinoRunner:
         zeitlich passend an den Arduino.
         """
 
+        finished_successfully = False
+
         try:
             self._log("Öffne serielle Schnittstelle...")
 
-            self.ser = serial.Serial(
-                self.port,
-                self.baudrate,
-                timeout=0.1
-            )
+            self.ser = serial.Serial(self.port, self.baudrate, timeout=0.1)
 
             # Viele Arduino-Boards resetten beim Öffnen der seriellen Verbindung.
             time.sleep(2)
 
             self._log("Serielle Verbindung geöffnet.")
             self._send_csv_rows(results_path)
-            self._log("Run finished.")
+
+            if self.running:
+                finished_successfully = True
+                self._log("Run finished.")
 
         except Exception as error:
             self._log(f"Arduino-Fehler: {error}")
@@ -83,6 +85,9 @@ class ArduinoRunner:
         finally:
             self._close_serial()
             self.running = False
+
+            if finished_successfully and self.on_finished is not None:
+                self.on_finished()
 
     def _send_csv_rows(self, results_path):
         """

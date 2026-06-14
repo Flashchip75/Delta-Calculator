@@ -36,6 +36,7 @@ class ExportLogic:
             self.on_results_created(Path(filepath))
 
     def run_callback(self):
+        self.set_status("Verbinde...")
         results_path = self.get_program_file_path()
 
         if not results_path.exists():
@@ -44,12 +45,14 @@ class ExportLogic:
 
         port = self.export_tab.serial_line.get()
 
-        self.arduino_runner = ArduinoRunner(port=port, baudrate=115200, slowdown_factor=1, on_log=self.log_from_arduino)
+        self.arduino_runner = ArduinoRunner(port=port, baudrate=115200, slowdown_factor=1, on_log=self.log_from_arduino,on_finished=self.run_finished_callback)
         self.arduino_runner.start(results_path)
+        self.set_status("Läuft")
 
     def stop_callback(self):
         if self.arduino_runner is not None:
             self.arduino_runner.stop()
+        self.set_status("Gestoppt")
 
     def get_program_file_path(self):
         return Path(self.export_tab.csv_line.get())
@@ -75,3 +78,12 @@ class ExportLogic:
 
     def log_from_arduino(self, message):
         self.export_tab.after(0, lambda: print(message))
+
+    def set_status(self, text):
+        self.export_tab.after(
+            0,
+            lambda: self.export_tab.set_status(text)
+        )
+
+    def run_finished_callback(self):
+        self.set_status("Fertig")

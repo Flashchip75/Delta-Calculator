@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Refactor ExportLogic and add configurable program file path">
-      <change afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/plot_data_loader.py" afterDir="false" />
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="added Comments">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/arduino_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/arduino_runner.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -241,7 +241,23 @@
       <option name="project" value="LOCAL" />
       <updated>1781429284056</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Move plot data preparation out of PlotFrame">
+      <option name="closed" value="true" />
+      <created>1781432730737</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1781432730737</updated>
+    </task>
+    <task id="LOCAL-00017" summary="added Comments">
+      <option name="closed" value="true" />
+      <created>1781434159522</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1781434159522</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -274,7 +290,9 @@
     <MESSAGE value="deleted unnecessary files" />
     <MESSAGE value="Add serial communication framework for Arduino trajectory execution" />
     <MESSAGE value="Refactor ExportLogic and add configurable program file path" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactor ExportLogic and add configurable program file path" />
+    <MESSAGE value="Move plot data preparation out of PlotFrame" />
+    <MESSAGE value="added Comments" />
+    <option name="LAST_COMMIT_MESSAGE" value="added Comments" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

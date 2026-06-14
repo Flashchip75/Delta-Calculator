@@ -26,5 +26,16 @@ class ExportTab(BaseTab):
         self.serial_line = TextLine(self, "Serial Connection", default="/dev/tty.usbserial-110")
         self.serial_line.pack(fill="x")
 
+        ttk.Label(self, text="Serial Status").pack(anchor="w")
+
+        status_frame = ttk.LabelFrame(self, text="Serial Status")
+        status_frame.pack(fill="x", pady=(8, 6))
+
+        self.status_label = ttk.Label(status_frame, text="Bereit – keine Verbindung geöffnet")
+        self.status_label.pack(fill="x", padx=6, pady=6)
+
         ttk.Button(self, text="RUN", command=self.logic.run_callback).pack(fill="x")
         ttk.Button(self, text="STOP", command=self.logic.stop_callback).pack(fill="x")
+
+    def set_status(self, text):
+        self.status_label.config(text=text)
