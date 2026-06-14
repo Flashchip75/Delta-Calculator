@@ -3,9 +3,9 @@ import tkinter as tk
 from tkinter import ttk
 
 from Motor_Berechnung.robotconfig import RobotConfig
-
 from Oberflaeche.gui.designelemente.input_tabgroup import InputTabGroup
 from Oberflaeche.gui.designelemente.plot_frames import PlotFrame
+from Oberflaeche.help_functions.plot_data_loader import PlotDataLoader
 
 
 class App(tk.Tk):
@@ -28,22 +28,25 @@ class App(tk.Tk):
         plot_area = ttk.Frame(main_frame, padding=10)
         plot_area.grid(row=0, column=1, sticky="nsew")
 
-        self.plot_frame = PlotFrame(
-            parent=plot_area,
-            default_plot="Geometrie"
-        )
+        self.plot_frame = PlotFrame(parent=plot_area, default_plot="Geometrie")
         self.plot_frame.pack(fill="both", expand=True)
 
         self.input_tabgroup = InputTabGroup(
             main_frame,
             robot_config=self.robot_config,
             on_show_geometry=self.show_geometry_plot,
-            on_results_created=self.show_motor_angle_plot
+            on_results_created=self.update_result_plots_from_csv
         )
         self.input_tabgroup.grid(row=0, column=0, sticky="nsew")
 
     def show_geometry_plot(self):
         self.plot_frame.update_geometry_plot(self.robot_config)
 
-    def show_motor_angle_plot(self, results_csv_path):
-        self.plot_frame.update_motor_angle_plot(results_csv_path)
+    def update_result_plots_from_csv(self, csv_path):
+        data = PlotDataLoader.load_csv(csv_path)
+
+        x, y, z = PlotDataLoader.get_path_data(data)
+        self.plot_frame.set_path_data(x, y, z)
+
+        t, phi_1, phi_2, phi_3 = PlotDataLoader.get_motor_angle_data(data)
+        self.plot_frame.set_motor_angle_data(t, phi_1, phi_2, phi_3)

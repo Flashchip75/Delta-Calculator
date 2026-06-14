@@ -1,6 +1,4 @@
-import csv
 import math
-from pathlib import Path
 from tkinter import ttk
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -12,36 +10,22 @@ class PlotFrame(ttk.Frame):
         super().__init__(parent)
 
         self.config = None
-        self.path_data = []
-        self.results_data = []
+        self.path_data = None
+        self.motor_angle_data = None
 
         self.plot_configs = {
-            "Geometrie": {
-                "method": self.plot_geometry,
-                "is_3d": True
-            },
-            "Pfad 3D": {
-                "method": self.plot_path,
-                "is_3d": True
-            },
-            "Motorwinkel": {
-                "method": self.plot_motor_angles,
-                "is_3d": False
-            }
+            "Geometrie": {"method": self.plot_geometry, "is_3d": True},
+            "Pfad 3D": {"method": self.plot_path, "is_3d": True},
+            "Motorwinkel": {"method": self.plot_motor_angles, "is_3d": False}
         }
 
         self.default_plot = default_plot
-
         self.figures = {}
         self.axes = {}
         self.canvases = {}
 
         self._build_plot_tabs()
         self._select_default_plot()
-
-    # ------------------------------------------------------
-    # GUI-Aufbau
-    # ------------------------------------------------------
 
     def _build_plot_tabs(self):
         self.notebook = ttk.Notebook(self)
@@ -52,11 +36,7 @@ class PlotFrame(ttk.Frame):
             self.notebook.add(tab, text=plot_name)
 
             figure = Figure(figsize=(6, 5), dpi=100)
-
-            if config["is_3d"]:
-                ax = figure.add_subplot(111, projection="3d")
-            else:
-                ax = figure.add_subplot(111)
+            ax = figure.add_subplot(111, projection="3d") if config["is_3d"] else figure.add_subplot(111)
 
             canvas = FigureCanvasTkAgg(figure, master=tab)
             canvas.get_tk_widget().pack(fill="both", expand=True)
@@ -70,36 +50,17 @@ class PlotFrame(ttk.Frame):
             index = list(self.plot_configs.keys()).index(self.default_plot)
             self.notebook.select(index)
 
-    # ------------------------------------------------------
-    # Callbacks
-    # ------------------------------------------------------
-
     def update_geometry_plot(self, config):
         self.config = config
         self.show_plot("Geometrie")
 
-    def update_path_plot(self, csv_path):
-        self.path_data = self._load_csv(csv_path)
+    def set_path_data(self, x, y, z):
+        self.path_data = {"x": x, "y": y, "z": z}
         self.show_plot("Pfad 3D")
 
-    def update_motor_angle_plot(self, csv_path):
-        self.results_data = self._load_csv(csv_path)
+    def set_motor_angle_data(self, t, phi_1, phi_2, phi_3):
+        self.motor_angle_data = {"t": t, "phi_1": phi_1, "phi_2": phi_2, "phi_3": phi_3}
         self.show_plot("Motorwinkel")
-
-    # ------------------------------------------------------
-    # CSV Hilfsfunktionen
-    # ------------------------------------------------------
-
-    def _load_csv(self, csv_path):
-        with open(Path(csv_path), "r", encoding="utf-8", newline="") as file:
-            return list(csv.DictReader(file))
-
-    def _col(self, data, name):
-        return [float(row[name]) for row in data]
-
-    # ------------------------------------------------------
-    # Plot-Steuerung
-    # ------------------------------------------------------
 
     def show_plot(self, plot_name):
         config = self.plot_configs.get(plot_name)
@@ -111,14 +72,8 @@ class PlotFrame(ttk.Frame):
         canvas = self.canvases[plot_name]
 
         ax.clear()
-
         config["method"](ax)
-
         canvas.draw_idle()
-
-    # ------------------------------------------------------
-    # Plot-Funktionen
-    # ------------------------------------------------------
 
     def plot_geometry(self, ax):
         if self.config is None:
@@ -157,10 +112,7 @@ class PlotFrame(ttk.Frame):
 
         avg_lower_length = sum(m["lower_length"] for m in motors) / len(motors)
 
-        avg_xy_dist = sum(
-            ((elbow[0] - center_x) ** 2 + (elbow[1] - center_y) ** 2) ** 0.5
-            for _, elbow in elbows
-        ) / len(elbows)
+        avg_xy_dist = sum(((elbow[0] - center_x) ** 2 + (elbow[1] - center_y) ** 2) ** 0.5 for _, elbow in elbows) / len(elbows)
 
         tcp_z = elbows[0][1][2] - max(avg_lower_length ** 2 - avg_xy_dist ** 2, 0) ** 0.5
         tcp = [center_x, center_y, tcp_z]
@@ -178,20 +130,8 @@ class PlotFrame(ttk.Frame):
             ax.scatter(elbow[0], elbow[1], elbow[2], s=35)
             ax.text(elbow[0], elbow[1], elbow[2], f"E{name}")
 
-            ax.plot(
-                [base[0], elbow[0]],
-                [base[1], elbow[1]],
-                [base[2], elbow[2]],
-                linewidth=2
-            )
-
-            ax.plot(
-                [elbow[0], tcp[0]],
-                [elbow[1], tcp[1]],
-                [elbow[2], tcp[2]],
-                linestyle="--",
-                linewidth=2
-            )
+            ax.plot([base[0], elbow[0]], [base[1], elbow[1]], [base[2], elbow[2]], linewidth=2)
+            ax.plot([elbow[0], tcp[0]], [elbow[1], tcp[1]], [elbow[2], tcp[2]], linestyle="--", linewidth=2)
 
         ax.set_title("Geometrie")
         ax.set_xlabel("x [m]")
@@ -200,29 +140,24 @@ class PlotFrame(ttk.Frame):
         ax.legend()
 
     def plot_path(self, ax):
-        if not self.path_data:
+        if self.path_data is None:
             return
 
-        x = self._col(self.path_data, "x")
-        y = self._col(self.path_data, "y")
-        z = self._col(self.path_data, "z")
-
-        ax.plot(x, y, z)
-
+        ax.plot(self.path_data["x"], self.path_data["y"], self.path_data["z"])
         ax.set_title("Pfad")
         ax.set_xlabel("x")
         ax.set_ylabel("y")
         ax.set_zlabel("z")
 
     def plot_motor_angles(self, ax):
-        if not self.results_data:
+        if self.motor_angle_data is None:
             return
 
-        t = self._col(self.results_data, "t")
+        t = self.motor_angle_data["t"]
 
-        ax.plot(t, self._col(self.results_data, "phi_1"), label="phi_1")
-        ax.plot(t, self._col(self.results_data, "phi_2"), label="phi_2")
-        ax.plot(t, self._col(self.results_data, "phi_3"), label="phi_3")
+        ax.plot(t, self.motor_angle_data["phi_1"], label="phi_1")
+        ax.plot(t, self.motor_angle_data["phi_2"], label="phi_2")
+        ax.plot(t, self.motor_angle_data["phi_3"], label="phi_3")
 
         ax.set_title("Motorwinkel")
         ax.set_xlabel("t")
