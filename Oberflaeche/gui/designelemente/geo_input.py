@@ -1,1 +1,0 @@
-# Hier Klasse zu erzeugung des Geometrieeingabe widgets (für die inkle seite geotab) schreiben

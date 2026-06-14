@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="centralized RobotConfig usage">
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/input_tabgroup.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/input_tabgroup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/plot_frames.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" afterDir="false" />
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Add Leonards geometry plot prototype and example geometry input fields">
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/geo_input.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/struct_geo_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/struct_kin_data.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/struct_path_data.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -208,7 +209,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781360879421</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Add Leonards geometry plot prototype and example geometry input fields">
+      <option name="closed" value="true" />
+      <created>1781362652887</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1781362652887</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -237,7 +246,8 @@
     <MESSAGE value="callback for geometry plot" />
     <MESSAGE value="Refactor GUI communication using callback-based plot updates" />
     <MESSAGE value="centralized RobotConfig usage" />
-    <option name="LAST_COMMIT_MESSAGE" value="centralized RobotConfig usage" />
+    <MESSAGE value="Add Leonards geometry plot prototype and example geometry input fields" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Leonards geometry plot prototype and example geometry input fields" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
