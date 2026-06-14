@@ -4,76 +4,67 @@ import time
 import threading
 import serial
 
+
 # Öffnet die serielle Schnittstelle im Hintergrundthread.
 # Tkinter darf aus diesem Thread nicht direkt aktualisiert werden.
-
-
 class ArduinoRunner:
     """
-    Spielt eine results.csv zeilenweise über die serielle Schnittstelle ab.
+    Spielt eine results.csv über die serielle Schnittstelle ab.
 
     Erwartete CSV-Spalten:
     - t
-    - omega_1_rad_s
-    - omega_2_rad_s
-    - omega_3_rad_s
+    - omega_1
+    - omega_2
+    - omega_3
     """
 
-    def __init__(self, port, baudrate=115200, slowdown_factor=1, on_log=None,on_finished=None):
+    def __init__(self, port, baudrate=115200, slowdown_factor=1, on_log=None, on_finished=None):
         self.port = port
         self.baudrate = baudrate
         self.slowdown_factor = slowdown_factor
         self.on_log = on_log
+        self.on_finished = on_finished
 
         self.running = False
         self.thread = None
         self.ser = None
-        self.on_finished = on_finished
 
     def start(self, results_path):
-        """
-        Startet das Abspielen der results.csv in einem eigenen Thread.
-        """
-
         if self.thread is not None and self.thread.is_alive():
             self._log("Arduino-Run läuft bereits.")
             return
 
         self.running = True
-
-        self.thread = threading.Thread(
-            target=self._run_loop,
-            args=(results_path,),
-            daemon=True
-        )
-
+        self.thread = threading.Thread(target=self._run_loop, args=(results_path,), daemon=True)
         self.thread.start()
 
     def stop(self):
-        """
-        Stoppt den laufenden Arduino-Run.
-        """
-
         self.running = False
 
     def _run_loop(self, results_path):
-        """
-        Öffnet die serielle Schnittstelle und sendet die CSV-Zeilen
-        zeitlich passend an den Arduino.
-        """
-
         finished_successfully = False
+        start_time = time.perf_counter()
 
         try:
-            self._log("Öffne serielle Schnittstelle...")
+            self._log("Lade Kommandos...")
+            commands = self._load_commands(results_path, min_time_step=0.01)
 
-            self.ser = serial.Serial(self.port, self.baudrate, timeout=0.1)
+            if not commands:
+                self._log("Keine gültigen Kommandos gefunden.")
+                return
+
+            csv_duration = commands[-1][0] - commands[0][0]
+            self._log(f"CSV Sollzeit: {csv_duration:.3f} s")
+            self._log(f"Anzahl Kommandos: {len(commands)}")
+
+            self._log("Öffne serielle Schnittstelle...")
+            self.ser = serial.Serial(self.port, self.baudrate, timeout=0.001)
 
             # Viele Arduino-Boards resetten beim Öffnen der seriellen Verbindung.
             time.sleep(2)
 
             self._log("Serielle Verbindung geöffnet.")
-            self._send_csv_rows(results_path)
+            self._send_commands(commands)
 
             if self.running:
                 finished_successfully = True
@@ -83,116 +74,81 @@ class ArduinoRunner:
             self._log(f"Arduino-Fehler: {error}")
 
         finally:
+            runtime = time.perf_counter() - start_time
+            self._send_stop_command()
             self._close_serial()
             self.running = False
+            self._log(f"Laufzeit: {runtime:.3f} s")
 
             if finished_successfully and self.on_finished is not None:
                 self.on_finished()
 
-    def _send_csv_rows(self, results_path):
-        """
-        Liest die CSV zeilenweise und sendet immer die aktuelle Zeile.
-        Für die Wartezeit wird die nächste Zeile benötigt.
-        """
+    def _load_commands(self, results_path, min_time_step=0.01):
+        commands = []
+        last_sent_t = None
 
         with open(results_path, newline="", encoding="utf-8") as file:
             reader = csv.DictReader(file)
 
-            try:
-                current_row = next(reader)
-            except StopIteration:
-                self._log("CSV ist leer.")
+            for row in reader:
+                if self._row_has_nan_values(row):
+                    continue
+
+                t = float(row["t"])
+
+                if not self._should_send_time(t, last_sent_t, min_time_step):
+                    continue
+
+                cmd = self._build_command(row)
+                commands.append((t, cmd))
+                last_sent_t = t
+
+        return commands
+
+    def _send_commands(self, commands):
+        start_real_time = time.perf_counter()
+        start_csv_time = commands[0][0]
+
+        for index, (t_csv, cmd) in enumerate(commands):
+            if not self.running:
+                self._log("Run wurde gestoppt.")
                 return
 
-            for next_row in reader:
-                if not self.running:
-                    self._log("Run wurde gestoppt.")
-                    return
+            target_time = start_real_time + (t_csv - start_csv_time) * self.slowdown_factor
+            sleep_time = target_time - time.perf_counter()
 
-                self._send_row(current_row)
+            if sleep_time > 0:
+                time.sleep(sleep_time)
 
-                delta_t = self._calculate_delta_t(current_row, next_row)
+            self.ser.write((cmd + "\n").encode())
 
-                if delta_t > 0:
-                    time.sleep(delta_t * self.slowdown_factor)
+            if index % 100 == 0:
+                self._log(f"t={t_csv:.4f} s | sent command {index}/{len(commands)}")
 
-                current_row = next_row
-
-            # Letzte Zeile senden
-            if self.running:
-                self._send_row(current_row)
-
-    def _send_row(self, row):
-        """
-        Baut aus einer CSV-Zeile ein Kommando und sendet es.
-        """
-
-        if self._row_has_nan_values(row):
-            self._log("Zeile mit NaN-Werten übersprungen.")
-            return
-
-        cmd = self._build_command(row)
-
-        self.ser.write((cmd + "\n").encode())
-
-        response = self.ser.readline().decode(errors="ignore").strip()
-
-        t_csv = float(row["t"])
-
-        self._log(
-            f"t={t_csv:.4f} s | sent: {cmd} | received: {response}"
-        )
+    def _send_stop_command(self):
+        if self.ser is not None and self.ser.is_open:
+            self.ser.write(("1,0,0;1,1,0;1,2,0\n").encode())
 
     def _build_command(self, row):
-        """
-        Baut das Paket für alle drei Motoren.
-
-        Aktueller Syntax:
-        1,0,omega_0;1,1,omega_1;1,2,omega_2
-        """
-
         omega_0 = float(row["omega_1"])
         omega_1 = float(row["omega_2"])
         omega_2 = float(row["omega_3"])
-
         return f"1,0,{omega_0};1,1,{omega_1};1,2,{omega_2}"
 
-    def _calculate_delta_t(self, current_row, next_row):
-        """
-        Berechnet die Wartezeit zwischen zwei CSV-Zeilen.
-        """
-
-        current_t = float(current_row["t"])
-        next_t = float(next_row["t"])
-
-        delta_t = next_t - current_t
-
-        if delta_t < 0:
-            self._log("Warnung: negativer Zeitschritt in CSV erkannt.")
-            return 0
-
-        return delta_t
-
     def _row_has_nan_values(self, row):
-        """
-        Prüft, ob eine Zeile ungültige omega-Werte enthält.
-        """
-
         omega_0 = float(row["omega_1"])
         omega_1 = float(row["omega_2"])
         omega_2 = float(row["omega_3"])
 
-        return (
-            math.isnan(omega_0)
-            or math.isnan(omega_1)
-            or math.isnan(omega_2)
-        )
+        return math.isnan(omega_0) or math.isnan(omega_1) or math.isnan(omega_2)
+
+    def _should_send_time(self, current_t, last_sent_t, min_time_step):
+        if last_sent_t is None:
+            return True
+
+        return current_t - last_sent_t >= min_time_step
 
     def _close_serial(self):
-        """
-        Schließt die serielle Schnittstelle sauber.
-        """
-
         if self.ser is not None and self.ser.is_open:
             self.ser.close()
             self._log("Serielle Verbindung geschlossen.")
@@ -200,10 +156,6 @@ class ArduinoRunner:
         self.ser = None
 
     def _log(self, message):
-        """
-        Gibt Debug-Informationen aus.
-        """
-
         if self.on_log is not None:
             self.on_log(message)
         else:

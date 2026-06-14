@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="added Comments">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" afterDir="false" />
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Add serial status feedback for Arduino runs">
       <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/arduino_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/arduino_runner.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -257,7 +254,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781434159522</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="Add serial status feedback for Arduino runs">
+      <option name="closed" value="true" />
+      <created>1781436035848</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1781436035848</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -292,7 +297,8 @@
     <MESSAGE value="Refactor ExportLogic and add configurable program file path" />
     <MESSAGE value="Move plot data preparation out of PlotFrame" />
     <MESSAGE value="added Comments" />
-    <option name="LAST_COMMIT_MESSAGE" value="added Comments" />
+    <MESSAGE value="Add serial status feedback for Arduino runs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add serial status feedback for Arduino runs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
