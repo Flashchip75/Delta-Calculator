@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Add Leonards geometry plot prototype and example geometry input fields">
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/geo_input.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/struct_geo_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/struct_kin_data.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/struct_path_data.py" beforeDir="false" />
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Add serial communication framework for Arduino trajectory execution">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_export.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/Export_logic.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,7 +216,23 @@
       <option name="project" value="LOCAL" />
       <updated>1781362652887</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="deleted unnecessary files">
+      <option name="closed" value="true" />
+      <created>1781425979143</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1781425979143</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Add serial communication framework for Arduino trajectory execution">
+      <option name="closed" value="true" />
+      <created>1781427771915</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1781427771915</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -247,7 +262,9 @@
     <MESSAGE value="Refactor GUI communication using callback-based plot updates" />
     <MESSAGE value="centralized RobotConfig usage" />
     <MESSAGE value="Add Leonards geometry plot prototype and example geometry input fields" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add Leonards geometry plot prototype and example geometry input fields" />
+    <MESSAGE value="deleted unnecessary files" />
+    <MESSAGE value="Add serial communication framework for Arduino trajectory execution" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add serial communication framework for Arduino trajectory execution" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
