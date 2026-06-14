@@ -7,12 +7,13 @@ from Motor_Berechnung.export import DataExporter
 from Oberflaeche.help_functions.arduino_runner import ArduinoRunner
 
 
+# Verbindet Export-Tab, CSV-Erzeugung und ArduinoRunner.
+# Der Tab bleibt reine Oberfläche, diese Klasse steuert den Ablauf.
 class ExportLogic:
     def __init__(self, export_tab, robot_config, on_results_created=None):
         self.export_tab = export_tab
         self.robot_config = robot_config
         self.on_results_created = on_results_created
-        self.results_csv_path = None
         self.arduino_runner = None
 
     def calc_all_callback(self):
@@ -29,21 +30,18 @@ class ExportLogic:
         exporter = DataExporter(trajectory, dynamics_solver)
 
         filepath = exporter.export_results_to_csv(all_results, filename="results.csv")
-
-        self.results_csv_path = Path(filepath)
-        self.write_csv_path_to_line()
+        self.set_program_file_path(filepath)
 
         if self.on_results_created is not None:
-            self.on_results_created(self.results_csv_path)
+            self.on_results_created(Path(filepath))
 
     def run_callback(self):
-        results_path = Path(self.export_tab.csv_line.get())
+        results_path = self.get_program_file_path()
 
         if not results_path.exists():
             print(f"CSV-Datei nicht gefunden: {results_path}")
             return
 
-        self.results_csv_path = results_path
         port = self.export_tab.serial_line.get()
 
         self.arduino_runner = ArduinoRunner(port=port, baudrate=115200, slowdown_factor=1, on_log=self.log_from_arduino)
@@ -53,26 +51,27 @@ class ExportLogic:
         if self.arduino_runner is not None:
             self.arduino_runner.stop()
 
-    def write_csv_path_to_line(self):
-        if self.results_csv_path is None:
-            return
+    def get_program_file_path(self):
+        return Path(self.export_tab.csv_line.get())
 
+    def set_program_file_path(self, path):
         self.export_tab.csv_line.input.delete(0, "end")
-        self.export_tab.csv_line.input.insert(0, str(self.results_csv_path))
-
-    def log_from_arduino(self, message):
-        self.export_tab.after(0, lambda: print(message))
+        self.export_tab.csv_line.input.insert(0, str(Path(path)))
 
     def write_program_file_path(self, value):
-        self.results_csv_path = Path(value)
+        # Wird von TextLine aufgerufen.
+        # Keine Speicherung nötig: Program File ist die aktuelle Quelle.
+        pass
 
     def program_file_changed_callback(self):
-        if self.results_csv_path is None:
-            return
+        csv_path = self.get_program_file_path()
 
-        if not self.results_csv_path.exists():
-            print(f"CSV-Datei nicht gefunden: {self.results_csv_path}")
+        if not csv_path.exists():
+            print(f"CSV-Datei nicht gefunden: {csv_path}")
             return
 
         if self.on_results_created is not None:
-            self.on_results_created(self.results_csv_path)
+            self.on_results_created(csv_path)
+
+    def log_from_arduino(self, message):
+        self.export_tab.after(0, lambda: print(message))

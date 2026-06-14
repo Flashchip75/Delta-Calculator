@@ -4,6 +4,9 @@ import time
 import threading
 import serial
 
+# Öffnet die serielle Schnittstelle im Hintergrundthread.
+# Tkinter darf aus diesem Thread nicht direkt aktualisiert werden.
+
 
 class ArduinoRunner:
     """
