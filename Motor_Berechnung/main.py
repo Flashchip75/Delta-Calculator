@@ -21,6 +21,8 @@ def main():
     # 3. Inverse Kinematik berechnen
     kinematics_solver = KinematicsSolver(robot_config)
 
+    #workspace_points = kinematics_solver.plot_workspace(show_unreachable=False)    # Workspace Plot
+
     all_results = kinematics_solver.solve_trajectory(trajectory.path_points)        # Berechnet Motorwinkel für alle Pfadpunkte
     kinematics_solver.print_reachable_summary(trajectory.path_points, all_results)
     kinematics_solver.print_unreachable_points(trajectory.path_points, all_results)

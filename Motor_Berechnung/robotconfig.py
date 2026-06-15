@@ -8,20 +8,20 @@ class RobotConfig:
             "mass_kg": 1.0,
             "payload_mass": 0.100,
             "singularity_margin_deg": 5.0,
-            "trajectory_csv": "woelke.csv",
+            "trajectory_csv": "roboter_dynamik.csv",
             "output_dir": "output"
         }
 
         self.workspace = {
             "resolution": 25,
-            "range_x": {"min": -0.4, "max": 0.4},
-            "range_y": {"min": -0.4, "max": 0.4},
-            "range_z": {"min": -1.3, "max": -0.1}
+            "range_x": {"min": -0.6, "max": 0.6},
+            "range_y": {"min": -0.6, "max": 0.6},
+            "range_z": {"min": -0.6, "max": 0}
         }
 
-        pos_A = np.array([-0.072612, -0.44232, 0], dtype=float)
-        pos_B = np.array([0.074612, -0.040768, 0], dtype=float)
-        pos_C = np.array([-0.002, 0.085, 0], dtype=float)
+        pos_A = np.array([-0.072612, -0.044232, 0.0], dtype=float)
+        pos_B = np.array([0.074612, -0.040768, 0.0], dtype=float)
+        pos_C = np.array([-0.002, 0.085, 0.0], dtype=float)
 
         self.robot_center = np.mean([pos_A, pos_B, pos_C], axis=0)
 
@@ -34,8 +34,8 @@ class RobotConfig:
                 "upper_mass": 0.100,
                 "lower_length": 0.400,
                 "lower_mass": 0.050,
-                "theta_min": -180.0,
-                "theta_max": 180.0,
+                "theta_min": -0.0873, # -5 grad
+                "theta_max": 1.5708, # 90 grad
                 "i": 20,
                 "eta": 0.85,
                 "Jm": 0.0,
@@ -51,8 +51,8 @@ class RobotConfig:
                 "upper_mass": 0.100,
                 "lower_length": 0.400,
                 "lower_mass": 0.050,
-                "theta_min": -180.0,
-                "theta_max": 180.0,
+                "theta_min": -0.0873, # -5 grad
+                "theta_max": 1.5708, # 90 grad
                 "i": 20,
                 "eta": 0.85,
                 "Jm": 0.0,
@@ -63,13 +63,13 @@ class RobotConfig:
             {
                 "name": "C",
                 "position": pos_C,
-                "axis": unit(np.array([1, 0.000, 0.000], dtype=float)),
+                "axis": unit(np.array([-1, 0.000, 0.000], dtype=float)),
                 "upper_length": 0.177,
                 "upper_mass": 0.100,
                 "lower_length": 0.400,
                 "lower_mass": 0.050,
-                "theta_min": -180.0,
-                "theta_max": 180.0,
+                "theta_min": -0.0873, # -5 grad
+                "theta_max": 1.5708, # 90 grad
                 "i": 20,
                 "eta": 0.85,
                 "Jm": 0.0,
