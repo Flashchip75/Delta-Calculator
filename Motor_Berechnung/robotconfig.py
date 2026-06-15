@@ -19,9 +19,9 @@ class RobotConfig:
             "range_z": {"min": -1.3, "max": -0.1}
         }
 
-        pos_A = np.array([0.900, 0.000, 1.500], dtype=float)
-        pos_B = np.array([-0.450, 0.779, 1.500], dtype=float)
-        pos_C = np.array([-0.450, -0.779, 1.500], dtype=float)
+        pos_A = np.array([-0.072612, -0.44232, 0], dtype=float)
+        pos_B = np.array([0.074612, -0.040768, 0], dtype=float)
+        pos_C = np.array([-0.002, 0.085, 0], dtype=float)
 
         self.robot_center = np.mean([pos_A, pos_B, pos_C], axis=0)
 
@@ -29,11 +29,11 @@ class RobotConfig:
             {
                 "name": "A",
                 "position": pos_A,
-                "axis": unit(np.array([0.000, 1.000, 0.000], dtype=float)),
-                "upper_length": 1.000,
-                "upper_mass": 0.600,
-                "lower_length": 2.000,
-                "lower_mass": 0.150,
+                "axis": unit(np.array([0.500, -0.866, 0.000], dtype=float)),
+                "upper_length": 0.177,
+                "upper_mass": 0.100,
+                "lower_length": 0.400,
+                "lower_mass": 0.050,
                 "theta_min": -180.0,
                 "theta_max": 180.0,
                 "i": 20,
@@ -46,11 +46,11 @@ class RobotConfig:
             {
                 "name": "B",
                 "position": pos_B,
-                "axis": unit(np.array([-0.866, -0.500, 0.000], dtype=float)),
-                "upper_length": 1.000,
-                "upper_mass": 0.600,
-                "lower_length": 2.000,
-                "lower_mass": 0.150,
+                "axis": unit(np.array([0.500, 0.866, 0.000], dtype=float)),
+                "upper_length": 0.177,
+                "upper_mass": 0.100,
+                "lower_length": 0.400,
+                "lower_mass": 0.050,
                 "theta_min": -180.0,
                 "theta_max": 180.0,
                 "i": 20,
@@ -63,11 +63,11 @@ class RobotConfig:
             {
                 "name": "C",
                 "position": pos_C,
-                "axis": unit(np.array([0.866, -0.500, 0.000], dtype=float)),
-                "upper_length": 1.000,
-                "upper_mass": 0.600,
-                "lower_length": 2.000,
-                "lower_mass": 0.150,
+                "axis": unit(np.array([1, 0.000, 0.000], dtype=float)),
+                "upper_length": 0.177,
+                "upper_mass": 0.100,
+                "lower_length": 0.400,
+                "lower_mass": 0.050,
                 "theta_min": -180.0,
                 "theta_max": 180.0,
                 "i": 20,
