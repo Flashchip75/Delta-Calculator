@@ -257,7 +257,7 @@ class DynamicsSolver:
 
             L = motor["upper_length"]
             ms = motor["upper_mass"]
-            m2 = motor["lower_mass"]
+            m2 = motor["lower_mass"] / 2.0
             rs = L / 2.0
             i = motor["i"]
             eta = motor["eta"]
@@ -282,7 +282,7 @@ class DynamicsSolver:
 
                 M_grav = (ms * self.g * rs + m2 * self.g * L) * np.cos(phi)
                 M_last = (J_ges * alpha_sw + M_grav) / (i * eta)
-                M_traeg = (Jm + Jg) * alpha_motor
+                M_traeg = (Jm + Jg) * alpha_motor * i
 
                 torque_all[point_index, motor_index] = M_last + M_traeg
 
