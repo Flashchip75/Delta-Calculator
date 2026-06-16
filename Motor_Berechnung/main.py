@@ -1,4 +1,4 @@
-from robotconfig import RobotConfig
+from robotconfig import robot_config
 from trajectory import Trajectory
 from kinematics import KinematicsSolver
 from dynamics import DynamicsSolver
@@ -10,8 +10,7 @@ def main():
     ROOT = Path(__file__).resolve().parent.parent
 
     # 1. Konfiguration laden
-    robot_config = RobotConfig()                    # Erzeugt Roboter, mit allen Attributen und alle globale daten
-    #print(robot_config.global_data["mass_kg"])     # Auslesebeispiel
+    # print(robot_config.global_data["mass_kg"])     # Auslesebeispiel
 
     trajectory_path = ROOT / robot_config.global_data["trajectory_csv"]
 
