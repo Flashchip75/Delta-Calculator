@@ -22,8 +22,9 @@ class exePath:
         """
         Priority:
           1. geometry given directly            -> load from JSON via ProfileManager
-          4. gcode given                        -> parse GCode file for path
-          5. none                               -> raise ValueError
+          2. gcode given                        -> parse GCode file for path
+          3. uiData given                       -> convert UI data to j_data format
+          4. none                               -> raise ValueError
         """
 
         path = cfg.path
@@ -50,10 +51,14 @@ class exePath:
             else:
                 raise ValueError(f"Unbekannte Dateiendung '{ext}' für GCode-Datei.")
         elif uiData is not None:
+            if not isinstance(uiData, tuple) or len(uiData) != 2:
+                raise ValueError("uiData muss ein Tuple mit zwei Elementen sein: (geometries, timeLaws)")
+            if not all(isinstance(item, list) for item in uiData):
+                raise ValueError("Beide Elemente in uiData müssen Listen sein.")
+            if not uiData[0] or not uiData[1]:
+                raise ValueError("Sowohl geometries als auch timeLaws in uiData dürfen nicht leer sein.")
             print("=== Konvertiere UI-Daten -> j_data ===")
-
             converter = UIProfileConverter(default_N=100)
-
             j_data = converter.convert_flat(geometries=uiData[0], timeLaws=uiData[1])
         else:
             raise ValueError("Entweder geometry oder gcode muss angegeben werden.")
