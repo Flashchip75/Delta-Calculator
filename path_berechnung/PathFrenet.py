@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class PathFrenet:
     def __init__(self, pts):
         # 1. Erste und zweite Ableitung der Punkte (Geschwindigkeit und Beschleunigung im Raum) -> Wird anhand des Bahnparameters 0 <= t <= 1 bestimmt.
@@ -23,6 +24,7 @@ class PathFrenet:
         # 5. Normalenvektor N = B x T
         self.N = np.cross(self.B, self.T)
 
+
         # 6. Rausch-Unterdrückung auf geraden Strecken!
         # Wo keine Krümmung ist, ist N und B mathematisch undefiniert.
         # Wir setzen sie auf 0, um das "Zittern" der Kräfte komplett zu eliminieren.
@@ -30,3 +32,17 @@ class PathFrenet:
         self.N[straight_line_mask] = 0.0
         self.B[straight_line_mask] = 0.0
         self.kappa[straight_line_mask] = 0.0
+
+        # ==========================================================
+        # 7. TEST: PROFESSOR-METHODE (Normierung des Krümmungsvektors)
+        # Zum Testen einkommentieren (überschreibt self.kappa am Ende)
+        # ==========================================================
+        #K_vec = self.kappa[:, None] * self.N
+        #norm_K_vec = np.linalg.norm(K_vec, axis=1, keepdims=True)
+        #norm_K_vec = np.maximum(norm_K_vec, 1e-12)
+        #K_vec_normiert = K_vec / norm_K_vec
+        #self.kappa = np.linalg.norm(K_vec_normiert, axis=1)
+
+
+# Frage für GSP am 12.05.2025 -> Wird im Code doch normiert, siehe bsp. norm_d1 = np.linalg.norm(d1,...)
+# Wieso stimmen Graphen erst überein, wenn Tangentenvektoren bzw. Krümmungsvektoren nicht mehr nomriert werden???
