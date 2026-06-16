@@ -17,6 +17,7 @@ class exePath:
         self,
         geometry: str | None = None,
         gcode: str | None = None,
+        uiData: tuple | None = None
     ) -> dict[str, np.ndarray]:
         """
         Priority:
@@ -48,20 +49,17 @@ class exePath:
                 print(f"  GCode '{gcode}' mit {len(j_data)} Segmenten geladen.")
             else:
                 raise ValueError(f"Unbekannte Dateiendung '{ext}' für GCode-Datei.")
+        elif uiData is not None:
+            print("=== Konvertiere UI-Daten -> j_data ===")
+
+            converter = UIProfileConverter(default_N=100)
+
+            j_data = converter.convert_flat(geometries=uiData[0], timeLaws=uiData[1])
         else:
             raise ValueError("Entweder geometry oder gcode muss angegeben werden.")
 
         # 2. Trajektorie & Dynamik (New Logic)
         print("=== Berechne Trajektorie & Dynamik ===")
-
-        # if geometry already comes as UI objects instead of JSON:
-        if isinstance(j_data, list) and len(j_data) > 0 and not isinstance(j_data[0], dict):
-            print("=== Konvertiere UI-Daten -> j_data ===")
-
-            converter = UIProfileConverter(default_N=100)
-
-            # you must provide time laws list here!
-            j_data = converter.convert_flat(j_data, time_laws)
 
         self.validate_path_continuity(j_data)
 
