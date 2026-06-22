@@ -47,7 +47,7 @@ class FloatEntry(ttk.Entry):
     def _validate(self, proposed_value: str) -> bool:
         try:
             n = float(proposed_value)  # <- Fails here if value cannot be parsed
-        except:
+        except ValueError:
             return False
 
         # Only continues here if parsing was successful
@@ -135,7 +135,7 @@ class IntSpinbox(ttk.Spinbox):
         try:
             nf = float(proposed_value) # <- Fails here if value cannot be parsed
             n  = int(nf)
-        except:
+        except ValueError:
             return False
 
         if n != nf: return False # String is not a clean representation of an int

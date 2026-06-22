@@ -265,6 +265,7 @@ class TextLine(PropertyLine):
     def get(self):
         return self.input.get()
 
+
 class DropdownLine(PropertyLine):
     """
     PropertyLine used for selecting an item from the options in a list or dict.
