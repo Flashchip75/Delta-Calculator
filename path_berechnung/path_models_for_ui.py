@@ -1,11 +1,43 @@
 from dataclasses import dataclass, field
-from typing import Tuple, List
+from typing import Tuple, List, Dict
 import math
 
+# =====================================================
+# Listing Function
+# =====================================================
+
+def get_path_models():
+    return (Line, Bezier, Arc, Wait), (Polynomial5, Polynomial7, ConstantVelocity)
 
 # =====================================================
 # Geometries
 # =====================================================
+
+@dataclass
+class Debug: # For UI Debugging only, do not include in get_path_models()
+    ff1: float = 0.0
+
+    ft1: Tuple[float] = (0.0,)
+    ft2: Tuple[float,float] = (0.0, 0.0)
+    ft3: Tuple[float,float,float] = (0.0, 0.0, 0.0)
+    ft4: Tuple[float,float,float,float] = (0.0, 0.0, 0.0, 0.0)
+
+    fu1: Tuple[float,str] = (0.0,"deg")
+    fu2: Tuple[float,float,str] = (0.0, 0.0, "um")
+    fu3: Tuple[float,float,float,str] = (0.0, 0.0, 0.0, "km/h")
+    fu4: Tuple[float,float,float,float,str] = (0.0, 0.0, 0.0, 0.0, "m/s^2")
+
+    ii: int = 90
+    iu: Tuple[int, str] = (180, "deg")
+
+    dl: List[str] = field(default_factory=lambda: ["X", "Y", "Z"])
+    dd: Dict[str, int] = field(default_factory=lambda: {"A": 1, "B": 2, "C": 3})
+
+    cb: bool = False
+    st: str = "Hello World"
+
+    time_law_ref: int = 0
+
 
 @dataclass
 class Line:
