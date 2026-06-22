@@ -61,9 +61,10 @@ class PropertyLine(tk.Frame):
     def get(self):
         return None
 
-    def updateLine(self):
+    def updateLine(self, writeOnly: bool = False):
         self.writeProperties(self.get())
-        self.onLineChanged()
+        if not writeOnly:
+            self.onLineChanged()
 
 
 class NumberLine(PropertyLine):
@@ -176,9 +177,14 @@ class IncrementorLine(PropertyLine):
         )
         self.unitSelector.grid(row=0, column=2, sticky="nsew")
 
+        self.returnAsInteger = isinstance(units,uc.Unitless)
+
     def get(self):
         unitFactor = self.unitSelector.get()[1]
-        return int(self.input.get() * unitFactor)
+        if self.returnAsInteger:
+            return int(self.input.get() * unitFactor)
+        else:
+            return self.input.get() * unitFactor
 
 
 class CheckboxLine(PropertyLine):

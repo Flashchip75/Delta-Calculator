@@ -44,7 +44,7 @@ class Unitless(IUnit):
 
 @dataclass(frozen=True)
 class UnitAngle(IUnit):
-    rad: float = 1
+    rad: float = 1.0
     deg: float = pi/180
     deg: float = pi/180
 
@@ -53,9 +53,9 @@ class UnitAngle(IUnit):
 
 @dataclass(frozen=True)
 class UnitTime(IUnit):
-    h: float = 3600
-    min: float = 60
-    s: float = 1
+    h: float = 3600.0
+    min: float = 60.0
+    s: float = 1.0
     ms: float = 0.001
 
     def getDefault(self) -> str: return "s"
@@ -63,7 +63,7 @@ class UnitTime(IUnit):
 
 @dataclass(frozen=True)
 class UnitLength(IUnit):
-    m: float = 1
+    m: float = 1.0
     dm: float = 0.1
     cm: float = 0.01
     mm: float = 0.001
@@ -74,19 +74,21 @@ class UnitLength(IUnit):
 
 @dataclass(frozen=True)
 class UnitVelocity(IUnit):
-    m_s: float = 1
+    m_s: float = 1.0
     km_h: float = 1 / 3.6
 
     def getDefault(self) -> str: return "m_s"
 
+
 @dataclass(frozen=True)
 class UnitAcceleration(IUnit):
-    m_s2: float = 1
+    m_s2: float = 1.0
 
     def getDefault(self) -> str: return "m_s2"
 
+
 @dataclass(frozen=True)
 class UnitJerk(IUnit):
-    m_s3: float = 1
+    m_s3: float = 1.0
 
     def getDefault(self) -> str: return "m_s3"

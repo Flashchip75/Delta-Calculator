@@ -2,74 +2,155 @@ import typing
 from typing import Tuple, List
 import dataclasses
 from Oberflaeche.gui.designelemente.custom_widgets.property_lines import PropertyLine, NumberLine, IncrementorLine, CheckboxLine, TextLine, DropdownLine
+from Oberflaeche.help_functions import unit_conversion as uc
+import tkinter as tk
+from tkinter import ttk
 
 
-def create_lines_from_dataclass(dataclass, line_master) -> List[PropertyLine]:
-    new_lines = []
-    for f in dataclasses.fields(dataclass):
+class path_property_section(tk.Frame):
+    def __init__(self, master=None, data_object = None, **kwargs):
+        super().__init__(master, **kwargs)
+        if data_object is not None:
+            self.data_object = data_object
+            self._create_lines_from_dataclass()
 
-        # Skip specific keywords
-        if f.name == "time_law_ref":
-            continue
+    def _update_single_curve(self):
+        pass
 
-        # Find base type if type is typing alias
-        main_type = typing.get_origin(f.type) if typing.get_origin(f.type) else f.type
+    def _create_lines_from_dataclass(self):
+        self.lines = []
+        for f in dataclasses.fields(self.data_object):
+            # Skip specific keywords
+            keywords = (
+                "time_law_ref" # Reference integer connecting path geometry to traversal time_law
+            )
+            if f.name in keywords:
+                continue
 
-        # Extract Subtype Information
-        main_type_args = typing.get_args(f.type)
-        if main_type_args:
-            sub_type = main_type_args[0]
-            if main_type_args[-1] == str:
-                field_count = len(main_type_args) - 1
-                has_unit_string = True
+            # Extract Field Value
+            if isinstance(f.default, dataclasses._MISSING_TYPE): # if produced my default factory
+                default_value = getattr(self.data_object,f.name)
             else:
-                field_count = len(main_type_args)
-                has_unit_string = False
+                default_value = f.default
 
-        # Initialize Property Writer
-        write_to_field = lambda value: setattr(dataclass, f.name, value)
+            # Name and default Units
+
+            unit_system = uc.Unitless()
+
+            # Find Base Type
+            if typing.get_origin(f.type): # if annotated as typing type
+                main_type = typing.get_origin(f.type)
+            else:
+                main_type = f.type
+
+            # Extract Subtype Information
+            main_type_args = typing.get_args(f.type)
+            if main_type_args and main_type == tuple:
+                sub_type = main_type_args[0]
+
+                # Adjust defaults if unit is defined
+                if main_type_args[-1] == str:
+                    default_value = f.default[0:-1]
+                    unit_system = uc.get_unit_type(f.default[-1])()
+            else:
+                sub_type = None
+
+            # Create new Line
+            self._create_new_line(main_type, sub_type, f.name, default_value, unit_system)
+
+    def _create_new_line(self, main_type, sub_type, field_name, default_value, unit_system = uc.Unitless()):
+        l = None
+
+        # Common Attributes:
+        line_name = field_name.replace("_", " ")
+        write_function = lambda value: setattr(self.data_object, field_name, value)
+        callback_function = self._update_single_curve
 
         # Main parser
+        # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | BOOL
         if   main_type == bool:
             l = CheckboxLine(
-                line_master,
-                f.name.replace("_", " "),
-                default = f.default,
-                writePropertiesFunction = write_to_field
+                self,
+                line_name,
+                writePropertiesFunction = write_function,
+                onLineChangedFunction = callback_function,
+                default = default_value
             )
-            new_lines.append(l)
-            print("BOOL")
-
+        # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | STR
         elif main_type == str:
-            #new_lines.append(TextLine(line_master,f.name.replace("_"," ")))
-            print("STRING")
-
+            l = TextLine(
+                self,
+                line_name,
+                writePropertiesFunction=write_function,
+                onLineChangedFunction=callback_function,
+                default=default_value
+            )
+        # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | INT
         elif main_type == int:
-            #new_lines.append(IncrementorLine(line_master,f.name.replace("_"," ")))
-            print("INTEGER")
-
+            l = IncrementorLine(
+                self,
+                line_name,
+                writePropertiesFunction = write_function,
+                onLineChangedFunction = callback_function,
+                default = default_value,
+                units = unit_system
+            )
+        # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | FLOAT
         elif main_type == float:
-            # new_lines.append(NumberLine(line_master,f.name.replace("_"," ")))
-            print("FLOAT")
-
+            l = NumberLine(
+                self,
+                line_name,
+                writePropertiesFunction = write_function,
+                onLineChangedFunction = callback_function,
+                defaults = (default_value,),
+                inputCount = 1,
+                units = unit_system
+            )
+        # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | TUPLE
         elif main_type == tuple:
-            if sub_type == int:
-                # new_lines.append(IncrementorLine(line_master,f.name.replace("_"," ")))
-                print("INT TUPLE")
-
-            elif sub_type == float:
-                # new_lines.append(NumberLine(line_master,f.name.replace("_"," ")))
-                print("FLOAT TUPLE")
-
-
+            print(sub_type)
+            if sub_type == float:
+                is_coordinate = isinstance(unit_system,uc.UnitLength) and len(default_value) == 3
+                l = NumberLine(
+                    self,
+                    line_name,
+                    writePropertiesFunction = write_function,
+                    onLineChangedFunction = callback_function,
+                    defaults = default_value,
+                    inputCount = len(default_value),
+                    units = unit_system,
+                    colored = is_coordinate
+                )
+            elif sub_type == int:
+                l = IncrementorLine(
+                    self,
+                    line_name,
+                    writePropertiesFunction = write_function,
+                    onLineChangedFunction = callback_function,
+                    default = default_value[0],
+                    units = unit_system
+                )
+        # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | LIST
         elif main_type == list:
-            #new_lines.append(DropdownLine(line_master, f.name.replace("_", " ")))
-            print("LIST")
-
+            l = DropdownLine(
+                self,
+                line_name,
+                writePropertiesFunction = write_function,
+                onLineChangedFunction = callback_function,
+                options = default_value
+            )
+        # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | DICT
         elif main_type == dict:
-            # new_lines.append(DropdownLine(line_master, f.name.replace("_", " ")))
-            print("DICT")
+            l = DropdownLine(
+                self,
+                line_name,
+                writePropertiesFunction=write_function,
+                onLineChangedFunction=callback_function,
+                options=default_value
+            )
 
-
-
-
+        # Store new Line
+        if l:
+            self.lines.append(l)
+            l.pack(fill=tk.BOTH)
+            l.updateLine(True)

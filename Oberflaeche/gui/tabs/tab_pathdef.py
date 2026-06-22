@@ -1,8 +1,13 @@
 from tkinter import ttk
+
+import path_berechnung
 from Oberflaeche.gui.tabs.tab_base import BaseTab
 from Oberflaeche.help_functions import unit_conversion as uc
 from Oberflaeche.gui.designelemente.custom_widgets.property_lines import *
 from Oberflaeche.gui.designelemente.custom_widgets.grouping_widgets import *
+
+import Oberflaeche.help_functions.path_dataclass_parser as pdp
+import path_berechnung.path_models_for_ui as path_models
 
 # Eingabetab links zur Pfaddefinition
 
@@ -64,3 +69,40 @@ class PathDefTab(BaseTab):
             command=printAction,
         )
         printButton.pack(fill=tk.X)
+
+        line_obj = path_models.Line()
+        bez_obj = path_models.Bezier()
+        arc_obj = path_models.Arc()
+        wait_obj = path_models.Wait()
+        debug_obj = path_models.Debug()
+
+        #line_section = pdp.path_property_section(self, line_obj)
+        #line_section.pack(fill=tk.X)
+#
+        #bez_section = pdp.path_property_section(self, bez_obj)
+        #bez_section.pack(fill=tk.X)
+#
+        #arc_section = pdp.path_property_section(self,arc_obj)
+        #arc_section.pack(fill=tk.X)
+#
+        #wait_section = pdp.path_property_section(self, wait_obj)
+        #wait_section.pack(fill=tk.X)
+
+        debug_section = pdp.path_property_section(self, debug_obj)
+        debug_section.pack(fill=tk.X)
+
+        def objAction():
+            print("> Object Values:")
+            print(line_obj)
+            print(bez_obj)
+            print(arc_obj)
+            print(wait_obj)
+            print(debug_obj)
+            print("----- ----- ----- ----- -----")
+
+        pathSectionButton = tk.Button(
+            self,
+            text="Obj Data",
+            command=objAction
+        )
+        pathSectionButton.pack(fill=tk.X)
