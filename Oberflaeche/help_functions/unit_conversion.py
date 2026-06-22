@@ -2,10 +2,24 @@ import dataclasses
 from dataclasses import dataclass
 from math import pi
 
+def string_to_field(str) -> str:
+    return str.replace("/", "_").replace("^2", "2").replace("^3", "3").replace("^4", "4")
+
+def field_to_string(str) -> str:
+    return str.replace("_", "/").replace("2", "^2").replace("3", "^3").replace("4", "^4")
+
+def get_unit_type(unitString: str) -> dataclass:
+    allUnits = IUnit.__subclasses__()
+    for unit in allUnits:
+        try:
+            getattr(unit, string_to_field(unitString))
+            return unit
+        except AttributeError:
+            pass
 
 class IUnit:
     def getValue(self, key: str) -> float:
-        return getattr(self, key.replace("/", "_"))
+        return getattr(self, string_to_field(key))
 
     def getIndex(self, key: str) -> int:
         d = dataclasses.asdict(self)
@@ -18,7 +32,7 @@ class IUnit:
 
     def getLists(self) -> tuple:
         d = dataclasses.asdict(self)
-        return [k.replace("_", "/") for k in d.keys()], list(d.values())
+        return [field_to_string(k) for k in d.keys()], list(d.values())
 
 
 @dataclass(frozen=True)
@@ -31,6 +45,7 @@ class Unitless(IUnit):
 @dataclass(frozen=True)
 class UnitAngle(IUnit):
     rad: float = 1
+    deg: float = pi/180
     deg: float = pi/180
 
     def getDefault(self) -> str: return "rad"
@@ -63,3 +78,15 @@ class UnitVelocity(IUnit):
     km_h: float = 1 / 3.6
 
     def getDefault(self) -> str: return "m_s"
+
+@dataclass(frozen=True)
+class UnitAcceleration(IUnit):
+    m_s2: float = 1
+
+    def getDefault(self) -> str: return "m_s2"
+
+@dataclass(frozen=True)
+class UnitJerk(IUnit):
+    m_s3: float = 1
+
+    def getDefault(self) -> str: return "m_s3"
