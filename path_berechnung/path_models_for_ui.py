@@ -17,15 +17,15 @@ def get_path_models():
 class Debug: # For UI Debugging only, do not include in get_path_models()
     ff1: float = 0.0
 
-    ft1: Tuple[float] = (0.0,)
-    ft2: Tuple[float,float] = (0.0, 0.0)
-    ft3: Tuple[float,float,float] = (0.0, 0.0, 0.0)
-    ft4: Tuple[float,float,float,float] = (0.0, 0.0, 0.0, 0.0)
+    ft1: Tuple[float] = (1.0,)
+    ft2: Tuple[float,float] = (2.0, 3.0)
+    ft3: Tuple[float,float,float] = (4.0, 5.0, 6.0)
+    ft4: Tuple[float,float,float,float] = (7.0, 8.0, 9.0, 10.0)
 
-    fu1: Tuple[float,str] = (0.0,"deg")
-    fu2: Tuple[float,float,str] = (0.0, 0.0, "um")
-    fu3: Tuple[float,float,float,str] = (0.0, 0.0, 0.0, "km/h")
-    fu4: Tuple[float,float,float,float,str] = (0.0, 0.0, 0.0, 0.0, "m/s^2")
+    fu1: Tuple[float,str] = (42.0,"deg")
+    fu2: Tuple[float,float,str] = (67.0, 69.0, "um")
+    fu3: Tuple[float,float,float,str] = (-273.15, 299792458.0, 6.022E23, "km/h")
+    fu4: Tuple[float,float,float,float,str] = (0.0, -0.0, 0.0, -0.0, "m/s^2")
 
     ii: int = 90
     iu: Tuple[int, str] = (180, "deg")
