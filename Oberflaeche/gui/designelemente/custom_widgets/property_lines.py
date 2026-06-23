@@ -32,7 +32,7 @@ class PropertyLine(tk.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)  # Left: Text Label, adjustable
         self.columnconfigure(1, weight=0)  # Center: Input Fields, fixed
-        self.columnconfigure(2, weight=0)  # Right: Text Label, fixed
+        self.columnconfigure(2, weight=0)  # Right: Input Fields or Units, fixed
 
         # Initialize Line Label
         self.label = ttk.Label(
