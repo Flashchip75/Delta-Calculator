@@ -1,6 +1,7 @@
 import numpy as np
 import copy
 import csv
+from ui_to_presolve import path_to_presolve_config
 
 class PreCurve:
     def __init__(self, cfg):
@@ -27,6 +28,11 @@ class Presolver:
             cfg["N"] = cfg.get("N", max(2, int(length * default_ppm)))
         return enriched
 
+    @staticmethod
+    def enrich_ui_path(path, time_laws=None, default_ppm=100):
+        presolver_input = path_to_presolve_config(path, time_laws)
+      return Presolver.enrich_config(presolver_input, default_ppm)
+    
     @staticmethod
     def export_summary_csv(enriched_data, filename="presolve_summary.csv"):
         """Exportiert eine saubere Übersicht der Segmente als CSV."""
