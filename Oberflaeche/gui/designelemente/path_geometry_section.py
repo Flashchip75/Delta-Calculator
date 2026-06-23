@@ -5,6 +5,7 @@ from Oberflaeche.gui.designelemente.custom_widgets.property_lines import Propert
 from Oberflaeche.help_functions import unit_conversion as uc
 import tkinter as tk
 from tkinter import ttk
+from path_berechnung.presolve import Presolver as pre
 
 
 class path_geometry_section(tk.Frame):
@@ -15,6 +16,9 @@ class path_geometry_section(tk.Frame):
             self._create_lines_from_dataclass()
 
     def _update_single_curve(self):
+        #TODO: Presolve this curve and/or callback to parent (path_tab)
+
+        # discrete_path_data = pre.enrich_config( uidata = ([self.data_object],[]) )
         pass
 
     def _create_lines_from_dataclass(self):
