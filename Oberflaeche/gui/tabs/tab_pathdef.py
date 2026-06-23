@@ -1,12 +1,8 @@
-from tkinter import ttk
-
-import path_berechnung
 from Oberflaeche.gui.tabs.tab_base import BaseTab
-from Oberflaeche.help_functions import unit_conversion as uc
 from Oberflaeche.gui.designelemente.custom_widgets.property_lines import *
 from Oberflaeche.gui.designelemente.custom_widgets.grouping_widgets import *
 
-import Oberflaeche.help_functions.path_dataclass_parser as pdp
+import Oberflaeche.gui.designelemente.path_geometry_section as pdp
 import path_berechnung.path_models_for_ui as path_models
 
 # Eingabetab links zur Pfaddefinition
@@ -88,7 +84,7 @@ class PathDefTab(BaseTab):
         #wait_section = pdp.path_property_section(self, wait_obj)
         #wait_section.pack(fill=tk.X)
 
-        debug_section = pdp.path_property_section(self, debug_obj)
+        debug_section = pdp.path_geometry_section(self, debug_obj)
         debug_section.pack(fill=tk.X)
 
         def objAction():

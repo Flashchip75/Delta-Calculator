@@ -72,7 +72,7 @@ class NumberLine(PropertyLine):
     PropertyLine used for inputting numerical values and vectors (tuples), optionally with SI unit conversion.
     """
     def __init__(self, master=None, labelText: str = "", inputCount: int = 1, units: dataclass = uc.Unitless(), *,
-                 defaults: tuple = None, writePropertiesFunction=None, onLineChangedFunction=None,
+                 defaults: tuple = None, defaultUnit: str = "", writePropertiesFunction=None, onLineChangedFunction=None,
                  colored: bool = False, colorShift: float = 0.0, **kwargs):
         super().__init__(
             master,
@@ -121,6 +121,7 @@ class NumberLine(PropertyLine):
         self.unitSelector = UnitSelectorCombobox(
             self,
             units,
+            defaultUnit=defaultUnit,
             onValueChangedFunction=self.updateLine,
             name="lineUnitSelector(" + labelText.replace(" ", "_") + ")"
         )
@@ -136,7 +137,7 @@ class IncrementorLine(PropertyLine):
     PropertyLine used for inputting integer values, optionally with SI unit conversion.
     """
     def __init__(self, master=None, labelText: str = "", units: dataclass = uc.Unitless(), *,
-                 default: int = 0, writePropertiesFunction=None, onLineChangedFunction=None, **kwargs):
+                 default: int = 0, defaultUnit: str = "", writePropertiesFunction=None, onLineChangedFunction=None, **kwargs):
         super().__init__(
             master,
             labelText,
@@ -172,6 +173,7 @@ class IncrementorLine(PropertyLine):
         self.unitSelector = UnitSelectorCombobox(
             self,
             units,
+            defaultUnit=defaultUnit,
             onValueChangedFunction=self.updateLine,
             name="lineUnitSelector(" + labelText.replace(" ", "_") + ")"
         )

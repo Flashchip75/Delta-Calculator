@@ -23,8 +23,10 @@ class IUnit:
 
     def getIndex(self, key: str) -> int:
         d = dataclasses.asdict(self)
+        key = string_to_field(key)
         idx = -1
         for i, k in enumerate(d):
+            print(k + "|" + key)
             if k == key:
                 idx = i
                 break

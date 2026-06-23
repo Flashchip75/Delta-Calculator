@@ -7,7 +7,7 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class path_property_section(tk.Frame):
+class path_geometry_section(tk.Frame):
     def __init__(self, master=None, data_object = None, **kwargs):
         super().__init__(master, **kwargs)
         if data_object is not None:
@@ -35,7 +35,7 @@ class path_property_section(tk.Frame):
 
             # Name and default Units
 
-            unit_system = uc.Unitless()
+            default_unit = "/"
 
             # Find Base Type
             if typing.get_origin(f.type): # if annotated as typing type
@@ -51,20 +51,21 @@ class path_property_section(tk.Frame):
                 # Adjust defaults if unit is defined
                 if main_type_args[-1] == str:
                     default_value = f.default[0:-1]
-                    unit_system = uc.get_unit_type(f.default[-1])()
+                    default_unit = f.default[-1]
             else:
                 sub_type = None
 
             # Create new Line
-            self._create_new_line(main_type, sub_type, f.name, default_value, unit_system)
+            self._create_new_line(main_type, sub_type, f.name, default_value, default_unit)
 
-    def _create_new_line(self, main_type, sub_type, field_name, default_value, unit_system = uc.Unitless()):
+    def _create_new_line(self, main_type, sub_type, field_name, default_value, default_unit):
         l = None
 
         # Common Attributes:
         line_name = field_name.replace("_", " ")
         write_function = lambda value: setattr(self.data_object, field_name, value)
         callback_function = self._update_single_curve
+        unit_system = uc.get_unit_type(default_unit)()
 
         # Main parser
         # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | BOOL
@@ -93,7 +94,8 @@ class path_property_section(tk.Frame):
                 writePropertiesFunction = write_function,
                 onLineChangedFunction = callback_function,
                 default = default_value,
-                units = unit_system
+                units = unit_system,
+                defaultUnit = default_unit
             )
         # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | FLOAT
         elif main_type == float:
@@ -104,11 +106,11 @@ class path_property_section(tk.Frame):
                 onLineChangedFunction = callback_function,
                 defaults = (default_value,),
                 inputCount = 1,
-                units = unit_system
+                units = unit_system,
+                defaultUnit = default_unit
             )
         # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | TUPLE
         elif main_type == tuple:
-            print(sub_type)
             if sub_type == float:
                 is_coordinate = isinstance(unit_system,uc.UnitLength) and len(default_value) == 3
                 l = NumberLine(
@@ -119,6 +121,7 @@ class path_property_section(tk.Frame):
                     defaults = default_value,
                     inputCount = len(default_value),
                     units = unit_system,
+                    defaultUnit = default_unit,
                     colored = is_coordinate
                 )
             elif sub_type == int:
@@ -128,6 +131,7 @@ class path_property_section(tk.Frame):
                     writePropertiesFunction = write_function,
                     onLineChangedFunction = callback_function,
                     default = default_value[0],
+                    defaultUnit = default_unit,
                     units = unit_system
                 )
         # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | LIST
