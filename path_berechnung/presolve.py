@@ -1,7 +1,8 @@
 import numpy as np
 import copy
 import csv
-from path_berechnung.ui_to_presolve import path_to_presolve_config
+from ui_to_presolve import UIToPresolveConverter
+
 
 class PreCurve:
     def __init__(self, cfg):
@@ -18,21 +19,41 @@ class PreCurve:
 
 
 class Presolver:
+
     @staticmethod
     def enrich_config(json_data, default_ppm=100):
         enriched = copy.deepcopy(json_data)
+
         for cfg in enriched:
-            pts = np.array([PreCurve(cfg)(t) for t in np.linspace(0, 1, 100)])
-            length = np.sum(np.linalg.norm(np.diff(pts, axis=0), axis=1))
+            # Erste grobe Abtastung zur Laengenbestimmung
+            pts_preview = np.array([
+                PreCurve(cfg)(t)
+                for t in np.linspace(0, 1, 100)
+            ])
+
+            length = np.sum(
+                np.linalg.norm(np.diff(pts_preview, axis=0), axis=1)
+            )
+
             cfg["approx_length"] = length
             cfg["N"] = cfg.get("N", max(2, int(length * default_ppm)))
+
+            # Eigentliche Punktewolke mit N Punkten
+            pts = np.array([
+                PreCurve(cfg)(t)
+                for t in np.linspace(0, 1, cfg["N"])
+            ])
+
+            cfg["point_cloud"] = pts.tolist()
+
         return enriched
 
     @staticmethod
-    def enrich_ui_path(path, time_laws=None, default_ppm=100):
-        presolver_input = path_to_presolve_config(path, time_laws)
+    def enrich_ui_path(ui_data, default_ppm=100):
+        converter = UIToPresolveConverter(default_N=default_ppm)
+        presolver_input = converter.convert_ui_data(ui_data)
         return Presolver.enrich_config(presolver_input, default_ppm)
-    
+
     @staticmethod
     def export_summary_csv(enriched_data, filename="presolve_summary.csv"):
         """Exportiert eine saubere Übersicht der Segmente als CSV."""
@@ -41,3 +62,21 @@ class Presolver:
             writer.writerow(["Segment_ID", "Typ", "Laenge_m", "Punkte_N", "Zeit_T"])
             for i, seg in enumerate(enriched_data):
                 writer.writerow([i, seg["type"], round(seg["approx_length"], 4), seg["N"], seg.get("T", "N/A")])
+
+    @staticmethod
+    def get_total_point_cloud(enriched_data):
+        point_cloud = []
+
+        for seg in enriched_data:
+            pts = seg.get("point_cloud", [])
+
+            if not pts:
+                continue
+
+            # Doppelten Uebergangspunkt vermeiden
+            if point_cloud and pts[0] == point_cloud[-1]:
+                point_cloud.extend(pts[1:])
+            else:
+                point_cloud.extend(pts)
+
+        return point_cloud
