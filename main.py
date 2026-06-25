@@ -10,11 +10,13 @@ def main():
 
     geometry = "full_circle"
     gcode = "test.gcode"
+    uiData = None
 
     # --- Switch ---
     kwargs = {
         "geometry": dict(geometry=geometry),
         "gcode":    dict(gcode=gcode),
+        "uiData":   dict(uiData=uiData),
     }
 
     g = cfg.global_cfg

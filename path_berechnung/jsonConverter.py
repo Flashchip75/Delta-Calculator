@@ -7,20 +7,20 @@ class UIProfileConverter:
     # -------------------------
     # Public API
     # -------------------------
-    def convert(self, geometries, time_laws, profile_name):
+    def convert(self, geometries, timeLaws, profile_name):
         if profile_name is None:
             raise ValueError("profile_name must be provided for convert() method.")
         return {
             profile_name: [
-                self._map_geometry(g, time_laws)
+                self._map_geometry(g, timeLaws)
                 for g in geometries
             ]
         }
 
-    def convert_flat(self, geometries, time_laws):
+    def convert_flat(self, geometries, timeLaws):
         """Returns directly j_data (list of segments)"""
         return [
-            self._map_geometry(g, time_laws)
+            self._map_geometry(g, timeLaws)
             for g in geometries
         ]
 
@@ -74,11 +74,11 @@ class UIProfileConverter:
     # -------------------------
     # Geometry mapping
     # -------------------------
-    def _map_geometry(self, obj, time_laws):
+    def _map_geometry(self, obj, timeLaws):
         tl = None
 
         if hasattr(obj, "time_law_ref") and not self._is_nan(obj.time_law_ref):
-            tl = time_laws[int(obj.time_law_ref)]
+            tl = timeLaws[int(obj.time_law_ref)]
 
         dynamik = self._map_time_law(tl)
 
