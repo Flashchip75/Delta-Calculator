@@ -1,150 +1,93 @@
-import math
+class UIToPresolveConverter:
+    def __init__(self, default_N=100):
+        self.default_N = default_N
 
+    def convert_ui_data(self, ui_data):
+        pfade, zeitgesetze = ui_data
+        return self.convert_path(pfade)
 
-def plane_to_uv(plane: str):
-    """
-    Converts the selected plane into the two unit vectors u and v
-    required by the presolver for Arc curves.
-    """
-    if plane == "xy":
-        return [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]
+    def convert_curve(self, curve):
+        name = curve.__class__.__name__
 
-    if plane == "xz":
-        return [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]
+        if name == "Line":
+            return {
+                "type": "Line",
+                "pts": [
+                    self._vec3(curve.start),
+                    self._vec3(curve.end)
+                ],
+                "N": self.default_N
+            }
 
-    if plane == "yz":
-        return [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]
+        if name == "Bezier":
+            return {
+                "type": "Bezier",
+                "pts": [
+                    self._vec3(curve.p0),
+                    self._vec3(curve.p1),
+                    self._vec3(curve.p2),
+                    self._vec3(curve.p3)
+                ],
+                "N": self.default_N
+            }
 
-    raise ValueError(f"Unknown plane: {plane}")
+        if name == "Arc":
+            plane = self._plane_value(curve.plane)
+            u, v = self._plane_to_uv(plane)
 
+            return {
+                "type": "Arc",
+                "c": self._vec3(curve.center),
+                "r": self._val(curve.radius),
+                "u": u,
+                "v": v,
+                "a": [
+                    self._val(curve.start_angle),
+                    self._val(curve.end_angle)
+                ],
+                "N": self.default_N
+            }
 
-def get_duration_from_time_law(curve, time_laws):
-    """
-    Gets the duration T from the time law referenced by the curve.
-    If no valid duration exists, None is returned.
-    """
-    ref = getattr(curve, "time_law_ref", None)
+        if name == "Wait":
+            return None
 
-    # Wait uses NaN as time_law_ref
-    if ref is None:
-        return None
+        raise ValueError(f"Unknown curve type: {name}")
 
-    if isinstance(ref, float) and math.isnan(ref):
-        return None
+    def convert_path(self, path):
+        configs = []
 
-    if not isinstance(ref, int):
-        return None
+        for curve in path:
+            cfg = self.convert_curve(curve)
 
-    if ref < 0 or ref >= len(time_laws):
-        return None
+            if cfg is not None:
+                configs.append(cfg)
 
-    time_law = time_laws[ref]
+        return configs
 
-    if hasattr(time_law, "duration"):
-        return time_law.duration
+    def _val(self, x):
+        if isinstance(x, tuple):
+            return x[0]
+        return x
 
-    return None
+    def _vec3(self, p):
+        return [p[0], p[1], p[2]]
 
+    def _plane_value(self, plane):
+        if isinstance(plane, list):
+            if len(plane) == 0:
+                raise ValueError("Plane list is empty.")
+            return plane[0]
 
-def curve_to_presolve_config(curve, time_laws=None):
-    """
-    Converts one UI curve dataclass into the dictionary format
-    required by PreCurve/Presolver.
-    """
-    curve_type = curve.__class__.__name__
+        return plane
 
-    if time_laws is None:
-        time_laws = []
+    def _plane_to_uv(self, plane):
+        if plane == "xy":
+            return [1.0, 0.0, 0.0], [0.0, 1.0, 0.0]
 
-    T = get_duration_from_time_law(curve, time_laws)
+        if plane == "xz":
+            return [1.0, 0.0, 0.0], [0.0, 0.0, 1.0]
 
-    if curve_type == "Line":
-        cfg = {
-            "type": "Line",
-            "pts": [
-                list(curve.start),
-                list(curve.end)
-            ]
-        }
+        if plane == "yz":
+            return [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]
 
-        if T is not None:
-            cfg["T"] = T
-
-        return cfg
-
-    if curve_type == "Bezier":
-        cfg = {
-            "type": "Bezier",
-            "pts": [
-                list(curve.p0),
-                list(curve.p1),
-                list(curve.p2),
-                list(curve.p3)
-            ]
-        }
-
-        if T is not None:
-            cfg["T"] = T
-
-        return cfg
-
-    if curve_type == "Arc":
-        u, v = plane_to_uv(curve.plane)
-
-        cfg = {
-            "type": "Arc",
-            "c": list(curve.center),
-            "r": curve.radius,
-            "u": u,
-            "v": v,
-            "a": [
-                curve.start_angle,
-                curve.end_angle
-            ]
-        }
-
-        if T is not None:
-            cfg["T"] = T
-
-        return cfg
-
-    if curve_type == "Wait":
-        return {
-            "type": "Wait",
-            "T": curve.duration,
-            "approx_length": 0.0,
-            "N": 1
-        }
-
-    raise TypeError(f"Unsupported curve type: {curve_type}")
-
-
-def path_to_presolve_config(path, time_laws=None, include_wait=False):
-    """
-    Converts a complete UI path into a list of presolver configurations.
-
-    If include_wait is False, Wait elements are ignored because the current
-    Presolver cannot calculate a curve length for Wait.
-    """
-    if time_laws is None:
-        time_laws = []
-
-    configs = []
-
-    for curve in path:
-        curve_type = curve.__class__.__name__
-
-        if curve_type == "Wait" and not include_wait:
-            continue
-
-        configs.append(curve_to_presolve_config(curve, time_laws))
-
-    return configs
-
-
-def single_curve_to_presolve_config(curve, time_laws=None):
-    """
-    Converts a single curve for presolve usage.
-    Useful if the UI calls the presolver for only one curve at a time.
-    """
-    return curve_to_presolve_config(curve, time_laws)
+        raise ValueError(f"Unknown plane: {plane}")
