@@ -85,22 +85,22 @@ class Wait:
 class Polynomial5:
     duration: Tuple[float, str] = (1.0, "s")
 
-    start_acceleration: Tuple[float, str] = (0.0, "1/s^2")
+    start_acceleration: Tuple[float, str] = (0.0, "m/s^2")
 
-    end_velocity: Tuple[float, str] = (0.0, "1/s")
-    end_acceleration: Tuple[float, str] = (0.0, "1/s^2")
+    end_velocity: Tuple[float, str] = (0.0, "m/s")
+    end_acceleration: Tuple[float, str] = (0.0, "m/s^2")
 
 
 @dataclass
 class Polynomial7:
     duration: Tuple[float, str] = (1.0, "s")
 
-    start_acceleration: Tuple[float, str] = (0.0, "1/s^2")
-    start_jerk: Tuple[float, str] = (0.0, "1/s^3")
+    start_acceleration: Tuple[float, str] = (0.0, "m/s^2")
+    start_jerk: Tuple[float, str] = (0.0, "m/s^3")
 
-    end_velocity: Tuple[float, str] = (0.0, "1/s")
-    end_acceleration: Tuple[float, str] = (0.0, "1/s^2")
-    end_jerk: Tuple[float, str] = (0.0, "1/s^3")
+    end_velocity: Tuple[float, str] = (0.0, "m/s")
+    end_acceleration: Tuple[float, str] = (0.0, "m/s^2")
+    end_jerk: Tuple[float, str] = (0.0, "m/s^3")
 
 
 @dataclass
