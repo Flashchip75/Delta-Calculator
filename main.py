@@ -6,7 +6,7 @@ import path_berechnung.exe_path as exeP
 
 def main():
     print("=== Starte Pfadberechnung ===")
-    mode = "geometry"
+    mode = "gcode"
 
     geometry = "full_circle"
     gcode = "test.gcode"
