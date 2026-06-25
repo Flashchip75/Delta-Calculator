@@ -1,7 +1,7 @@
 import numpy as np
 import copy
 import csv
-from ui_to_presolve import path_to_presolve_config
+from path_berechnung.ui_to_presolve import path_to_presolve_config
 
 class PreCurve:
     def __init__(self, cfg):
