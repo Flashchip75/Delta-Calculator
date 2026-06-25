@@ -31,7 +31,7 @@ class Presolver:
     @staticmethod
     def enrich_ui_path(path, time_laws=None, default_ppm=100):
         presolver_input = path_to_presolve_config(path, time_laws)
-      return Presolver.enrich_config(presolver_input, default_ppm)
+        return Presolver.enrich_config(presolver_input, default_ppm)
     
     @staticmethod
     def export_summary_csv(enriched_data, filename="presolve_summary.csv"):
