@@ -72,7 +72,7 @@ class NumberLine(PropertyLine):
     """
     def __init__(self, master=None, labelText: str = "", inputCount: int = 1, units: dataclass = uc.Unitless(), *,
                  defaults: tuple = None, writePropertiesFunction=None, onLineChangedFunction=None,
-                 colored: bool = False, colorShift: float = 0.0, **kwargs):
+                 colored: bool = False, colorShift: float = 0.0, defaultUnit: str = "", **kwargs):
         super().__init__(
             master,
             labelText,
@@ -85,7 +85,7 @@ class NumberLine(PropertyLine):
         self.inputContainer = tk.Frame(
             self,
             bg="#ffffff",
-            width=150,
+            width=200,
             name="lineInputFrame(" + labelText.replace(" ", "_") + ")"
         )
         self.inputContainer.grid(row=0, column=1, sticky="nsew")
@@ -120,10 +120,25 @@ class NumberLine(PropertyLine):
         self.unitSelector = UnitSelectorCombobox(
             self,
             units,
-            onValueChangedFunction=self.updateLine,
+            defaultUnit,
+            onValueChangedFunction=self.updateUnitSelection,
             name="lineUnitSelector(" + labelText.replace(" ", "_") + ")"
         )
         self.unitSelector.grid(row=0, column=2, sticky="nsew")
+
+    def updateUnitSelection(self):
+        oldFactor = self.unitSelector.previous_value[1]
+        newFactor = self.unitSelector.get()[1]
+
+        for widget in self.inputs:
+            displayValue = widget.get() * oldFactor / newFactor
+            text = str(displayValue)
+            widget.delete(0, tk.END)
+            widget.insert(0, text)
+            widget.last_valid_value = text
+            widget.numerical_value = displayValue
+
+        self.updateLine()
 
     def get(self):
         unitFactor = self.unitSelector.get()[1]

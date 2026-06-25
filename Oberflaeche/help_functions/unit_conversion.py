@@ -58,8 +58,37 @@ class UnitLength(IUnit):
 
 
 @dataclass(frozen=True)
+class UnitMass(IUnit):
+    kg: float = 1
+    g: float = 0.001
+    mg: float = 0.000001
+
+    def getDefault(self) -> str: return "kg"
+
+
+@dataclass(frozen=True)
 class UnitVelocity(IUnit):
     m_s: float = 1
     km_h: float = 1 / 3.6
 
     def getDefault(self) -> str: return "m_s"
+
+
+@dataclass(frozen=True)
+class UnitAcceleration(IUnit):
+    m_s2: float = 1
+
+    def getValue(self, key: str) -> float:
+        if key == "m/s^2":
+            return self.m_s2
+        return super().getValue(key)
+
+    def getIndex(self, key: str) -> int:
+        if key == "m/s^2":
+            return 0
+        return super().getIndex(key)
+
+    def getLists(self) -> tuple:
+        return ["m/s^2"], [self.m_s2]
+
+    def getDefault(self) -> str: return "m/s^2"

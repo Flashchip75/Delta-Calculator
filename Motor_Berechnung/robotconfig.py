@@ -80,4 +80,6 @@ class RobotConfig:
         ]
 
         self.upper_arm_length = self.motors[0]["upper_length"]
+        self.upper_arm_mass   = self.motors[0]["upper_mass"]
         self.lower_arm_length = self.motors[0]["lower_length"]
+        self.lower_arm_mass   = self.motors[0]["lower_mass"]
