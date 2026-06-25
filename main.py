@@ -6,15 +6,17 @@ import path_berechnung.exe_path as exeP
 
 def main():
     print("=== Starte Pfadberechnung ===")
-    mode = "gcode"
+    mode = "geometry"
 
     geometry = "full_circle"
     gcode = "test.gcode"
+    uiData = None
 
     # --- Switch ---
     kwargs = {
         "geometry": dict(geometry=geometry),
         "gcode":    dict(gcode=gcode),
+        "uiData":   dict(uiData=uiData),
     }
 
     g = cfg.global_cfg
