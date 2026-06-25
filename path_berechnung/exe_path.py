@@ -4,12 +4,12 @@ import math
 
 from config import cfg
 from pathlib import Path
-from .track import Trajectory
-from .PathFrenet import PathFrenet
-from .ProfileManager import ProfileManager
-from .DynamicsManager import DynamicsManager
-from .Visualization import Plotter
-from .jsonConverter import UIProfileConverter
+from path_berechnung.track import Trajectory
+from path_berechnung.PathFrenet import PathFrenet
+from path_berechnung.ProfileManager import ProfileManager
+from path_berechnung.DynamicsManager import DynamicsManager
+from path_berechnung.Visualization import Plotter
+from path_berechnung.jsonConverter import UIProfileConverter
 
 
 class exePath:
