@@ -127,13 +127,13 @@ class ArduinoRunner:
 
     def _send_stop_command(self):
         if self.ser is not None and self.ser.is_open:
-            self.ser.write(("1,0,0;1,1,0;1,2,0\n").encode())
+            self.ser.write(("0,0,0,0,1,0,0,2,0\n").encode())
 
     def _build_command(self, row):
         omega_0 = float(row["omega_1"])
         omega_1 = float(row["omega_2"])
         omega_2 = float(row["omega_3"])
-        return f"1,0,{omega_0};1,1,{omega_1};1,2,{omega_2}"
+        return f"1,0,{omega_0},1,1,{omega_1},1,2,{omega_2}"
 
     def _row_has_nan_values(self, row):
         omega_0 = float(row["omega_1"])

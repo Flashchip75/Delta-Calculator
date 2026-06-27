@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Add serial status feedback for Arduino runs">
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Precompute Arduino commands and reduce trajectory update rate">
+      <change afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/runner2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Delta-Calculator" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/arduino_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/arduino_runner.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -85,8 +90,9 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.14" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
+      <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
@@ -262,7 +268,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781436035848</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Precompute Arduino commands and reduce trajectory update rate">
+      <option name="closed" value="true" />
+      <created>1781439542937</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1781439542937</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -298,7 +312,8 @@
     <MESSAGE value="Move plot data preparation out of PlotFrame" />
     <MESSAGE value="added Comments" />
     <MESSAGE value="Add serial status feedback for Arduino runs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add serial status feedback for Arduino runs" />
+    <MESSAGE value="Precompute Arduino commands and reduce trajectory update rate" />
+    <option name="LAST_COMMIT_MESSAGE" value="Precompute Arduino commands and reduce trajectory update rate" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

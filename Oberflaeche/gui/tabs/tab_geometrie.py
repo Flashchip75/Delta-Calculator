@@ -63,7 +63,7 @@ class GeometrieTab(BaseTab):
             1,
             uc.UnitLength(),
             defaults=(self.robot_config.lower_arm_length,),
-            writePropertiesFunction=self.set_lower_arm_length
+            writePropertiesFunction=self.set_lower_arm_length,
         )
         self.lower_length.pack(fill=tk.X)
 
