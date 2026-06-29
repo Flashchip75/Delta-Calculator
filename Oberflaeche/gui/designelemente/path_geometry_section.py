@@ -5,30 +5,36 @@ from Oberflaeche.gui.designelemente.custom_widgets.property_lines import Propert
 from Oberflaeche.help_functions import unit_conversion as uc
 import tkinter as tk
 from tkinter import ttk
-from path_berechnung.presolve import Presolver as pre
+#from path_berechnung.presolve import Presolver as pre
 
 
-class path_geometry_section(tk.Frame):
-    def __init__(self, master=None, data_object = None, **kwargs):
+class path_data_section(tk.Frame):
+    def __init__(self, master=None, data_object=None, onSectionChangedFunction=None, **kwargs):
         super().__init__(master, **kwargs)
+
+        self.keywords = []
+
         if data_object is not None:
             self.data_object = data_object
             self._create_lines_from_dataclass()
+        else:
+            self.data_object = None
 
-    def _update_single_curve(self):
-        #TODO: Presolve this curve and/or callback to parent (path_tab)
+        # Set onChange Function
+        if callable(onSectionChangedFunction):
+            self.onSectionChanged = onSectionChangedFunction
+        else:
+            self.onSectionChanged = lambda: None
 
-        # discrete_path_data = pre.enrich_config( uidata = ([self.data_object],[]) )
-        pass
+    def _update_section(self):
+        # Override in Children
+        self.onSectionChanged()
 
     def _create_lines_from_dataclass(self):
         self.lines = []
         for f in dataclasses.fields(self.data_object):
             # Skip specific keywords
-            keywords = (
-                "time_law_ref" # Reference integer connecting path geometry to traversal time_law
-            )
-            if f.name in keywords:
+            if f.name in self.keywords:
                 continue
 
             # Extract Field Value
@@ -68,7 +74,6 @@ class path_geometry_section(tk.Frame):
         # Common Attributes:
         line_name = field_name.replace("_", " ")
         write_function = lambda value: setattr(self.data_object, field_name, value)
-        callback_function = self._update_single_curve
         unit_system = uc.get_unit_type(default_unit)()
 
         # Main parser
@@ -78,7 +83,7 @@ class path_geometry_section(tk.Frame):
                 self,
                 line_name,
                 writePropertiesFunction = write_function,
-                onLineChangedFunction = callback_function,
+                onLineChangedFunction = self._update_section,
                 default = default_value
             )
         # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | STR
@@ -86,9 +91,9 @@ class path_geometry_section(tk.Frame):
             l = TextLine(
                 self,
                 line_name,
-                writePropertiesFunction=write_function,
-                onLineChangedFunction=callback_function,
-                default=default_value
+                writePropertiesFunction = write_function,
+                onLineChangedFunction = self._update_section,
+                default = default_value
             )
         # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | INT
         elif main_type == int:
@@ -96,7 +101,7 @@ class path_geometry_section(tk.Frame):
                 self,
                 line_name,
                 writePropertiesFunction = write_function,
-                onLineChangedFunction = callback_function,
+                onLineChangedFunction = self._update_section,
                 default = default_value,
                 units = unit_system,
                 defaultUnit = default_unit
@@ -107,7 +112,7 @@ class path_geometry_section(tk.Frame):
                 self,
                 line_name,
                 writePropertiesFunction = write_function,
-                onLineChangedFunction = callback_function,
+                onLineChangedFunction = self._update_section,
                 defaults = (default_value,),
                 inputCount = 1,
                 units = unit_system,
@@ -121,7 +126,7 @@ class path_geometry_section(tk.Frame):
                     self,
                     line_name,
                     writePropertiesFunction = write_function,
-                    onLineChangedFunction = callback_function,
+                    onLineChangedFunction = self._update_section,
                     defaults = default_value,
                     inputCount = len(default_value),
                     units = unit_system,
@@ -133,7 +138,7 @@ class path_geometry_section(tk.Frame):
                     self,
                     line_name,
                     writePropertiesFunction = write_function,
-                    onLineChangedFunction = callback_function,
+                    onLineChangedFunction = self._update_section,
                     default = default_value[0],
                     defaultUnit = default_unit,
                     units = unit_system
@@ -144,7 +149,7 @@ class path_geometry_section(tk.Frame):
                 self,
                 line_name,
                 writePropertiesFunction = write_function,
-                onLineChangedFunction = callback_function,
+                onLineChangedFunction = self._update_section,
                 options = default_value
             )
         # ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- | DICT
@@ -152,9 +157,9 @@ class path_geometry_section(tk.Frame):
             l = DropdownLine(
                 self,
                 line_name,
-                writePropertiesFunction=write_function,
-                onLineChangedFunction=callback_function,
-                options=default_value
+                writePropertiesFunction = write_function,
+                onLineChangedFunction = self._update_section,
+                options = default_value
             )
 
         # Store new Line
@@ -162,3 +167,23 @@ class path_geometry_section(tk.Frame):
             self.lines.append(l)
             l.pack(fill=tk.BOTH)
             l.updateLine(True)
+
+
+class path_geometry_section(path_data_section):
+    def __init__(self, master=None, data_object=None, onSectionChangedFunction=None, **kwargs):
+        super().__init__(master, None, onSectionChangedFunction, **kwargs)
+        self.keywords.extend([
+            "time_law_ref"  # Reference integer connecting path geometry to traversal time_law
+        ])
+
+        if data_object is not None:
+            self.data_object = data_object
+            self._create_lines_from_dataclass()
+        else:
+            self.data_object = None
+        
+    def _update_section(self):
+        #TODO: Presolve this curve and/or callback to parent (path_tab)
+
+        # discrete_path_data = pre.enrich_config( uidata = ([self.data_object],[]) )
+        self.onSectionChanged()
