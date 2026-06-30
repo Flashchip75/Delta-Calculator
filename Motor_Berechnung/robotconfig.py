@@ -1,8 +1,8 @@
 import numpy as np
 from Motor_Berechnung.math_utilities import unit
 
-class RobotConfig:
-    def __init__(self, config_path=None):
+class _RobotConfig:
+    def __init__(self):
         self.global_data = {
             "gravity": np.array([0.0, 0.0, -9.81], dtype=float),
             "mass_kg": 1.0,
@@ -14,14 +14,14 @@ class RobotConfig:
 
         self.workspace = {
             "resolution": 25,
-            "range_x": {"min": -0.4, "max": 0.4},
-            "range_y": {"min": -0.4, "max": 0.4},
-            "range_z": {"min": -1.3, "max": -0.1}
+            "range_x": {"min": -0.6, "max": 0.6},
+            "range_y": {"min": -0.6, "max": 0.6},
+            "range_z": {"min": -0.6, "max": 0}
         }
 
-        pos_A = np.array([0.900, 0.000, 1.500], dtype=float)
-        pos_B = np.array([-0.450, 0.779, 1.500], dtype=float)
-        pos_C = np.array([-0.450, -0.779, 1.500], dtype=float)
+        pos_A = np.array([-0.072612, -0.044232, 0.0], dtype=float)
+        pos_B = np.array([0.074612, -0.040768, 0.0], dtype=float)
+        pos_C = np.array([-0.002, 0.085, 0.0], dtype=float)
 
         self.robot_center = np.mean([pos_A, pos_B, pos_C], axis=0)
 
@@ -29,13 +29,13 @@ class RobotConfig:
             {
                 "name": "A",
                 "position": pos_A,
-                "axis": unit(np.array([0.000, 1.000, 0.000], dtype=float)),
-                "upper_length": 1.000,
-                "upper_mass": 0.600,
-                "lower_length": 2.000,
-                "lower_mass": 0.150,
-                "theta_min": -180.0,
-                "theta_max": 180.0,
+                "axis": unit(np.array([0.500, -0.866, 0.000], dtype=float)),
+                "upper_length": 0.177,
+                "upper_mass": 0.100,
+                "lower_length": 0.400,
+                "lower_mass": 0.050,
+                "theta_min": -0.0873, # -5 grad
+                "theta_max": 1.5708, # 90 grad
                 "i": 20,
                 "eta": 0.85,
                 "Jm": 0.0,
@@ -46,13 +46,13 @@ class RobotConfig:
             {
                 "name": "B",
                 "position": pos_B,
-                "axis": unit(np.array([-0.866, -0.500, 0.000], dtype=float)),
-                "upper_length": 1.000,
-                "upper_mass": 0.600,
-                "lower_length": 2.000,
-                "lower_mass": 0.150,
-                "theta_min": -180.0,
-                "theta_max": 180.0,
+                "axis": unit(np.array([0.500, 0.866, 0.000], dtype=float)),
+                "upper_length": 0.177,
+                "upper_mass": 0.100,
+                "lower_length": 0.400,
+                "lower_mass": 0.050,
+                "theta_min": -0.0873, # -5 grad
+                "theta_max": 1.5708, # 90 grad
                 "i": 20,
                 "eta": 0.85,
                 "Jm": 0.0,
@@ -63,13 +63,13 @@ class RobotConfig:
             {
                 "name": "C",
                 "position": pos_C,
-                "axis": unit(np.array([0.866, -0.500, 0.000], dtype=float)),
-                "upper_length": 1.000,
-                "upper_mass": 0.600,
-                "lower_length": 2.000,
-                "lower_mass": 0.150,
-                "theta_min": -180.0,
-                "theta_max": 180.0,
+                "axis": unit(np.array([-1, 0.000, 0.000], dtype=float)),
+                "upper_length": 0.177,
+                "upper_mass": 0.100,
+                "lower_length": 0.400,
+                "lower_mass": 0.050,
+                "theta_min": -0.0873, # -5 grad
+                "theta_max": 1.5708, # 90 grad
                 "i": 20,
                 "eta": 0.85,
                 "Jm": 0.0,
@@ -81,3 +81,16 @@ class RobotConfig:
 
         self.upper_arm_length = self.motors[0]["upper_length"]
         self.lower_arm_length = self.motors[0]["lower_length"]
+
+    def set_val(self, key, value):
+        """Hilfsfunktion für die GUI, um Werte in dicts oder als direkte Attribute zu schreiben."""
+        if hasattr(self, "global_data") and key in self.global_data:
+            self.global_data[key] = value
+        elif hasattr(self, "workspace") and key in self.workspace:
+            self.workspace[key] = value
+        else:
+            setattr(self, key, value)
+
+# Erstelle ein globales Singleton-Objekt.
+# Dieses Objekt (als Objekt statt Klasse) kann nun projektweit importiert werden.
+robot_config = _RobotConfig()

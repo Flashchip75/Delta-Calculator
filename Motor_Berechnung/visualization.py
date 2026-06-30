@@ -95,21 +95,21 @@ class Visualizer:
 
             axis_vis = np.array([B - 0.8 * axis, B + 0.8 * axis])
             ax.plot(axis_vis[:, 0], axis_vis[:, 1], axis_vis[:, 2],
-                    linewidth=2, alpha=0.7, color="green")
+                    linewidth=1, alpha=0.7, color="green")
 
             self.plot_zero_plane(
                 ax=ax,
                 origin=B,
                 motor_axis=axis,
                 zero_direction=zero_direction,
-                size=1.4,
+                size=0.4,
                 alpha=0.22
             )
 
         ax.set_box_aspect([1, 1, 1])
-        ax.set_xlim(-1.5, 1.5)
-        ax.set_ylim(-1.5, 1.5)
-        ax.set_zlim(-1.0, 2)
+        ax.set_xlim(-0.5, 0.5)
+        ax.set_ylim(-0.5, 0.5)
+        ax.set_zlim(-1.0, 0.3)
 
         ax.set_xlabel("X")
         ax.set_ylabel("Y")
@@ -130,7 +130,7 @@ class Visualizer:
             print("Keine vollständig erreichbaren Posen für Animation vorhanden.")
             return
 
-        target_duration_s = 5
+        target_duration_s = 2
         target_fps = 20
         target_frame_count = target_duration_s * target_fps
 
