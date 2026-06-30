@@ -1,28 +1,57 @@
 import math
 
+
 class UIProfileConverter:
-    def __init__(self, default_N=100):
+    def __init__(self, default_N=100, debug=True):
         self.default_N = default_N
+        self.DEBUG = debug
+
+    # -------------------------
+    # Debug helper
+    # -------------------------
+    def _log(self, msg, **kwargs):
+        if not self.DEBUG:
+            return
+        print(f"[UIProfileConverter] {msg}")
+        if kwargs:
+            for k, v in kwargs.items():
+                print(f"    {k}: {v}")
 
     # -------------------------
     # Public API
     # -------------------------
     def convert(self, geometries, timeLaws, profile_name):
+        self._log("convert() called",
+                  profile_name=profile_name,
+                  n_geometries=len(geometries))
+
         if profile_name is None:
             raise ValueError("profile_name must be provided for convert() method.")
-        return {
+
+        result = {
             profile_name: [
                 self._map_geometry(g, timeLaws)
                 for g in geometries
             ]
         }
 
+        self._log("convert() finished")
+        return result
+
     def convert_flat(self, geometries, timeLaws):
-        """Returns directly j_data (list of segments)"""
-        return [
-            self._map_geometry(g, timeLaws)
-            for g in geometries
-        ]
+        self._log("convert_flat() called", n=len(geometries))
+
+        out = []
+        for i, g in enumerate(geometries):
+            self._log(f"geometry[{i}] input", type=type(g).__name__, repr=str(g))
+
+            mapped = self._map_geometry(g, timeLaws)
+
+            self._log(f"geometry[{i}] mapped", result=mapped)
+            out.append(mapped)
+
+        self._log("convert_flat() finished")
+        return out
 
     # -------------------------
     # Internal helpers
@@ -33,113 +62,161 @@ class UIProfileConverter:
     def _vec3(self, p):
         return [p[0], p[1], p[2]]
 
-    def _get_arc_axes(self, plane):
+    # -------------------------
+    # Arc helper
+    # -------------------------
+    def _get_arc_axes(self, plane: str):
+        self._log("get_arc_axes()", plane=plane, type=type(plane).__name__)
+
+        if not isinstance(plane, str):
+            raise TypeError(f"Plane must be string, got {type(plane)}")
+
+        plane = plane.lower().strip()
+        self._log("normalized plane", plane=plane)
+
         if plane == "xy":
-            return [1,0,0], [0,1,0]
-        if plane == "xz":
-            return [1,0,0], [0,0,1]
-        if plane == "yz":
-            return [0,1,0], [0,0,1]
+            return 0, 1
+        elif plane == "xz":
+            return 0, 2
+        elif plane == "yz":
+            return 1, 2
+
+        if len(plane) == 1:
+            fallback = {
+                "x": (1, 2),
+                "y": (0, 2),
+                "z": (0, 1),
+            }
+            result = fallback.get(plane, (0, 1))
+            self._log("fallback plane used", result=result)
+            return result
+
         raise ValueError(f"Unknown plane: {plane}")
 
     # -------------------------
     # Time law mapping
     # -------------------------
     def _map_time_law(self, tl):
+        self._log("map_time_law()", type=type(tl).__name__ if tl else None)
+
         if tl is None:
             return {"type": "konstant"}
 
         name = tl.__class__.__name__
+        self._log("time law resolved", name=name)
 
         if name == "ConstantVelocity":
             return {"type": "konstant"}
 
         if name == "Polynomial5":
-            return {
+            out = {
                 "dauer": self._val(tl.duration),
                 "ziel_v": self._val(tl.end_velocity),
                 "ziel_a": self._val(tl.end_acceleration),
             }
+            self._log("Polynomial5 mapped", out=out)
+            return out
 
         if name == "Polynomial7":
-            return {
+            out = {
                 "dauer": self._val(tl.duration),
                 "ziel_v": self._val(tl.end_velocity),
                 "ziel_a": self._val(tl.end_acceleration),
                 "ziel_j": self._val(tl.end_jerk),
             }
+            self._log("Polynomial7 mapped", out=out)
+            return out
 
         raise ValueError(f"Unknown time law: {name}")
 
     # -------------------------
     # Geometry mapping
     # -------------------------
-    def _map_geometry(self, obj, timeLaws):
-        tl = None
+    def _map_geometry(self, g, timeLaws):
+        if g is None:
+            self._log("geometry is None")
+            return None
 
-        if hasattr(obj, "time_law_ref") and not self._is_nan(obj.time_law_ref):
-            tl = timeLaws[int(obj.time_law_ref)]
+        raw_type = type(g).__name__
 
-        dynamik = self._map_time_law(tl)
+        TYPE_MAP = {
+            "Line": "line",
+            "Arc": "arc",
+            "Bezier": "bezier",
+            "LINE": "line",
+            "ARC": "arc",
+            "BEZIER": "bezier",
+        }
 
-        name = obj.__class__.__name__
+        typ = TYPE_MAP.get(raw_type)
 
-        # ---- Line ----
-        if name == "Line":
-            return {
-                "type": "Line",
-                "pts": [self._vec3(obj.start), self._vec3(obj.end)],
-                "N": self.default_N,
-                "dynamik": dynamik,
+        self._log("map_geometry()",
+                  raw_type=raw_type,
+                  mapped_type=typ,
+                  object=str(g))
+
+        if typ is None:
+            raise ValueError(f"Unsupported geometry type: {raw_type}")
+
+        # ---------------- LINE ----------------
+        if typ == "line":
+            out = {
+                "type": "line",
+                "pts": [list(g.start), list(g.end)],
+                "time_law": int(g.time_law_ref),
             }
 
-        # ---- Bezier ----
-        if name == "Bezier":
-            return {
-                "type": "Bezier",
-                "pts": [
-                    self._vec3(obj.p0),
-                    self._vec3(obj.p1),
-                    self._vec3(obj.p2),
-                    self._vec3(obj.p3),
-                ],
-                "N": self.default_N,
-                "dynamik": dynamik,
-            }
+            self._log("line output", out=out)
+            return out
 
-        # ---- Arc ----
-        if name == "Arc":
-            plane = obj.plane[0]  # assumes first active plane
-            u, v = self._get_arc_axes(plane)
+        # ---------------- ARC ----------------
+        elif typ == "arc":
+            u_idx, v_idx = self._get_arc_axes(g.plane)
+
+            # unit vectors in 3D
+            axes = [
+                [1, 0, 0],
+                [0, 1, 0],
+                [0, 0, 1],
+            ]
+
+            u = axes[u_idx]
+            v = axes[v_idx]
 
             return {
-                "type": "Arc",
-                "c": self._vec3(obj.center),
-                "r": self._val(obj.radius),
+                "type": "arc",
+                "c": list(g.center),
+                "r": float(g.radius[0]),
                 "u": u,
                 "v": v,
                 "a": [
-                    self._val(obj.start_angle),
-                    self._val(obj.end_angle),
+                    float(g.start_angle[0]),
+                    float(g.end_angle[0])
                 ],
-                "N": self.default_N,
-                "dynamik": dynamik,
+                "time_law": int(g.time_law_ref),
             }
 
-        # ---- Wait ----
-        if name == "Wait":
-            return {
-                "type": "Line",
-                "pts": [[0,0,0],[0,0,0]],
-                "N": 2,
-                "dynamik": {
-                    "type": "warten",
-                    "dauer": self._val(obj.duration),
-                },
+        # ---------------- BEZIER ----------------
+        elif typ == "bezier":
+            out = {
+                "type": "bezier",
+                "pts": [
+                    list(g.p0),
+                    list(g.p1),
+                    list(g.p2),
+                    list(g.p3),
+                ],
+                "time_law": int(g.time_law_ref),
             }
 
-        raise ValueError(f"Unknown geometry: {name}")
+            self._log("bezier output", out=out)
+            return out
 
+        raise ValueError(f"Unsupported geometry type: {typ}")
+
+    # -------------------------
+    # Safety helper
+    # -------------------------
     def _is_nan(self, x):
         try:
             return math.isnan(x)
