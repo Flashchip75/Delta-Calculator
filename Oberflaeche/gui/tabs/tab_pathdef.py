@@ -145,8 +145,8 @@ class PathDefTab(BaseTab):
             print("----- Time Laws:")
             [print(tl) for tl in time_law_list]
 
-            # calc_data = exeP.exePath().run( uiData = (curve_list, time_law_list) )
-            # print(calc_data)
+            calc_data = exeP.exePath().run( uiData = (curve_list, time_law_list) )
+            print(calc_data)
 
         calcButton = tk.Button(
             self,

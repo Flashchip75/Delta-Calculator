@@ -18,7 +18,8 @@ class path_geometry_section(tk.Frame):
     def _update_single_curve(self):
         #TODO: Presolve this curve and/or callback to parent (path_tab)
 
-        # discrete_path_data = pre.enrich_config( uidata = ([self.data_object],[]) )
+        discrete_path_data = pre.enrich_config( dict( uidata = ([self.data_object],[]) ) )
+        print(discrete_path_data)
         pass
 
     def _create_lines_from_dataclass(self):
