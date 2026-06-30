@@ -4,15 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Add serial status feedback for Arduino runs">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Geometrieeingabeaenderungen">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Motor_Berechnung/robotconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/Motor_Berechnung/robotconfig.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/custom_widgets/input_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/custom_widgets/input_widgets.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/custom_widgets/property_lines.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/custom_widgets/property_lines.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/unit_conversion.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/unit_conversion.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,7 +14,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="76" />
+    <option name="cachedIndexableFilesCount" value="79" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -35,7 +29,7 @@
   <component name="Git.Settings">
     <option name="RECENT_BRANCH_BY_REPOSITORY">
       <map>
-        <entry key="$PROJECT_DIR$" value="GUI-Leonard" />
+        <entry key="$PROJECT_DIR$" value="GUI-Stefan" />
       </map>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -58,23 +52,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.6378470343402816" />
-      <entry key="MS500" value="3.6878582475326307" />
-      <entry key="S2" value="12.161696355367996" />
-      <entry key="S5" value="26.764957962970087" />
-      <entry key="S10" value="43.87672782735649" />
-      <entry key="S30" value="68.38743262906327" />
-      <entry key="S60" value="84.59760912123797" />
-      <entry key="M2" value="119.81804038842793" />
-      <entry key="M5" value="211.8286173555829" />
-      <entry key="M10" value="380.38206729150846" />
-      <entry key="M15" value="551.6633666421178" />
-      <entry key="M30" value="1031.2160131773119" />
-      <entry key="H1" value="1858.004107926637" />
-      <entry key="H2" value="3014.299196222996" />
-      <entry key="H4" value="4200.082271410264" />
-      <entry key="D1" value="5931.87121682941" />
-      <entry key="W1" value="6346.314518984542" />
+      <entry key="MS100" value="1.09369197161496" />
+      <entry key="MS500" value="3.853711719655837" />
+      <entry key="S2" value="15.48937234694144" />
+      <entry key="S5" value="34.76018276971758" />
+      <entry key="S10" value="57.139851323937734" />
+      <entry key="S30" value="94.8532434151538" />
+      <entry key="S60" value="124.52197425681467" />
+      <entry key="M2" value="160.57490616629084" />
+      <entry key="M5" value="202.54084822158492" />
+      <entry key="M10" value="226.5918069779" />
+      <entry key="M15" value="237.43187996724845" />
+      <entry key="M30" value="250.59261865050425" />
+      <entry key="H1" value="258.32163340255977" />
+      <entry key="H2" value="266.989165428864" />
+      <entry key="H4" value="438.59068953959775" />
+      <entry key="D1" value="4245.174203697152" />
+      <entry key="W1" value="7135.227017719881" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -82,37 +76,37 @@
       <entry key="S2" value="0.0" />
       <entry key="S5" value="0.0" />
       <entry key="S10" value="0.0" />
-      <entry key="S30" value="3.39291364844418E-148" />
-      <entry key="S60" value="1.8421165736107165E-74" />
-      <entry key="M2" value="1.3759192140411177E-37" />
-      <entry key="M5" value="2.4045952837783453E-15" />
-      <entry key="M10" value="8.509730757555185E-8" />
-      <entry key="M15" value="2.9772583051465783E-5" />
-      <entry key="M30" value="0.010754525676157034" />
-      <entry key="H1" value="0.20669832868997462" />
-      <entry key="H2" value="0.9085317580842309" />
-      <entry key="H4" value="1.9059532984148366" />
-      <entry key="D1" value="3.5350047040663184" />
-      <entry key="W1" value="3.9300000539969666" />
+      <entry key="S30" value="0.0" />
+      <entry key="S60" value="0.0" />
+      <entry key="M2" value="8.128220060981972E-177" />
+      <entry key="M5" value="3.664360400510657E-71" />
+      <entry key="M10" value="6.053396221247472E-36" />
+      <entry key="M15" value="3.321531590140185E-24" />
+      <entry key="M30" value="1.8354630909922605E-12" />
+      <entry key="H1" value="1.5769732114968045E-6" />
+      <entry key="H2" value="0.002113946233916752" />
+      <entry key="H4" value="0.09578477555462431" />
+      <entry key="D1" value="2.5650625622851306" />
+      <entry key="W1" value="4.544466383722684" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.599866722472136" />
-      <entry key="MS500" value="3.671326240744905" />
-      <entry key="S2" value="12.148703466149612" />
-      <entry key="S5" value="26.753316169795347" />
-      <entry key="S10" value="43.866946378349965" />
-      <entry key="S30" value="68.38221116366441" />
-      <entry key="S60" value="84.5943789111433" />
-      <entry key="M2" value="119.81579312988315" />
-      <entry key="M5" value="211.82705452282758" />
-      <entry key="M10" value="380.38065707273785" />
-      <entry key="M15" value="551.6620204687845" />
-      <entry key="M30" value="1031.225414513299" />
-      <entry key="H1" value="1858.2092393245189" />
-      <entry key="H2" value="3015.2058952667635" />
-      <entry key="H4" value="4201.986599469954" />
-      <entry key="D1" value="5935.4057511071705" />
-      <entry key="W1" value="6350.244444642655" />
+      <entry key="MS100" value="1.078022806817217" />
+      <entry key="MS500" value="3.8392558833907975" />
+      <entry key="S2" value="15.473673007778036" />
+      <entry key="S5" value="34.7456992716892" />
+      <entry key="S10" value="57.12772163407317" />
+      <entry key="S30" value="94.84635599818046" />
+      <entry key="S60" value="124.51733363629846" />
+      <entry key="M2" value="160.57183558482996" />
+      <entry key="M5" value="202.53926451415043" />
+      <entry key="M10" value="226.59091109006548" />
+      <entry key="M15" value="237.43125105432054" />
+      <entry key="M30" value="250.59228483644478" />
+      <entry key="H1" value="258.321462355219" />
+      <entry key="H2" value="266.9911883079291" />
+      <entry key="H4" value="438.68635850204134" />
+      <entry key="D1" value="4247.738940364417" />
+      <entry key="W1" value="7139.771402222318" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -409,11 +403,6 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
-          <line>14</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
           <line>36</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
@@ -444,23 +433,28 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
-          <line>15</line>
-          <option name="timeStamp" value="13" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
-          <line>16</line>
-          <option name="timeStamp" value="14" />
+          <line>18</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
           <line>17</line>
-          <option name="timeStamp" value="15" />
+          <option name="timeStamp" value="18" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
-          <line>18</line>
-          <option name="timeStamp" value="16" />
+          <line>16</line>
+          <option name="timeStamp" value="19" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>15</line>
+          <option name="timeStamp" value="20" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>14</line>
+          <option name="timeStamp" value="21" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
