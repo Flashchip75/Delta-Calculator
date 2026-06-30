@@ -4,6 +4,10 @@ from Oberflaeche.gui.tabs.tab_geometrie import GeometrieTab
 from Oberflaeche.gui.tabs.tab_pathdef import PathDefTab
 from Oberflaeche.gui.tabs.tab_export import ExportTab
 
+# TODO: Force Update on Tab change for MAC
+# Tab change get's stuck while hovering the mouse over the Tabs, nto showing the new content until you move the curser off it.
+# Probably able to catch a click event and force the update on that.
+
 class InputTabGroup(ttk.Frame):
     def __init__(self, parent, robot_config, on_show_geometry=None, on_results_created=None):
         super().__init__(parent)

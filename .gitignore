@@ -224,3 +224,5 @@ output/
 Motor_Berechnung/output/
 
 .vscode/
+.gitignore
+.idea/

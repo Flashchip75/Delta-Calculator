@@ -32,7 +32,7 @@ class PropertyLine(tk.Frame):
         self.rowconfigure(0, weight=1)
         self.columnconfigure(0, weight=1)  # Left: Text Label, adjustable
         self.columnconfigure(1, weight=0)  # Center: Input Fields, fixed
-        self.columnconfigure(2, weight=0)  # Right: Text Label, fixed
+        self.columnconfigure(2, weight=0)  # Right: Input Fields or Units, fixed
 
         # Initialize Line Label
         self.label = ttk.Label(
@@ -61,9 +61,10 @@ class PropertyLine(tk.Frame):
     def get(self):
         return None
 
-    def updateLine(self):
+    def updateLine(self, writeOnly: bool = False):
         self.writeProperties(self.get())
-        self.onLineChanged()
+        if not writeOnly:
+            self.onLineChanged()
 
 
 class NumberLine(PropertyLine):
@@ -71,7 +72,7 @@ class NumberLine(PropertyLine):
     PropertyLine used for inputting numerical values and vectors (tuples), optionally with SI unit conversion.
     """
     def __init__(self, master=None, labelText: str = "", inputCount: int = 1, units: dataclass = uc.Unitless(), *,
-                 defaults: tuple = None, writePropertiesFunction=None, onLineChangedFunction=None,
+                 defaults: tuple = None, defaultUnit: str = "", writePropertiesFunction=None, onLineChangedFunction=None,
                  colored: bool = False, colorShift: float = 0.0, **kwargs):
         super().__init__(
             master,
@@ -120,6 +121,7 @@ class NumberLine(PropertyLine):
         self.unitSelector = UnitSelectorCombobox(
             self,
             units,
+            defaultUnit=defaultUnit,
             onValueChangedFunction=self.updateLine,
             name="lineUnitSelector(" + labelText.replace(" ", "_") + ")"
         )
@@ -135,7 +137,7 @@ class IncrementorLine(PropertyLine):
     PropertyLine used for inputting integer values, optionally with SI unit conversion.
     """
     def __init__(self, master=None, labelText: str = "", units: dataclass = uc.Unitless(), *,
-                 default: int = 0, writePropertiesFunction=None, onLineChangedFunction=None, **kwargs):
+                 default: int = 0, defaultUnit: str = "", writePropertiesFunction=None, onLineChangedFunction=None, **kwargs):
         super().__init__(
             master,
             labelText,
@@ -171,14 +173,20 @@ class IncrementorLine(PropertyLine):
         self.unitSelector = UnitSelectorCombobox(
             self,
             units,
+            defaultUnit=defaultUnit,
             onValueChangedFunction=self.updateLine,
             name="lineUnitSelector(" + labelText.replace(" ", "_") + ")"
         )
         self.unitSelector.grid(row=0, column=2, sticky="nsew")
 
+        self.returnAsInteger = isinstance(units,uc.Unitless)
+
     def get(self):
         unitFactor = self.unitSelector.get()[1]
-        return int(self.input.get() * unitFactor)
+        if self.returnAsInteger:
+            return int(self.input.get() * unitFactor)
+        else:
+            return self.input.get() * unitFactor
 
 
 class CheckboxLine(PropertyLine):
@@ -264,6 +272,7 @@ class TextLine(PropertyLine):
 
     def get(self):
         return self.input.get()
+
 
 class DropdownLine(PropertyLine):
     """
