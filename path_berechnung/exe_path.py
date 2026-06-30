@@ -8,7 +8,6 @@ from path_berechnung.track import Trajectory
 from path_berechnung.PathFrenet import PathFrenet
 from path_berechnung.ProfileManager import ProfileManager
 from path_berechnung.DynamicsManager import DynamicsManager
-from path_berechnung.Visualization import Plotter
 from path_berechnung.Jsonconverter import UIProfileConverter
 
 
