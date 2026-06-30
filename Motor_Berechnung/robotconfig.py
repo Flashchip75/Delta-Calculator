@@ -1,7 +1,7 @@
 import numpy as np
 from Motor_Berechnung.math_utilities import unit
 
-class _RobotConfig:
+class RobotConfig:
     def __init__(self):
         self.global_data = {
             "gravity": np.array([0.0, 0.0, -9.81], dtype=float),
@@ -93,4 +93,4 @@ class _RobotConfig:
 
 # Erstelle ein globales Singleton-Objekt.
 # Dieses Objekt (als Objekt statt Klasse) kann nun projektweit importiert werden.
-robot_config = _RobotConfig()
+robot_config = RobotConfig()

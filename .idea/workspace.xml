@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Precompute Arduino commands and reduce trajectory update rate">
-      <change afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/runner2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="fixed interpreter stuff">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Delta-Calculator" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Motor_Berechnung/robotconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/Motor_Berechnung/robotconfig.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/arduino_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/arduino_runner.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -276,7 +273,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781439542937</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="fixed interpreter stuff">
+      <option name="closed" value="true" />
+      <created>1782577585549</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1782577585549</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -313,7 +318,8 @@
     <MESSAGE value="added Comments" />
     <MESSAGE value="Add serial status feedback for Arduino runs" />
     <MESSAGE value="Precompute Arduino commands and reduce trajectory update rate" />
-    <option name="LAST_COMMIT_MESSAGE" value="Precompute Arduino commands and reduce trajectory update rate" />
+    <MESSAGE value="fixed interpreter stuff" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed interpreter stuff" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
