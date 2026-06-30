@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Geometrieeingabeaenderungen">
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Payloadmass,theta min/max eingefuegt ; upper/lower arm length fuer einzelne Motoren entfernt">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -52,23 +51,23 @@
   </component>
   <component name="NextEditCompletionFeaturesState">
     <decayedCancelled>
-      <entry key="MS100" value="1.09369197161496" />
-      <entry key="MS500" value="3.853711719655837" />
-      <entry key="S2" value="15.48937234694144" />
-      <entry key="S5" value="34.76018276971758" />
-      <entry key="S10" value="57.139851323937734" />
-      <entry key="S30" value="94.8532434151538" />
-      <entry key="S60" value="124.52197425681467" />
-      <entry key="M2" value="160.57490616629084" />
-      <entry key="M5" value="202.54084822158492" />
-      <entry key="M10" value="226.5918069779" />
-      <entry key="M15" value="237.43187996724845" />
-      <entry key="M30" value="250.59261865050425" />
-      <entry key="H1" value="258.32163340255977" />
-      <entry key="H2" value="266.989165428864" />
-      <entry key="H4" value="438.59068953959775" />
-      <entry key="D1" value="4245.174203697152" />
-      <entry key="W1" value="7135.227017719881" />
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0" />
+      <entry key="S5" value="1.0" />
+      <entry key="S10" value="1.0" />
+      <entry key="S30" value="1.0" />
+      <entry key="S60" value="1.0" />
+      <entry key="M2" value="1.0000000096655404" />
+      <entry key="M5" value="1.0152139405976173" />
+      <entry key="M10" value="3.03427309880426" />
+      <entry key="M15" value="11.590190304116051" />
+      <entry key="M30" value="56.729116531791675" />
+      <entry key="H1" value="129.4329642379468" />
+      <entry key="H2" value="199.18274453887938" />
+      <entry key="H4" value="383.52597684346995" />
+      <entry key="D1" value="4133.289018357639" />
+      <entry key="W1" value="7131.5070315809135" />
     </decayedCancelled>
     <decayedSelected>
       <entry key="MS100" value="0.0" />
@@ -78,35 +77,35 @@
       <entry key="S10" value="0.0" />
       <entry key="S30" value="0.0" />
       <entry key="S60" value="0.0" />
-      <entry key="M2" value="8.128220060981972E-177" />
-      <entry key="M5" value="3.664360400510657E-71" />
-      <entry key="M10" value="6.053396221247472E-36" />
-      <entry key="M15" value="3.321531590140185E-24" />
-      <entry key="M30" value="1.8354630909922605E-12" />
-      <entry key="H1" value="1.5769732114968045E-6" />
-      <entry key="H2" value="0.002113946233916752" />
-      <entry key="H4" value="0.09578477555462431" />
-      <entry key="D1" value="2.5650625622851306" />
-      <entry key="W1" value="4.544466383722684" />
+      <entry key="M2" value="1.8793434507527368E-187" />
+      <entry key="M5" value="2.039869863886015E-75" />
+      <entry key="M10" value="4.516491962175046E-38" />
+      <entry key="M15" value="1.2682547011202717E-25" />
+      <entry key="M30" value="3.586573229616104E-13" />
+      <entry key="H1" value="6.97093991311911E-7" />
+      <entry key="H2" value="0.00140548899352157" />
+      <entry key="H4" value="0.07810219540002947" />
+      <entry key="D1" value="2.479281014473549" />
+      <entry key="W1" value="4.522437565017591" />
     </decayedSelected>
     <decayedShown>
-      <entry key="MS100" value="1.078022806817217" />
-      <entry key="MS500" value="3.8392558833907975" />
-      <entry key="S2" value="15.473673007778036" />
-      <entry key="S5" value="34.7456992716892" />
-      <entry key="S10" value="57.12772163407317" />
-      <entry key="S30" value="94.84635599818046" />
-      <entry key="S60" value="124.51733363629846" />
-      <entry key="M2" value="160.57183558482996" />
-      <entry key="M5" value="202.53926451415043" />
-      <entry key="M10" value="226.59091109006548" />
-      <entry key="M15" value="237.43125105432054" />
-      <entry key="M30" value="250.59228483644478" />
-      <entry key="H1" value="258.321462355219" />
-      <entry key="H2" value="266.9911883079291" />
-      <entry key="H4" value="438.68635850204134" />
-      <entry key="D1" value="4247.738940364417" />
-      <entry key="W1" value="7139.771402222318" />
+      <entry key="MS100" value="0.8827029962906549" />
+      <entry key="MS500" value="0.9753554615276419" />
+      <entry key="S2" value="0.9937810933225548" />
+      <entry key="S5" value="0.9975077808975293" />
+      <entry key="S10" value="0.9987531130852756" />
+      <entry key="S30" value="0.9995841981612189" />
+      <entry key="S60" value="0.9997920774647191" />
+      <entry key="M2" value="0.9998960429931762" />
+      <entry key="M5" value="1.015172233219079" />
+      <entry key="M10" value="3.034244257176579" />
+      <entry key="M15" value="11.590148396642585" />
+      <entry key="M30" value="56.72903543100604" />
+      <entry key="H1" value="129.432875745949" />
+      <entry key="H2" value="199.1840809152469" />
+      <entry key="H4" value="383.60397962380114" />
+      <entry key="D1" value="4135.767983430296" />
+      <entry key="W1" value="7136.029387523399" />
     </decayedShown>
   </component>
   <component name="ProjectColorInfo">{
@@ -340,7 +339,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781436035848</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="Payloadmass,theta min/max eingefuegt ; upper/lower arm length fuer einzelne Motoren entfernt">
+      <option name="closed" value="true" />
+      <created>1782809588596</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1782809588596</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -376,7 +383,8 @@
     <MESSAGE value="Move plot data preparation out of PlotFrame" />
     <MESSAGE value="added Comments" />
     <MESSAGE value="Add serial status feedback for Arduino runs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add serial status feedback for Arduino runs" />
+    <MESSAGE value="Payloadmass,theta min/max eingefuegt ; upper/lower arm length fuer einzelne Motoren entfernt" />
+    <option name="LAST_COMMIT_MESSAGE" value="Payloadmass,theta min/max eingefuegt ; upper/lower arm length fuer einzelne Motoren entfernt" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
