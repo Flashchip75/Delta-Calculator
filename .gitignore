@@ -218,6 +218,8 @@ __marimo__/
 
 # csv files
 *.csv
+roboter_dynamik.csv
+roboter_dynamik.json
 
 # excluding output directory
 output/
