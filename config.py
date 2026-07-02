@@ -210,9 +210,3 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         cVision    = vision_cfg,
         motors     = motors_cfg,
     )
-
-
-# ---------------------------------------------------------------------------
-# Singleton — wird beim ersten Import einmalig geladen
-# ---------------------------------------------------------------------------
-#cfg: AppConfig = load_config()

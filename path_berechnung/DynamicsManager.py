@@ -3,7 +3,7 @@ import json
 import os
 from pathlib import Path
 
-from config import cfg
+from config import load_config
 from path_berechnung.PathFrenet import PathFrenet
 from path_berechnung.DeltaUniversalPlaner import DeltaUniversalPlaner
 
@@ -72,6 +72,7 @@ class DynamicsManager:
 
     def _export_results(self, matrix):
         # CSV Export - Fix: Verwendet Path für die Pfad-Manipulierung
+        cfg = load_config()
         g = cfg.global_cfg
         filepath = Path(g.output_dir) / g.trajectory_csv
         filepath.parent.mkdir(parents=True, exist_ok=True)

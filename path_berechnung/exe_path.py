@@ -2,7 +2,7 @@ from __future__ import annotations
 import numpy as np
 import math
 
-from config import cfg
+from config import load_config
 from pathlib import Path
 from path_berechnung.track import Trajectory
 from path_berechnung.PathFrenet import PathFrenet
@@ -25,7 +25,7 @@ class exePath:
           3. uiData given                       -> convert UI data to j_data format
           4. none                               -> raise ValueError
         """
-
+        cfg = load_config()
         path = cfg.path
         g = cfg.global_cfg
 
