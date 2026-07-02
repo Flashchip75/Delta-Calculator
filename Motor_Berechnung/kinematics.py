@@ -7,12 +7,14 @@ from Motor_Berechnung.math_utilities import (
     unit
 )
 
+
 class KinematicsSolver:
     def __init__(self, robot_config):
         self.upper_arm_length = robot_config.upper_arm_length
         self.lower_arm_length = robot_config.lower_arm_length
         self.robot_center = robot_config.robot_center
         self.motors = robot_config.motors
+        self.workspace = robot_config.workspace
 
     def get_upper_geometry_from_motorposition(self, motorposition):
         B = np.array(motorposition["position"], dtype=float)
@@ -23,6 +25,24 @@ class KinematicsSolver:
 
     def select_lower_point(self, P1, P2):
         return P1 if P1[2] < P2[2] else P2
+    
+    def validate_motor_angle(self, angle_rad, motorposition):
+        theta_min = motorposition.get("theta_min")
+        theta_max = motorposition.get("theta_max")
+
+        if theta_min is None or theta_max is None:
+            raise ValueError(
+                f"Motor {motorposition['name']} hat keine theta_min/theta_max Werte."
+            )
+
+        if angle_rad < theta_min or angle_rad > theta_max:
+            raise ValueError(
+                f"Motor {motorposition['name']}: Winkel {np.degrees(angle_rad):.2f}° "
+                f"außerhalb der Grenzen "
+                f"[{np.degrees(theta_min):.2f}°, {np.degrees(theta_max):.2f}°]"
+            )
+
+        return angle_rad
 
     def calculate_motor_angle_rad(self, circle_center, motor_axis, point, zero_direction):
         motor_axis = unit(motor_axis)
@@ -37,8 +57,9 @@ class KinematicsSolver:
         x_local = np.dot(r_vec, zero_direction)
         y_local = np.dot(r_vec, perp_direction)
 
-        angle_rad = np.arctan2(y_local, x_local)
+        angle_rad = -np.arctan2(y_local, x_local)
         return angle_rad
+
 
     def solve_single_arm_ik(self, A, motorposition):
         A = np.array(A, dtype=float)
@@ -58,7 +79,9 @@ class KinematicsSolver:
         upper_arm_direction = unit(upper_arm_vector)
 
         zero_direction = B - robot_center
+
         angle_rad = self.calculate_motor_angle_rad(circle_center, nB, elbow, zero_direction)
+        angle_rad = self.validate_motor_angle(angle_rad, motorposition)
 
         lower_rod_vector = elbow - A
         lower_rod_direction = unit(lower_rod_vector)
@@ -162,6 +185,134 @@ class KinematicsSolver:
         print(f"Voll erreichbar      : {fully_reachable_points}")
         print(f"Nichterreichbar      : {total_points - fully_reachable_points}")
         print()
+
+
+    def generate_workspace_grid(self):
+        resolution = int(self.workspace["resolution"])
+
+        x_values = np.linspace(self.workspace["range_x"]["min"], self.workspace["range_x"]["max"], resolution)
+        y_values = np.linspace(self.workspace["range_y"]["min"], self.workspace["range_y"]["max"], resolution)
+        z_values = np.linspace(self.workspace["range_z"]["min"], self.workspace["range_z"]["max"], resolution)
+
+        X, Y, Z = np.meshgrid(x_values, y_values, z_values, indexing="ij")
+
+        return np.column_stack((X.ravel(), Y.ravel(), Z.ravel()))
+
+
+    def is_point_in_rough_workspace(self, point):
+        point = np.array(point, dtype=float)
+
+        for motor in self.motors:
+            motor_position = np.array(motor["position"], dtype=float)
+
+            upper_length = motor["upper_length"]
+            lower_length = motor["lower_length"]
+
+            distance = norm(point - motor_position)
+
+            max_reach = upper_length + lower_length
+            min_reach = abs(lower_length - upper_length)
+
+            if distance > max_reach:
+                return False
+
+            if distance < min_reach:
+                return False
+
+        return True
+
+    def solve_workspace(self):
+        workspace_grid_points = self.generate_workspace_grid()
+
+
+        rough_workspace_points = []
+        reachable_workspace_points = []
+        unreachable_workspace_points = []
+        workspace_results = []
+
+        for point in workspace_grid_points:
+            if not self.is_point_in_rough_workspace(point):
+                continue
+
+            rough_workspace_points.append(point)
+
+            result = self.solve_point(point)
+            is_reachable = all(motor_result["reachable"] for motor_result in result)
+
+            workspace_results.append({
+                "point": point,
+                "reachable": is_reachable,
+                "result": result
+            })
+
+            if is_reachable:
+                reachable_workspace_points.append(point)
+            else:
+                unreachable_workspace_points.append(point)
+
+        return (
+            np.array(reachable_workspace_points, dtype=float),
+            np.array(unreachable_workspace_points, dtype=float),
+            np.array(rough_workspace_points, dtype=float),
+            workspace_results
+        )
+
+
+    def plot_workspace(self, show_unreachable=False, show_rough_workspace=False):
+        import matplotlib.pyplot as plt
+        
+        reachable_points, unreachable_points, rough_points, workspace_results = self.solve_workspace()
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection="3d")
+
+        if show_rough_workspace and len(rough_points) > 0:
+            ax.scatter(
+                rough_points[:, 0],
+                rough_points[:, 1],
+                rough_points[:, 2],
+                s=2,
+                alpha=0.05,
+                label="Grobe Vorauswahl"
+            )
+
+        if show_unreachable and len(unreachable_points) > 0:
+            ax.scatter(
+                unreachable_points[:, 0],
+                unreachable_points[:, 1],
+                unreachable_points[:, 2],
+                s=3,
+                alpha=0.1,
+                label="Nach Vorauswahl nicht IK-erreichbar"
+            )
+
+        if len(reachable_points) > 0:
+            ax.scatter(
+                reachable_points[:, 0],
+                reachable_points[:, 1],
+                reachable_points[:, 2],
+                s=8,
+                alpha=0.8,
+                label="IK-erreichbarer Workspace"
+            )
+
+
+        ax.set_xlabel("X [m]")
+        ax.set_ylabel("Y [m]")
+        ax.set_zlabel("Z [m]")
+        ax.set_title("Erreichbarer Workspace des Roboters")
+        ax.legend()
+        ax.grid(True)
+
+        print(f"Gitterpunkte insgesamt : {len(self.generate_workspace_grid())}")
+        print(f"Grobe Vorauswahl       : {len(rough_points)}")
+        print(f"IK-erreichbar          : {len(reachable_points)}")
+        print(f"Nicht IK-erreichbar    : {len(unreachable_points)}")
+
+        plt.show()
+
+        return reachable_points
+
 
     def debug_plot_offset_trajectory(self, path_points):
         import matplotlib.pyplot as plt

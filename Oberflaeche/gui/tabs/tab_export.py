@@ -23,7 +23,7 @@ class ExportTab(BaseTab):
                                  onLineChangedFunction=self.logic.program_file_changed_callback)
         self.csv_line.pack(fill="x")
 
-        self.serial_line = TextLine(self, "Serial Connection", default="/dev/tty.usbserial-110")
+        self.serial_line = TextLine(self, "Serial Connection", default="/dev/tty.usbmodem11101")
         self.serial_line.pack(fill="x")
 
         ttk.Label(self, text="Serial Status").pack(anchor="w")

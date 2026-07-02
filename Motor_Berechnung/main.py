@@ -1,4 +1,4 @@
-from robotconfig import RobotConfig
+from robotconfig import robot_config
 from trajectory import Trajectory
 from kinematics import KinematicsSolver
 from dynamics import DynamicsSolver
@@ -10,8 +10,7 @@ def main():
     ROOT = Path(__file__).resolve().parent.parent
 
     # 1. Konfiguration laden
-    robot_config = RobotConfig()                    # Erzeugt Roboter, mit allen Attributen und alle globale daten
-    #print(robot_config.global_data["mass_kg"])     # Auslesebeispiel
+    # print(robot_config.global_data["mass_kg"])     # Auslesebeispiel
 
     trajectory_path = ROOT / robot_config.global_data["trajectory_csv"]
 
@@ -20,6 +19,8 @@ def main():
 
     # 3. Inverse Kinematik berechnen
     kinematics_solver = KinematicsSolver(robot_config)
+
+    #workspace_points = kinematics_solver.plot_workspace(show_unreachable=False)    # Workspace Plot
 
     all_results = kinematics_solver.solve_trajectory(trajectory.path_points)        # Berechnet Motorwinkel für alle Pfadpunkte
     #kinematics_solver.print_reachable_summary(trajectory.path_points, all_results)
@@ -36,10 +37,10 @@ def main():
     # 6. Visualisierung
     #visualizer = Visualizer(robot_config, trajectory, dynamics_solver)
     
-    #visualizer.plot_motor_angles(all_results)
-    #visualizer.save_motor_angles_plot(all_results, filename="motor_angles.png")
-#
-    #visualizer.animate_reachable_poses(all_results,save_gif=True,gif_name="delta_robot_animation.gif")
+    visualizer.plot_motor_angles(all_results)
+    visualizer.save_motor_angles_plot(all_results, filename="motor_angles.png")
+
+    visualizer.animate_reachable_poses(all_results,save_gif=True,gif_name="delta_robot_animation.gif")
 
     
 
