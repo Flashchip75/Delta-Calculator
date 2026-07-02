@@ -4,12 +4,11 @@ import math
 
 from config import cfg
 from pathlib import Path
-from .track import Trajectory
-from .PathFrenet import PathFrenet
-from .ProfileManager import ProfileManager
-from .DynamicsManager import DynamicsManager
-from .Visualization import Plotter
-from .jsonConverter import UIProfileConverter
+from path_berechnung.track import Trajectory
+from path_berechnung.PathFrenet import PathFrenet
+from path_berechnung.ProfileManager import ProfileManager
+from path_berechnung.DynamicsManager import DynamicsManager
+from path_berechnung.Jsonconverter import UIProfileConverter
 
 
 class exePath:
@@ -59,14 +58,14 @@ class exePath:
                 raise ValueError("Sowohl geometries als auch timeLaws in uiData dürfen nicht leer sein.")
             print("=== Konvertiere UI-Daten -> j_data ===")
             converter = UIProfileConverter(default_N=100)
-            j_data = converter.convert_flat(geometries=uiData[0], timeLaws=uiData[1])
+            j_data = converter.convert_ui_data_to_solver_input(ui_data=uiData)
         else:
             raise ValueError("Entweder geometry oder gcode muss angegeben werden.")
 
         # 2. Trajektorie & Dynamik (New Logic)
         print("=== Berechne Trajektorie & Dynamik ===")
 
-        self.validate_path_continuity(j_data)
+        #self.validate_path_continuity(j_data)
 
         traj = Trajectory(j_data)
         pfade = []

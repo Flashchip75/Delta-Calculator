@@ -122,24 +122,10 @@ class NumberLine(PropertyLine):
             self,
             units,
             defaultUnit=defaultUnit,
-            onValueChangedFunction=self.updateUnitSelection,
+            onValueChangedFunction=self.updateLine,
             name="lineUnitSelector(" + labelText.replace(" ", "_") + ")"
         )
         self.unitSelector.grid(row=0, column=2, sticky="nsew")
-
-    def updateUnitSelection(self):
-        oldFactor = self.unitSelector.previous_value[1]
-        newFactor = self.unitSelector.get()[1]
-
-        for widget in self.inputs:
-            displayValue = widget.get() * oldFactor / newFactor
-            text = str(displayValue)
-            widget.delete(0, tk.END)
-            widget.insert(0, text)
-            widget.last_valid_value = text
-            widget.numerical_value = displayValue
-
-        self.updateLine()
 
     def get(self):
         unitFactor = self.unitSelector.get()[1]

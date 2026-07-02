@@ -181,7 +181,6 @@ class UnitSelectorCombobox(ttk.Combobox):
         defaultUnit = defaultUnit if defaultUnit else self.units.getDefault()
         self.current(self.units.getIndex(defaultUnit))
         self.last_value = self.get()
-        self.previous_value = self.last_value
         self.bind("<<ComboboxSelected>>", self._checkNewSelection)
 
         # Set onChanged Function
@@ -191,10 +190,8 @@ class UnitSelectorCombobox(ttk.Combobox):
             self.onValueChanged = lambda: None
 
     def _checkNewSelection(self, event):
-        current_value = self.get()
-        if not self.last_value == current_value:
-            self.previous_value = self.last_value
-            self.last_value = current_value
+        if not self.last_value == self.get():
+            self.last_value = self.get()
             self.onValueChanged()
 
     def get(self) -> tuple:
