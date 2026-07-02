@@ -6,7 +6,7 @@ from Oberflaeche.gui.designelemente.custom_widgets.timeline_button import Timeli
 
 import Oberflaeche.gui.designelemente.path_geometry_section as pgeo
 import path_berechnung.path_models_for_ui as path_models
-#import path_berechnung.exe_path as exeP
+import path_berechnung.exe_path as exeP
 
 # Eingabetab links zur Pfaddefinition
 
@@ -222,11 +222,11 @@ class PathDefTab(BaseTab):
         self.path_tra_folder.open()
 
     def update_references(self):
-        i = 0
+        i = -1
         for geo_sec in self.all_geo_sections:
-            geo_sec.data_object.time_law_ref = i
             if self.all_time_law_sections[i] is not None:
                 i = i + 1
+            geo_sec.data_object.time_law_ref = i
 
     def solve(self):
         if self.solver_output is not None:
@@ -242,9 +242,9 @@ class PathDefTab(BaseTab):
             print("----- Time Laws:")
             [print(tl) for tl in time_law_list]
 
-            self.solver_output = "DATA"
-            # calc_data = exeP.exePath().run( uiData = (curve_list, time_law_list) )
-            # print(calc_data)
+            #self.solver_output = "DATA"
+            self.solver_output = exeP.exePath().run( uiData = (curve_list, time_law_list) )
+            print(self.solver_output)
 
     def invalidate(self):
         self.solver_output = None
