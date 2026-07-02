@@ -57,7 +57,7 @@ class KinematicsSolver:
         x_local = np.dot(r_vec, zero_direction)
         y_local = np.dot(r_vec, perp_direction)
 
-        angle_rad = np.arctan2(y_local, x_local)
+        angle_rad = -np.arctan2(y_local, x_local)
         return angle_rad
 
 

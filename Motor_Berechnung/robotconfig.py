@@ -34,8 +34,8 @@ class RobotConfig:
                 "upper_mass": 0.100,
                 "lower_length": 0.400,
                 "lower_mass": 0.050,
-                "theta_min": -0.0873, # -5 grad
-                "theta_max": 1.5708, # 90 grad
+                "theta_min": -1.5708, # -90 grad
+                "theta_max": 0.0873, # 5 grad
                 "i": 20,
                 "eta": 0.85,
                 "Jm": 0.0,
@@ -51,8 +51,8 @@ class RobotConfig:
                 "upper_mass": 0.100,
                 "lower_length": 0.400,
                 "lower_mass": 0.050,
-                "theta_min": -0.0873, # -5 grad
-                "theta_max": 1.5708, # 90 grad
+                "theta_min": -1.5708, # -90 grad
+                "theta_max": 0.0873, # 5 grad
                 "i": 20,
                 "eta": 0.85,
                 "Jm": 0.0,
@@ -68,8 +68,8 @@ class RobotConfig:
                 "upper_mass": 0.100,
                 "lower_length": 0.400,
                 "lower_mass": 0.050,
-                "theta_min": -0.0873, # -5 grad
-                "theta_max": 1.5708, # 90 grad
+                "theta_min": -1.5708, # -90 grad
+                "theta_max": 0.0873, # 5 grad
                 "i": 20,
                 "eta": 0.85,
                 "Jm": 0.0,

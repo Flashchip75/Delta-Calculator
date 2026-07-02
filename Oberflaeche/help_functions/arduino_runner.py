@@ -138,7 +138,7 @@ class ArduinoRunner:
         omega_0 = float(row["omega_1"])
         omega_1 = float(row["omega_2"])
         omega_2 = float(row["omega_3"])
-        return f"0,0,{-omega_0*636:.3f},1,{-omega_1*636:.3f},2,{-omega_2*636:.3f}"
+        return f"0,0,{omega_0*200/2/3.14159:.3f},1,{omega_1*200/2/3.14159:.3f},2,{omega_2*200/2/3.14159:.3f}"
 
     def _row_has_nan_values(self, row):
         omega_0 = float(row["omega_1"])
