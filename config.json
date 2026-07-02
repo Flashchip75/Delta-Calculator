@@ -8,8 +8,8 @@
     "mass_kg": 1.0,
     "payload_mass": 0.100,
     "singularity_margin_deg": 5.0,
-    "trajectory_csv": "woelke.csv",
-    "output_dir": "output"
+    "trajectory_csv": "roboter_dynamik.csv",
+    "output_dir": ""
   },
   "plotting": {
     "dpi": 100,
