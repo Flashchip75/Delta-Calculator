@@ -57,19 +57,6 @@ class PathConfig:
     path_profiles: str              # Dateiname der Pfadgeometrie-Profile (relativ zum Projekt-Root)
 
 @dataclass
-class VisionConfig:
-    """Vision-spezifische Parameter -> JSON-Sektion 'cVision'."""
-    reCalibration: bool             # Bei True: Kalibrierung vor Erkennung durchführen
-    aruco_dict: str                 # ArUco-Dict für Erkennung
-    mToPixel: float                 # Gespeicherter px/m-Wert (verwendet wenn reCalibration=False)
-    calibration_source: str         # Bildquelle für Kalibrierung
-    calibration_norm_m: int         # Referenzlänge in m für Kalibrierung
-    calibration_id: int             # ArUco-Marker-ID für Kalibrierung
-    model_path: str                 # Pfad zum YOLO-Modell
-    conf_threshold: float           # Mindestvertrauen für YOLO-Erkennung
-    visiualisations: dict           # Farben und Stärken für Bounding Boxes und Kreise
-
-@dataclass
 class MotorConfig:
     """Konfiguration eines einzelnen Motors -> JSON-Sektion 'motors.<ID>'."""
     position: list[float]           # Montageposition [x, y, z] in m
@@ -97,7 +84,6 @@ class AppConfig:
     plotting: plottingConfig
     workspace: WorkspaceConfig
     path: PathConfig
-    cVision: VisionConfig
     motors: MotorsConfig
 
 
@@ -184,18 +170,6 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         path_profiles   = _require(p, "path_profiles",  "path"),
     )
 
-    vision_cfg = VisionConfig(
-        reCalibration           = _require(cv, "reCalibration",         "cVision"),
-        aruco_dict              = _require(cv, "aruco_dict",            "cVision"),
-        mToPixel                = _require(cv, "mToPixel",              "cVision"),
-        calibration_source      = _require(cv, "calibration_source",    "cVision"),
-        calibration_norm_m      = _require(cv, "calibration_norm_m",    "cVision"),
-        calibration_id          = _require(cv, "calibration_id",        "cVision"),
-        model_path              = _require(cv, "model_path",            "cVision"),
-        conf_threshold          = _require(cv, "conf_threshold",        "cVision"),
-        visiualisations         = _require(cv, "visiualisations",       "cVision"),
-    )
-
     motors_cfg = MotorsConfig(
         A = _load_motor(_require(m, "A", "motors"), "A"),
         B = _load_motor(_require(m, "B", "motors"), "B"),
@@ -207,6 +181,5 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         plotting   = plotting_cfg,
         workspace  = workspace_cfg,
         path       = path_cfg,
-        cVision    = vision_cfg,
         motors     = motors_cfg,
     )

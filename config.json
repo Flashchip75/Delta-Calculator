@@ -33,6 +33,7 @@
     ]
   },
   "path": {
+    "path_profiles": "path_profiles.config",
     "duration_s": 5.0,
     "points": 1000,
     "gain": 50.0,
