@@ -1,4 +1,5 @@
 # Byte-compiled / optimized / DLL files
+
 __pycache__/
 *.py[codz]
 *$py.class
@@ -214,3 +215,16 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# csv files
+*.csv
+roboter_dynamik.csv
+roboter_dynamik.json
+
+# excluding output directory
+output/
+Motor_Berechnung/output/
+
+.vscode/
+.gitignore
+.idea/
