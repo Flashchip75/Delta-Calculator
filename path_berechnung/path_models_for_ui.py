@@ -72,7 +72,7 @@ class Arc:
 
 @dataclass
 class Wait:
-    duration: Tuple[float, str] = (0.0, "s")
+    duration: Tuple[float, str] = (1.0, "s")
 
     time_law_ref: float = math.nan
 

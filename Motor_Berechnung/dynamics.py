@@ -1,203 +1,289 @@
-"""
-dynamics.py
-===========
-Berechnet Drehmoment an jedem Motor via Lagrange-Methode.
-
-Lagrange-Funktion L = T - V:
-
-  Kinetische Energie T:
-    T = sum_i [ 1/2 * I_o,i * omega_i^2          (Oberarm, Stabtraegheit)
-              + 1/2 * m_u,i * Lo,i^2 * omega_i^2  (Unterarm-Masse am Gelenk)
-              ]
-      + 1/2 * m_E * |v_E|^2                        (Payload)
-
-  Potenzielle Energie V:
-    V = sum_i [ m_o,i * g . s_o,i(phi_i)           (Oberarm-SP bei Lo/2)
-              + m_u,i * g . k_i(phi_i)              (Unterarm-Masse am Gelenk)
-              ]
-      + m_E * g . e
-
-  Euler-Lagrange (diagonal, da Ketten kinematisch entkoppelt):
-    tau_i = I_ges,i * alpha_i + dV/dphi_i - Q_ext,i
-
-  dV/dphi_i : analytisch (Ableitung der Schwerpunkts-z-Koordinaten)
-  Q_ext,i   : generalisierte externe Kraft via virtuelle Arbeit
-               Q_ext,i = (dk_i/dphi_i) . F_ext (projiziert auf Unterarm)
-
-Ausgabe:
-  output/kinematics.npz  wird um 'torque' ergaenzt
-  output/motor_results.png
-"""
-
 import numpy as np
-import os
-import matplotlib
-matplotlib.use("Agg")
+from Motor_Berechnung.math_utilities import build_orthonormal_basis_from_vector
+from Motor_Berechnung.math_utilities import gradient
 import matplotlib.pyplot as plt
 
-from .robot_geometry import RobotGeometry
-from .inverse_kinematics import load_kinematics, save_kinematics
+class DynamicsSolver:
+    def __init__(self, robot_config, trajectory):
+        self.upper_arm_length = robot_config.upper_arm_length
+        self.trajectory_points = trajectory.points
+    
+        self.motors = robot_config.motors
+        self.g = abs(robot_config.global_data["gravity"][2])
+    
+        self.motor_transmission = {
+            motor["name"]: motor["i"]
+            for motor in self.motors
+        }
+    
+        self.motor_axis = {
+            motor["name"]: motor["axis"]
+            for motor in self.motors
+        }
 
+    def get_lower_rod_directions(self, results):
+        U = np.column_stack([res["lower_rod_direction"] for res in results])
+        return U
 
-# ==============================================================================
-# Drehmoment Lagrange
-# ==============================================================================
+    def project_vector_onto_rods(self, vector_quantity, results):
+        q = np.array(vector_quantity, dtype=float)
+        projections = []
+        for res in results:
+            u = res["lower_rod_direction"]
+            proj = np.dot(q, u)
+            projections.append(proj)
+        return np.array(projections)
 
-def _torque_lagrange(
-    robot:     RobotGeometry,
-    motor_idx: int,
-    phi_i:     float,
-    omega_i:   float,
-    alpha_i:   float,
-    end_pos:   np.ndarray,
-    F_ext:     np.ndarray,
-) -> float:
-    """
-    Drehmoment an Motor motor_idx via Lagrange.
+    def solve_rod_scalars(self, vector_quantity, results):
+        q = np.array(vector_quantity, dtype=float)  # Skalare Werte der Stabkräfte aufgesplittet
+        U = self.get_lower_rod_directions(results)  # Richtungsvektoren der Stäbe
 
-    tau_i = I_ges * alpha_i  +  dV/dphi_i  -  Q_ext,i
-
-    I_ges,i = 1/3 * m_o * Lo^2   (Oberarm, Stabtraegheit um Motorende)
-            + m_u * Lo^2          (Unterarmasse als Punktmasse bei Lo)
-
-    dV/dphi_i wird analytisch aus der z-Koordinate der Schwerpunkte berechnet.
-
-    Q_ext,i: generalisierte Kraft des externen Kraftvektors F_ext.
-      dk_i/dphi_i = Lo*(-sin(phi)*r_hat + cos(phi)*d_hat)
-      Unterarm uebertraegt Kraft entlang seiner Achse:
-      u_hat = (e - k_i)/|e - k_i|
-      Q_ext,i = (dk_i/dphi_i . u_hat) * (F_ext . u_hat)
-    """
-    mc   = robot.motors[motor_idx]
-    Lo   = mc.upper.length
-    mo   = mc.upper.mass
-    Io   = mc.upper.inertia      # 1/3 * mo * Lo^2
-    mu   = mc.lower.mass
-    r    = mc.radial_vec
-    d    = mc.drop_vec
-    g    = robot.gravity
-
-    I_ges = Io + mu * Lo**2
-
-    # Gelenk-Endpunkt und Ableitung nach phi
-    k_i      = mc.position + Lo * (np.cos(phi_i) * r + np.sin(phi_i) * d)
-    dk_dphi  = Lo * (-np.sin(phi_i) * r + np.cos(phi_i) * d)
-
-    # Oberarm-Schwerpunkt und Ableitung
-    s_i      = mc.position + 0.5 * Lo * (np.cos(phi_i) * r + np.sin(phi_i) * d)
-    ds_dphi  = 0.5 * dk_dphi
-
-    # dV/dphi_i = -( m_o * g . ds/dphi  +  m_u * g . dk/dphi )
-    #  Vorzeichen: V = m*g.r, dV/dphi = m*g . dr/dphi
-    #  Im Lagrange-Term: tau = ... + dV/dphi (da L = T - V -> -dL/dphi = +dV/dphi)
-    dV_dphi = (float(np.dot(mo * g, ds_dphi))
-             + float(np.dot(mu * g, dk_dphi)))
-
-    # Externe Kraft (Payload-Kraft via Unterarm)
-    u_vec  = end_pos - k_i
-    u_norm = np.linalg.norm(u_vec)
-    if u_norm > 1e-9:
-        u_hat   = u_vec / u_norm
-        # Jacobi-Projektion: wie viel von dk/dphi entlang u_hat
-        jac_col = float(np.dot(dk_dphi, u_hat))
-        Q_ext   = jac_col * float(np.dot(F_ext, u_hat))
-    else:
-        Q_ext = 0.0
-
-    tau = I_ges * alpha_i + dV_dphi - Q_ext
-    return float(tau)
-
-
-def compute_torques(robot: RobotGeometry,
-                    kin: dict,
-                    matrix: np.ndarray) -> np.ndarray:
-    """
-    Berechnet Drehmomente fuer alle Zeitschritte.
-
-    Parameter:
-        kin    : Ergebnis aus inverse_kinematics.compute_kinematics()
-        matrix : (N, 16) Trajektorienmatrix (Spalten 13-15: Fx,Fy,Fz)
-
-    Rueckgabe:
-        torque : (N, 3) Drehmoment [Nm] an Motor A, B, C
-    """
-    N      = kin["t"].shape[0]
-    torque = np.zeros((N, 3))
-
-    has_force = matrix.shape[1] >= 16
-    F_grav    = robot.payload_mass * robot.gravity   # Schwerkraft auf Payload
-
-    for k in range(N):
-        if not kin["valid"][k]:
-            continue
-        # Externe Kraft = Traegheitskraft + Schwerkraft des Payloads
-        if has_force:
-            F_ext = matrix[k, 13:16]
-        else:
-            # Fallback: nur Schwerkraft
-            F_ext = F_grav
-
-        for i in range(3):
-            torque[k, i] = _torque_lagrange(
-                robot, i,
-                kin["phi"][k, i],
-                kin["omega"][k, i],
-                kin["alpha"][k, i],
-                kin["pos"][k],
-                F_ext,
+        detU = np.linalg.det(U)
+        if abs(detU) < 1e-10:
+            raise ValueError(
+                "Die Richtungsmatrix der unteren Stäbe ist singulär oder fast singulär. "
+                "Die Zerlegung kann nicht eindeutig berechnet werden."
             )
 
-    return torque
+        scalars = np.linalg.solve(U, q)
+        reconstructed_vector = U @ scalars
+        return scalars, U, reconstructed_vector
+
+    def solve_rod_forces(self, force_vector, results):
+        return self.solve_rod_scalars(force_vector, results)
+
+    
+    def project_rod_force_tangential_to_upper_arm(self, rod_force_scalar, result):
+        lower_rod_direction = np.array(result["lower_rod_direction"], dtype=float)
+        upper_arm_direction = np.array(result["upper_arm_direction"], dtype=float)
+
+        lower_rod_norm = np.linalg.norm(lower_rod_direction)
+        upper_arm_norm = np.linalg.norm(upper_arm_direction)
+
+        if lower_rod_norm < 1e-12:
+            raise ValueError(
+                f"lower_rod_direction von Motor {result['name']} ist ungültig."
+            )
+
+        if upper_arm_norm < 1e-12:
+            raise ValueError(
+                f"upper_arm_direction von Motor {result['name']} ist ungültig."
+            )
+
+        lower_rod_direction = lower_rod_direction / lower_rod_norm
+        upper_arm_direction = upper_arm_direction / upper_arm_norm
+
+        # Kraft, die über den Lower Arm auf das Ellbogengelenk wirkt
+        force_on_upper_arm = -rod_force_scalar * lower_rod_direction
 
 
-# ==============================================================================
-# Plot
-# ==============================================================================
+        # Tangentialrichtung muss in der Motorebene liegen.
+        motor_axis = np.array(result["motor_axis"], dtype=float)
+        motor_axis = motor_axis / np.linalg.norm(motor_axis)
 
-def plot_motor_results(kin: dict, torque: np.ndarray, out_dir: str = "output"):
-    """
-    4-Panel-Plot: phi, omega, alpha, torque fuer alle 3 Motoren.
-    """
-    t      = kin["t"]
-    phi    = np.rad2deg(kin["phi"])
-    omega  = np.rad2deg(kin["omega"])
-    alpha  = np.rad2deg(kin["alpha"])
-    names  = ["A", "B", "C"]
-    colors = ["tab:red", "tab:green", "tab:blue"]
+        tangent = np.cross(motor_axis, upper_arm_direction)
 
-    fig, axes = plt.subplots(4, 1, figsize=(12, 14), sharex=True)
-    fig.suptitle("Motor-Ergebnisse", fontsize=13, fontweight="bold")
+        tangent_norm = np.linalg.norm(tangent)
+        if tangent_norm < 1e-12:
+            raise ValueError(
+                f"Tangentialrichtung für Motor {result['name']} ungültig."
+            )
 
-    datasets = [
-        (phi,    "Winkel φ [°]"),
-        (omega,  "Winkelgeschw. ω [°/s]"),
-        (alpha,  "Winkelbeschl. α [°/s²]"),
-        (torque, "Drehmoment T [Nm]"),
-    ]
+        tangent = tangent / tangent_norm
 
-    for ax, (data, ylabel) in zip(axes, datasets):
-        for i in range(3):
-            ax.plot(t, data[:, i], color=colors[i],
-                    label=f"Motor {names[i]}", linewidth=1.8)
-        ax.set_ylabel(ylabel, fontsize=9)
-        ax.legend(ncol=3, fontsize=8)
-        ax.grid(True, alpha=0.3)
-        ax.set_xlim(t[0], t[-1])
+        
+        tangential_force = np.dot(force_on_upper_arm, tangent)
 
-    axes[-1].set_xlabel("Zeit t [s]")
-    plt.tight_layout()
-    path = f"{out_dir}/motor_results.png"
-    plt.savefig(path, dpi=150)
-    plt.close()
-    print(f"  Gespeichert: {path}")
+        return tangential_force
+    
+    def compute_motor_torque_from_rod_force(self, rod_force_scalar, result):
+        tangential_force = self.project_rod_force_tangential_to_upper_arm(
+            rod_force_scalar,
+            result
+        )
 
+        torque_motor = tangential_force * self.upper_arm_length
 
-if __name__ == "__main__":
-    os.makedirs("output", exist_ok=True)
-    robot  = RobotGeometry("config.txt")
-    matrix = np.loadtxt(robot.trajectory_csv, delimiter=",", skiprows=1)
-    kin    = load_kinematics()
-    torque = compute_torques(robot, kin, matrix)
-    kin["torque"] = torque
-    save_kinematics(kin)
-    plot_motor_results(kin, torque)
+        return torque_motor
+    
+    def compute_motor_energy_balance(self, force_vector, velocity_vector, results):
+        force_projections = self.project_vector_onto_rods(force_vector, results)
+        velocity_projections = self.project_vector_onto_rods(velocity_vector, results)
+
+        rod_forces, U, reconstructed_force = self.solve_rod_forces(force_vector,results)
+
+        rod_velocities = self.project_vector_onto_rods(velocity_vector, results)
+
+        motors_energy = []
+
+        for res, f_i, v_i in zip(results, rod_forces, rod_velocities):
+            P_i = f_i * v_i
+
+            T_i = self.compute_motor_torque_from_rod_force(f_i, res)
+           
+    
+            if abs(T_i) < 1e-12:
+                omega_i = np.nan
+                i_motor = np.nan
+            else:
+                i_motor = self.motor_transmission[res["name"]]
+                omega_i = (-P_i / T_i) * i_motor
+
+            motors_energy.append({
+                "name": res["name"],
+                "force_projection": np.dot(
+                    np.array(force_vector, dtype=float),
+                    res["lower_rod_direction"]
+                ),
+                "velocity_projection": np.dot(
+                    np.array(velocity_vector, dtype=float),
+                    res["lower_rod_direction"]
+                ),
+                "rod_force": f_i,
+                "rod_velocity": v_i,
+                "P_motor": P_i,
+                "T_motor": T_i,
+                "omega_motor": omega_i,
+                "transmission": i_motor
+            })
+
+        return {
+            "force_projections": force_projections,
+            "velocity_projections": velocity_projections,
+            "rod_forces": rod_forces,
+            "rod_velocities": rod_velocities,
+            "U": U,
+            "reconstructed_force": reconstructed_force,
+            
+            "motors": motors_energy
+        }
+
+    def compute_all_motor_omega(self, all_results):
+        omega_all = []
+
+        for i, results in enumerate(all_results):
+            point = self.trajectory_points[i]
+
+            if not all(res["reachable"] for res in results):
+                omega_all.append([np.nan, np.nan, np.nan])
+                continue
+
+            try:
+                energy = self.compute_motor_energy_balance(
+                    force_vector=point["force"],
+                    velocity_vector=point["velocity"],
+                    results=results
+                )
+
+                omega_row = [m["omega_motor"] for m in energy["motors"]]
+
+            except Exception as error:
+                print(f"Omega Fehler bei Index {i}: {error}")
+                omega_row = [np.nan, np.nan, np.nan]
+
+            omega_all.append(omega_row)
+
+        return np.array(omega_all, dtype=float)
+
+    def compute_all_motor_alpha(self, omega_all):
+        t = np.array([point["time"] for point in self.trajectory_points], dtype=float)
+        omega_all = np.array(omega_all, dtype=float)
+
+        alpha_all = np.full_like(omega_all, np.nan, dtype=float)
+
+        for motor_index in range(3):
+            omega_motor = omega_all[:, motor_index]
+            valid = np.isfinite(omega_motor) & np.isfinite(t)
+
+            if np.count_nonzero(valid) >= 2:
+                alpha_all[valid, motor_index] = gradient(omega_motor[valid],t[valid])
+
+        return alpha_all
+
+    def compute_motor_omega_numerical_debug(self, all_results):
+        t = np.array([point["time"] for point in self.trajectory_points], dtype=float)
+
+        phi_all = np.full((len(all_results), 3), np.nan, dtype=float)
+
+        for i, results in enumerate(all_results):
+            for motor_index in range(3):
+                if results[motor_index]["reachable"]:
+                    phi_all[i, motor_index] = results[motor_index]["angle_rad"]
+
+        omega_numerical = np.full_like(phi_all, np.nan, dtype=float)
+
+        for motor_index in range(3):
+            phi_motor = phi_all[:, motor_index]
+            valid = np.isfinite(phi_motor) & np.isfinite(t)
+
+            if np.count_nonzero(valid) >= 2:
+                omega_numerical[valid, motor_index] = 20*gradient(phi_motor[valid],t[valid])
+
+        omega_analytical = self.compute_all_motor_omega(all_results)
+
+        fig, axs = plt.subplots(3, 1, figsize=(10, 9), sharex=True)
+
+        for motor_index in range(3):
+            axs[motor_index].plot(
+                t,
+                omega_analytical[:, motor_index],
+                label=f"omega_{motor_index + 1}_analytisch"
+            )
+
+            axs[motor_index].plot(
+                t,
+                omega_numerical[:, motor_index],
+                linestyle="--",
+                label=f"omega_{motor_index + 1}_numerisch"
+            )
+
+            axs[motor_index].set_ylabel("omega [rad/s]")
+            axs[motor_index].grid(True)
+            axs[motor_index].legend()
+
+        axs[2].set_xlabel("t [s]")
+
+        plt.suptitle("Vergleich analytische und numerische Winkelgeschwindigkeit")
+        plt.tight_layout()
+        plt.show()
+
+        return omega_numerical
+    
+    def compute_all_motor_torque(self, all_results, alpha_all):
+        torque_all = np.full_like(alpha_all, np.nan, dtype=float)
+
+        for motor_index in range(3):
+            motor = self.motors[motor_index]
+
+            L = motor["upper_length"]
+            ms = motor["upper_mass"]
+            m2 = motor["lower_mass"]
+            rs = L / 2.0
+            i = motor["i"]
+            eta = motor["eta"]
+            Jm = motor["Jm"]
+            Jg = motor["Jg"]
+
+            J_ges = (1.0 / 3.0) * ms * L**2 + m2 * L**2
+
+            for point_index, results in enumerate(all_results):
+                res = results[motor_index]
+
+                if not res["reachable"]:
+                    continue
+
+                phi = res["angle_rad"]
+                alpha_motor = alpha_all[point_index, motor_index]
+
+                if not np.isfinite(phi) or not np.isfinite(alpha_motor):
+                    continue
+
+                alpha_sw = alpha_motor / i
+
+                M_grav = (ms * self.g * rs + m2 * self.g * L) * np.cos(phi)
+                M_last = (J_ges * alpha_sw + M_grav) / (i * eta)
+                M_traeg = (Jm + Jg) * alpha_motor
+
+                torque_all[point_index, motor_index] = M_last + M_traeg
+
+        return torque_all
