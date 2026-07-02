@@ -28,13 +28,6 @@ class GlobalConfig:
     output_dir: str                 # Ausgabeordner (relativ zum Projekt-Root)
 
 
-@dataclass
-class plottingConfig:
-    """Plotting-spezifische Parameter -> JSON-Sektion 'plotting'."""
-    dpi: int
-    bbox_inches: str
-    trajectory_plot: str             # Dateiname für den Trajektorien-Plot
-    forces_plot: str                # Dateiname für den Kraft-Plot
 
 @dataclass
 class WorkspaceConfig:
@@ -81,7 +74,6 @@ class MotorsConfig:
 class AppConfig:
     """Haupt-Config-Objekt — enthält alle Sektionen."""
     global_cfg: GlobalConfig
-    plotting: plottingConfig
     workspace: WorkspaceConfig
     path: PathConfig
     motors: MotorsConfig
@@ -146,12 +138,6 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         output_dir             = _require(g, "output_dir",             "global"),
     )
 
-    plotting_cfg = plottingConfig(
-        dpi             = _require(pl, "dpi", "plotting"),
-        bbox_inches     = _require(pl, "bbox_inches", "plotting"),
-        trajectory_plot = _require(pl, "trajectory_plot", "plotting"),
-        forces_plot     = _require(pl, "forces_plot", "plotting"),
-    )
 
     workspace_cfg = WorkspaceConfig(
         resolution = _require(ws, "resolution", "workspace"),
@@ -178,7 +164,6 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
 
     return AppConfig(
         global_cfg = global_cfg,
-        plotting   = plotting_cfg,
         workspace  = workspace_cfg,
         path       = path_cfg,
         motors     = motors_cfg,

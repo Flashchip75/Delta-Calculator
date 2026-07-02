@@ -11,12 +11,6 @@
     "trajectory_csv": "roboter_dynamik.csv",
     "output_dir": ""
   },
-  "plotting": {
-    "dpi": 100,
-    "bbox_inches": "tight",
-    "trajectory_plot": "trajectory_plot.png",
-    "forces_plot": "forces_plot.png"
-  },
   "workspace": {
     "resolution": 25,
     "range_x": [
