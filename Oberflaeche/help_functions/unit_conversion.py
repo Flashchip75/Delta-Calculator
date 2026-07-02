@@ -47,7 +47,6 @@ class Unitless(IUnit):
 class UnitAngle(IUnit):
     rad: float = 1.0
     deg: float = pi/180
-    deg: float = pi/180
 
     def getDefault(self) -> str: return "rad"
 
@@ -71,6 +70,15 @@ class UnitLength(IUnit):
     um: float = 0.000001
 
     def getDefault(self) -> str: return "mm"
+
+
+@dataclass(frozen=True)
+class UnitMass(IUnit):
+    kg: float = 1
+    g: float = 0.001
+    mg: float = 0.000001
+
+    def getDefault(self) -> str: return "kg"
 
 
 @dataclass(frozen=True)
