@@ -3,7 +3,7 @@ class UIToPresolveConverter:
         self.default_N = default_N
 
     def convert_ui_data(self, ui_data):
-        pfade, zeitgesetze = ui_data
+        pfade, _ = ui_data
         return self.convert_path(pfade)
 
     def convert_curve(self, curve):

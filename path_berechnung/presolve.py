@@ -47,10 +47,6 @@ class Presolver:
     @staticmethod
     def enrich_config(json_data, default_ppm=100):
 
-        # ============================================
-        # INPUT NORMALISIERUNG (DAS IST DER FIX)
-        # ============================================
-
         # --- Fall 1: neues Format (Liste von Dicts)
         if isinstance(json_data, list):
             cfg_list = json_data
@@ -67,17 +63,9 @@ class Presolver:
         else:
             raise TypeError(f"Unsupported input format: {type(json_data)}")
 
-        # ============================================
-        # VALIDIERUNG
-        # ============================================
-
         for i, cfg in enumerate(cfg_list):
             if not isinstance(cfg, dict):
                 raise TypeError(f"Segment {i} is not dict: {cfg}")
-
-        # ============================================
-        # AB HIER DEIN ORIGINAL CODE
-        # ============================================
 
         enriched = copy.deepcopy(cfg_list)
 

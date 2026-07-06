@@ -1,6 +1,4 @@
 import numpy as np
-import math
-import matplotlib.pyplot as plt
 from scipy.optimize import brentq
 from path_berechnung.GeometryEngine import GeometryEngine
 from path_berechnung.TrajectoryMath import TrajectoryMath
@@ -68,6 +66,7 @@ class DeltaUniversalPlaner:
         Invertiert s -> t exakt für jeden übergebenen Punkt und
         berechnet v, a und j (Ruck) für diesen Zustand.
         """
+
         s_kumuliert = self.geo.berechne_kumulierte_pfadlaengen(punktewolke_gesamt)
 
         ergebnisse = []

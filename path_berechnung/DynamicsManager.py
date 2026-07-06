@@ -1,6 +1,5 @@
 import numpy as np
 import json
-import os
 from pathlib import Path
 
 from config import load_config
@@ -12,7 +11,6 @@ class DynamicsManager:
     def __init__(self, mass, g):
         self.mass = mass
         self.g = g[2]
-        # Neue Header-Reihenfolge (angepasst an die neuen Daten)
         self.header = "t,s,x,y,z,vx,vy,vz,ax,ay,az,jx,jy,jz,tx,ty,tz,nx,ny,nz,bx,by,bz,kappa,ftx,fty,ftz,fnx,fny,fnz,fx,fy,fz"
 
     def prozessiere_pfad(self, pfade, dynamik_vorgaben):
@@ -62,16 +60,10 @@ class DynamicsManager:
         ))
 
         self._export_results(csv_matrix)
-        print("Dynamik erfolgreich berechnet und exportiert.")
-
-        return raum_dynamik, F_vec
-        self._export_results(csv_matrix)
-        print("Dynamik erfolgreich berechnet und exportiert.")
 
         return raum_dynamik, F_vec
 
     def _export_results(self, matrix):
-        # CSV Export - Fix: Verwendet Path für die Pfad-Manipulierung
         cfg = load_config()
         g = cfg.global_cfg
         filepath = Path(g.output_dir) / g.trajectory_csv
