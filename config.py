@@ -121,10 +121,8 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         raw = json.load(f)
 
     g  = raw.get("global",    {})
-    pl  = raw.get("plotting",  {})
     ws = raw.get("workspace", {})
     p  = raw.get("path",      {})
-    cv = raw.get("cVision",   {})
     m  = raw.get("motors",    {})
 
     global_cfg = GlobalConfig(
