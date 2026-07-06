@@ -28,7 +28,6 @@ class GlobalConfig:
     output_dir: str                 # Ausgabeordner (relativ zum Projekt-Root)
 
 
-
 @dataclass
 class WorkspaceConfig:
     """Arbeitsraum-Raster -> JSON-Sektion 'workspace'."""
@@ -48,6 +47,7 @@ class PathConfig:
     scale_m: float                  # Skalierungsfaktor m -> m (0.001)
     offset_m: int                   # Offset in m, um Ursprung zu verschieben (z.B. 1000 für 1m über Boden)
     path_profiles: str              # Dateiname der Pfadgeometrie-Profile (relativ zum Projekt-Root)
+
 
 @dataclass
 class MotorConfig:
@@ -90,7 +90,6 @@ def _require(section: dict, key: str, section_name: str):
         raise KeyError(f"Missing config key: '{section_name}.{key}'")
     return val
 
-
 def _load_motor(data: dict, motor_id: str) -> MotorConfig:
     """Lädt einen einzelnen Motor-Block aus dem Dict."""
     s = f"motors.{motor_id}"
@@ -104,7 +103,6 @@ def _load_motor(data: dict, motor_id: str) -> MotorConfig:
         theta_min    = _require(data, "theta_min",    s),
         theta_max    = _require(data, "theta_max",    s),
     )
-
 
 def load_config(config_path: Path | str | None = None) -> AppConfig:
     """
@@ -137,7 +135,6 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
         trajectory_csv         = _require(g, "trajectory_csv",         "global"),
         output_dir             = _require(g, "output_dir",             "global"),
     )
-
 
     workspace_cfg = WorkspaceConfig(
         resolution = _require(ws, "resolution", "workspace"),
