@@ -60,7 +60,6 @@ class DynamicsManager:
         ))
 
         self._export_results(csv_matrix)
-        print("Dynamik erfolgreich berechnet und exportiert.")
 
         return raum_dynamik, F_vec
 
