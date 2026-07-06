@@ -1,3 +1,0 @@
-- Multiplikation: *
-- Division: /
-- Potenz: ^
