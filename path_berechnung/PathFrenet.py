@@ -32,17 +32,3 @@ class PathFrenet:
         self.N[straight_line_mask] = 0.0
         self.B[straight_line_mask] = 0.0
         self.kappa[straight_line_mask] = 0.0
-
-        # ==========================================================
-        # 7. TEST: PROFESSOR-METHODE (Normierung des Krümmungsvektors)
-        # Zum Testen einkommentieren (überschreibt self.kappa am Ende)
-        # ==========================================================
-        #K_vec = self.kappa[:, None] * self.N
-        #norm_K_vec = np.linalg.norm(K_vec, axis=1, keepdims=True)
-        #norm_K_vec = np.maximum(norm_K_vec, 1e-12)
-        #K_vec_normiert = K_vec / norm_K_vec
-        #self.kappa = np.linalg.norm(K_vec_normiert, axis=1)
-
-
-# Frage für GSP am 12.05.2025 -> Wird im Code doch normiert, siehe bsp. norm_d1 = np.linalg.norm(d1,...)
-# Wieso stimmen Graphen erst überein, wenn Tangentenvektoren bzw. Krümmungsvektoren nicht mehr nomriert werden???
