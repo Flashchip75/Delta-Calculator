@@ -30,11 +30,9 @@ class exePath:
         path = cfg.path
         g = cfg.global_cfg
 
-        # Geometrie
-        print("=== Definiere Pfad-Geometrie ===")
-
+        # Geometrie laden
         if geometry is not None:
-            print("=== Geometrie (direkt übergeben) ===")
+            print("Geometrie direkt übergeben")
             filepath = path.path_profiles
             if filepath is None:
                 raise ValueError("Kein Pfad für path_profiles in config.json angegeben.")
@@ -44,7 +42,7 @@ class exePath:
         elif gcode is not None:
             ext = Path(gcode).suffix.lower()
             if ext in ['.gcode', '.gc', '.g']:
-                print(f"=== Geometrie (GCode: {gcode}) ===")
+                print(f"Geometrie in GCode format übergeben: {gcode}")
                 from .gcode_reader import read_gcode
                 j_data = read_gcode(gcode)
                 print(f"  GCode '{gcode}' mit {len(j_data)} Segmenten geladen.")
@@ -57,14 +55,13 @@ class exePath:
                 raise ValueError("Beide Elemente in uiData müssen Listen sein.")
             if not uiData[0] or not uiData[1]:
                 raise ValueError("Sowohl geometries als auch timeLaws in uiData dürfen nicht leer sein.")
-            print("=== Konvertiere UI-Daten -> j_data ===")
+            print("Geometrie über UI-Daten übergeben")
+            print(f"  Geometrien: {len(uiData[0])} Segmente, TimeLaws: {len(uiData[1])} Segmente")
             converter = UIProfileConverter(default_N=100)
             j_data = converter.convert_ui_data_to_solver_input(ui_data=uiData)
+            print(f"  Konvertierte UI-Daten in {len(j_data)} Segmente für die Solver-Eingabe.")
         else:
             raise ValueError("Entweder geometry oder gcode muss angegeben werden.")
-
-        # Trajektorie & Dynamik
-        print("=== Berechne Trajektorie & Dynamik ===")
 
         #self.validate_path_continuity(j_data)
         # TO-DO getting path validation to work with new inputs
@@ -81,7 +78,7 @@ class exePath:
             dynamik_vorgaben.append(dyn)
 
         # Berechnung über DynamicsManager
-        print("=== Prozessiere Pfad-Dynamik ===")
+        print("Dynamik berechnen...")
         manager = DynamicsManager(mass=g.mass_kg, g=g.gravity)
         dynamik, F_vec = manager.prozessiere_pfad(pfade, dynamik_vorgaben)
 
@@ -126,11 +123,15 @@ class exePath:
             'fnx':   F_n_vec[:, 0], 'fny':   F_n_vec[:, 1], 'fnz':   F_n_vec[:, 2],
             'fx':    F_vec[:, 0],   'fy':    F_vec[:, 1],   'fz':    F_vec[:, 2],
         }
+        if len(data['t']) == 0:
+            raise ValueError("Die berechnete Trajektorie ist leer. Bitte überprüfen Sie die Eingabedaten.")
+        print("Dynamik erfolgreich berechnet.")
 
         # Exportiere die Daten in eine CSV-Datei
-        print("=== Exportiere Daten ===")
+        print("Path exportieren...")
         csvPath = Path(__file__).parent.parent / g.output_dir / g.trajectory_csv
         csvPath.parent.mkdir(parents=True, exist_ok=True)
+        print(f"  Exportiere Trajektorie in '{csvPath}'")
         
         keys = list(data.keys())
         arr = np.column_stack([data[k] for k in keys])
