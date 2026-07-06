@@ -25,11 +25,12 @@ class exePath:
           3. uiData given                       -> convert UI data to j_data format
           4. none                               -> raise ValueError
         """
+
         cfg = load_config()
         path = cfg.path
         g = cfg.global_cfg
 
-        # 1. Geometrie
+        # Geometrie
         print("=== Definiere Pfad-Geometrie ===")
 
         if geometry is not None:
@@ -62,10 +63,11 @@ class exePath:
         else:
             raise ValueError("Entweder geometry oder gcode muss angegeben werden.")
 
-        # 2. Trajektorie & Dynamik (New Logic)
+        # Trajektorie & Dynamik
         print("=== Berechne Trajektorie & Dynamik ===")
 
         #self.validate_path_continuity(j_data)
+        # TO-DO getting path validation to work with new inputs
 
         traj = Trajectory(j_data)
         pfade = []
@@ -78,7 +80,7 @@ class exePath:
             dyn = seg["cfg"].get("dynamik", {"type": "konstant"})
             dynamik_vorgaben.append(dyn)
 
-        # 3. Berechnung über DynamicsManager
+        # Berechnung über DynamicsManager
         print("=== Prozessiere Pfad-Dynamik ===")
         manager = DynamicsManager(mass=g.mass_kg, g=g.gravity)
         dynamik, F_vec = manager.prozessiere_pfad(pfade, dynamik_vorgaben)
@@ -125,18 +127,7 @@ class exePath:
             'fx':    F_vec[:, 0],   'fy':    F_vec[:, 1],   'fz':    F_vec[:, 2],
         }
 
-        # Visualisierungen anzeigen
-        print("=== Oeffne Diagramme und 3D-Animation ===")
-        F_mag = np.linalg.norm(F_vec, axis=1)
-        
-        # Plotter aufrufen und die Animation an self.ani binden
-        #self.ani = Plotter.show(
-        #    t, s, v, a, j, pts,
-        #    frenet.T, frenet.N, frenet.kappa,
-        #    F_mag, F_vec
-        #)
-
-        # 5. Export (Inline ausführen)
+        # Exportiere die Daten in eine CSV-Datei
         print("=== Exportiere Daten ===")
         csvPath = Path(__file__).parent.parent / g.output_dir / g.trajectory_csv
         csvPath.parent.mkdir(parents=True, exist_ok=True)
