@@ -244,7 +244,7 @@ class PathDefTab(BaseTab):
 
             #self.solver_output = "DATA"
             self.solver_output = exeP.exePath().run( uiData = (curve_list, time_law_list) )
-            print(self.solver_output)
+            #print(self.solver_output)
 
     def invalidate(self):
         self.solver_output = None

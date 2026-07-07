@@ -2,7 +2,7 @@ import math
 
 
 class UIProfileConverter:
-    def __init__(self, default_N=100):
+    def __init__(self, default_N):
         self.default_N = default_N
 
     # =========================================================

@@ -47,6 +47,7 @@ class PathConfig:
     scale_m: float                  # Skalierungsfaktor m -> m (0.001)
     offset_m: int                   # Offset in m, um Ursprung zu verschieben (z.B. 1000 für 1m über Boden)
     path_profiles: str              # Dateiname der Pfadgeometrie-Profile (relativ zum Projekt-Root)
+    points_converter: int           # Faktor zur Umrechnung der Punkte von UI_data in die JSON-Profile
 
 
 @dataclass
@@ -142,13 +143,14 @@ def load_config(config_path: Path | str | None = None) -> AppConfig:
     )
 
     path_cfg = PathConfig(
-        duration_s      = _require(p, "duration_s",     "path"),
-        points          = _require(p, "points",         "path"),
-        gain            = _require(p, "gain",           "path"),
-        blend           = _require(p, "blend",          "path"),
-        scale_m         = _require(p, "scale_m",        "path"),
-        offset_m        = _require(p, "offset_m",       "path"),
-        path_profiles   = _require(p, "path_profiles",  "path"),
+        duration_s          = _require(p, "duration_s",         "path"),
+        points              = _require(p, "points",             "path"),
+        gain                = _require(p, "gain",               "path"),
+        blend               = _require(p, "blend",              "path"),
+        scale_m             = _require(p, "scale_m",            "path"),
+        offset_m            = _require(p, "offset_m",           "path"),
+        path_profiles       = _require(p, "path_profiles",      "path"),
+        points_converter    = _require(p, "points_converter",   "path")
     )
 
     motors_cfg = MotorsConfig(

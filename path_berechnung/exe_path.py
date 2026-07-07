@@ -29,6 +29,7 @@ class exePath:
         cfg = load_config()
         path = cfg.path
         g = cfg.global_cfg
+        p = cfg.path
 
         # Geometrie laden
         if geometry is not None:
@@ -57,13 +58,14 @@ class exePath:
                 raise ValueError("Sowohl geometries als auch timeLaws in uiData dürfen nicht leer sein.")
             print("Geometrie über UI-Daten übergeben")
             print(f"  Geometrien: {len(uiData[0])} Segmente, TimeLaws: {len(uiData[1])} Segmente")
-            converter = UIProfileConverter(default_N=100)
+            converter = UIProfileConverter(default_N=p.points_converter)
             j_data = converter.convert_ui_data_to_solver_input(ui_data=uiData)
             print(f"  Konvertierte UI-Daten in {len(j_data)} Segmente für die Solver-Eingabe.")
         else:
             raise ValueError("Entweder geometry oder gcode muss angegeben werden.")
-
-        #self.validate_path_continuity(j_data)
+        
+        print("Checking path continuity...")
+        self.validate_path_continuity(j_data)
         # TO-DO getting path validation to work with new inputs
 
         traj = Trajectory(j_data)
@@ -184,6 +186,7 @@ class exePath:
                 raise ValueError(f"Unknown segment type '{seg_type}' at index {idx}.")
 
         if not j_data or len(j_data) < 2:
+            print("Path continuity check skipped: less than 2 segments.")
             return  # Nothing to compare
 
         for i in range(len(j_data) - 1):
