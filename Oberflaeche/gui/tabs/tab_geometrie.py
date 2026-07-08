@@ -33,6 +33,56 @@ class GeometrieTab(BaseTab):
         )
         self.gravity.pack(fill=tk.X)
 
+        self.payload_mass = NumberLine(
+            self,
+            "Payload Mass",
+            1,
+            uc.UnitMass(),
+            defaults=(abs(float(self.robot_config.global_data["payload_mass"])),),
+            writePropertiesFunction=self.set_payload_mass
+        )
+        self.payload_mass.pack(fill=tk.X)
+
+        self.upper_arm_length = NumberLine(
+            self,
+            "Upper Arm Length",
+            1,
+            uc.UnitLength(),
+            defaults=(self.robot_config.upper_arm_length / uc.UnitLength().mm,),
+            writePropertiesFunction=self.set_upper_arm_length
+        )
+        self.upper_arm_length.pack(fill=tk.X)
+
+        self.upper_arm_mass = NumberLine(
+            self,
+            "Upper Arm Mass",
+            1,
+            uc.UnitMass(),
+            defaults=(self.robot_config.upper_arm_mass,),
+            writePropertiesFunction=self.set_upper_arm_mass
+        )
+        self.upper_arm_mass.pack(fill=tk.X)
+
+        self.lower_arm_length = NumberLine(
+            self,
+            "Lower Arm Length",
+            1,
+            uc.UnitLength(),
+            defaults=(self.robot_config.lower_arm_length / uc.UnitLength().mm,),
+            writePropertiesFunction=self.set_lower_arm_length
+        )
+        self.lower_arm_length.pack(fill=tk.X)
+
+        self.lower_arm_mass = NumberLine(
+            self,
+            "Lower Arm Mass",
+            1,
+            uc.UnitMass(),
+            defaults=(self.robot_config.lower_arm_mass,),
+            writePropertiesFunction=self.set_lower_arm_mass
+        )
+        self.lower_arm_mass.pack(fill=tk.X)
+
         self.basic_geometry_frame = tk.Frame(self, bg="#ffffff")
         self.basic_geometry_frame.pack(fill=tk.X)
 
@@ -56,48 +106,27 @@ class GeometrieTab(BaseTab):
         )
         self.end_effector_radius.pack(fill=tk.X)
 
-        self.advanced_geometry_frame = tk.Frame(self, bg="#ffffff")
-        self.build_advanced_geometry()
-
-        self.upper_length = NumberLine(
+        self.theta_min = NumberLine(
             self.basic_geometry_frame,
-            "Upper Arm Length",
+            "Theta Min",
             1,
-            uc.UnitLength(),
-            defaults=(self.robot_config.upper_arm_length / uc.UnitLength().mm,),
-            writePropertiesFunction=self.set_upper_arm_length
+            uc.UnitAngle(),
+            defaults=(self.robot_config.motors[0].get("theta_min", -180.0),),
+            writePropertiesFunction=self.set_theta_min,
+            defaultUnit="deg"
         )
-        self.upper_length.pack(fill=tk.X)
+        self.theta_min.pack(fill=tk.X)
 
-        self.upper_arm_mass = NumberLine(
+        self.theta_max = NumberLine(
             self.basic_geometry_frame,
-            "Upper Arm Mass",
+            "Theta Max",
             1,
-            uc.UnitMass(),
-            defaults=(self.robot_config.upper_arm_mass,),
-            writePropertiesFunction=self.set_upper_arm_mass
+            uc.UnitAngle(),
+            defaults=(self.robot_config.motors[0].get("theta_max", 180.0),),
+            writePropertiesFunction=self.set_theta_max,
+            defaultUnit="deg"
         )
-        self.upper_arm_mass.pack(fill=tk.X)
-
-        self.lower_length = NumberLine(
-            self.basic_geometry_frame,
-            "Lower Arm Length",
-            1,
-            uc.UnitLength(),
-            defaults=(self.robot_config.lower_arm_length / uc.UnitLength().mm,),
-            writePropertiesFunction=self.set_lower_arm_length
-        )
-        self.lower_length.pack(fill=tk.X)
-
-        self.lower_arm_mass = NumberLine(
-            self.basic_geometry_frame,
-            "Lower Arm Mass",
-            1,
-            uc.UnitMass(),
-            defaults=(self.robot_config.lower_arm_mass,),
-            writePropertiesFunction=self.set_lower_arm_mass
-        )
-        self.lower_arm_mass.pack(fill=tk.X)
+        self.theta_max.pack(fill=tk.X)
 
         self.show_geometry_button = ttk.Button(
             self,
@@ -105,6 +134,9 @@ class GeometrieTab(BaseTab):
             command=self.show_geometry_callback
         )
         self.show_geometry_button.pack(fill=tk.X, pady=5)
+
+        self.advanced_geometry_frame = tk.Frame(self, bg="#ffffff")
+        self.build_advanced_geometry()
 
     def build_advanced_geometry(self):
         advanced_fields = (
@@ -134,37 +166,21 @@ class GeometrieTab(BaseTab):
                 ""
             ),
             (
-                "Upper Arm Length",
+                "Theta Min",
                 1,
-                uc.UnitLength(),
-                lambda motor: (motor.get("upper_length", self.robot_config.upper_arm_length) / uc.UnitLength().mm,),
-                self.set_motor_upper_arm_length,
-                ""
+                uc.UnitAngle(),
+                lambda motor: (motor.get("theta_min", -180.0),),
+                self.set_motor_theta_min,
+                "deg"
             ),
             (
-                "Upper Arm Mass",
+                "Theta Max",
                 1,
-                uc.UnitMass(),
-                lambda motor: (motor.get("upper_mass", self.robot_config.upper_arm_mass),),
-                self.set_motor_upper_arm_mass,
-                ""
+                uc.UnitAngle(),
+                lambda motor: (motor.get("theta_max", 180.0),),
+                self.set_motor_theta_max,
+                "deg"
             ),
-            (
-                "Lower Arm Length",
-                1,
-                uc.UnitLength(),
-                lambda motor: (motor.get("lower_length", self.robot_config.lower_arm_length) / uc.UnitLength().mm,),
-                self.set_motor_lower_arm_length,
-                ""
-            ),
-            (
-                "Lower Arm Mass",
-                1,
-                uc.UnitMass(),
-                lambda motor: (motor.get("lower_mass", self.robot_config.lower_arm_mass),),
-                self.set_motor_lower_arm_mass,
-                ""
-            )
         )
 
         for motor_index, motor in enumerate(self.robot_config.motors):
@@ -256,17 +272,11 @@ class GeometrieTab(BaseTab):
     def set_motor_ef_offset_radius(self, motor_index, value):
         self.robot_config.motors[motor_index]["EF_offset_radius"] = abs(float(value[0]))
 
-    def set_motor_upper_arm_length(self, motor_index, value):
-        self.robot_config.motors[motor_index]["upper_length"] = float(value[0])
+    def set_motor_theta_min(self, motor_index, value):
+        self.robot_config.motors[motor_index]["theta_min"] = float(value[0]) / uc.UnitAngle().deg
 
-    def set_motor_upper_arm_mass(self, motor_index, value):
-        self.robot_config.motors[motor_index]["upper_mass"] = float(value[0])
-
-    def set_motor_lower_arm_length(self, motor_index, value):
-        self.robot_config.motors[motor_index]["lower_length"] = float(value[0])
-
-    def set_motor_lower_arm_mass(self, motor_index, value):
-        self.robot_config.motors[motor_index]["lower_mass"] = float(value[0])
+    def set_motor_theta_max(self, motor_index, value):
+        self.robot_config.motors[motor_index]["theta_max"] = float(value[0]) / uc.UnitAngle().deg
 
     def set_motor_radius(self, value):
         radius = abs(float(value[0]))
@@ -316,9 +326,25 @@ class GeometrieTab(BaseTab):
         for motor in self.robot_config.motors:
             motor["EF_offset_radius"] = value
 
+    def set_theta_min(self, value):
+        value = float(value[0]) / uc.UnitAngle().deg
+
+        for motor in self.robot_config.motors:
+            motor["theta_min"] = value
+
+    def set_theta_max(self, value):
+        value = float(value[0]) / uc.UnitAngle().deg
+
+        for motor in self.robot_config.motors:
+            motor["theta_max"] = value
+
     def set_gravity(self, value):
         value = abs(float(value[0]))
         self.robot_config.global_data["gravity"] = np.array([0.0, 0.0, -value], dtype=float)
+
+    def set_payload_mass(self, value):
+        value = abs(float(value[0]))
+        self.robot_config.global_data["payload_mass"] = value
 
     def show_geometry_callback(self):
         if self.on_show_geometry is not None:
