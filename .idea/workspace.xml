@@ -1,11 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Precompute Arduino commands and reduce trajectory update rate" />
+    <list default="true" id="09a33b12-be8f-47ea-a9e2-ff4683ecdd20" name="Changes" comment="Add serial status feedback for Arduino runs">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Motor_Berechnung/robotconfig.py" beforeDir="false" afterPath="$PROJECT_DIR$/Motor_Berechnung/robotconfig.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/custom_widgets/input_widgets.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/custom_widgets/input_widgets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/custom_widgets/property_lines.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/designelemente/custom_widgets/property_lines.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Oberflaeche/help_functions/unit_conversion.py" beforeDir="false" afterPath="$PROJECT_DIR$/Oberflaeche/help_functions/unit_conversion.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="76" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -34,9 +49,72 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/Flashchip75/Delta-Calculator.git&quot;,
-    &quot;accountId&quot;: &quot;e787015a-964d-4bc5-b8a2-72f1ab719007&quot;
+    &quot;accountId&quot;: &quot;32aada1c-e7a8-45f9-92db-676cbe80e704&quot;
   }
 }</component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="1.6378470343402816" />
+      <entry key="MS500" value="3.6878582475326307" />
+      <entry key="S2" value="12.161696355367996" />
+      <entry key="S5" value="26.764957962970087" />
+      <entry key="S10" value="43.87672782735649" />
+      <entry key="S30" value="68.38743262906327" />
+      <entry key="S60" value="84.59760912123797" />
+      <entry key="M2" value="119.81804038842793" />
+      <entry key="M5" value="211.8286173555829" />
+      <entry key="M10" value="380.38206729150846" />
+      <entry key="M15" value="551.6633666421178" />
+      <entry key="M30" value="1031.2160131773119" />
+      <entry key="H1" value="1858.004107926637" />
+      <entry key="H2" value="3014.299196222996" />
+      <entry key="H4" value="4200.082271410264" />
+      <entry key="D1" value="5931.87121682941" />
+      <entry key="W1" value="6346.314518984542" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="0.0" />
+      <entry key="MS500" value="0.0" />
+      <entry key="S2" value="0.0" />
+      <entry key="S5" value="0.0" />
+      <entry key="S10" value="0.0" />
+      <entry key="S30" value="3.39291364844418E-148" />
+      <entry key="S60" value="1.8421165736107165E-74" />
+      <entry key="M2" value="1.3759192140411177E-37" />
+      <entry key="M5" value="2.4045952837783453E-15" />
+      <entry key="M10" value="8.509730757555185E-8" />
+      <entry key="M15" value="2.9772583051465783E-5" />
+      <entry key="M30" value="0.010754525676157034" />
+      <entry key="H1" value="0.20669832868997462" />
+      <entry key="H2" value="0.9085317580842309" />
+      <entry key="H4" value="1.9059532984148366" />
+      <entry key="D1" value="3.5350047040663184" />
+      <entry key="W1" value="3.9300000539969666" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="1.599866722472136" />
+      <entry key="MS500" value="3.671326240744905" />
+      <entry key="S2" value="12.148703466149612" />
+      <entry key="S5" value="26.753316169795347" />
+      <entry key="S10" value="43.866946378349965" />
+      <entry key="S30" value="68.38221116366441" />
+      <entry key="S60" value="84.5943789111433" />
+      <entry key="M2" value="119.81579312988315" />
+      <entry key="M5" value="211.82705452282758" />
+      <entry key="M10" value="380.38065707273785" />
+      <entry key="M15" value="551.6620204687845" />
+      <entry key="M30" value="1031.225414513299" />
+      <entry key="H1" value="1858.2092393245189" />
+      <entry key="H2" value="3015.2058952667635" />
+      <entry key="H4" value="4201.986599469954" />
+      <entry key="D1" value="5935.4057511071705" />
+      <entry key="W1" value="6350.244444642655" />
+    </decayedShown>
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
 }</component>
@@ -45,27 +123,33 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "Python.GUI_main.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.plot_frames.executor": "Run",
-    "Python.struct_path_data.executor": "Run",
-    "Python.tab_export.executor": "Run",
-    "Python.tab_pathdef.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
-    "ai.playground.ignore.import.keys.banner.in.settings": "true",
-    "git-widget-placeholder": "GUI",
-    "last_opened_file_path": "/Users/annika/Documents/Studieren/OTH/6_Semester/PA/Delta-Calculator",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Python.GUI_main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.plot_frames.executor&quot;: &quot;Run&quot;,
+    &quot;Python.struct_path_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python.tab_export.executor&quot;: &quot;Run&quot;,
+    &quot;Python.tab_pathdef.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;ai.playground.ignore.import.keys.banner.in.settings&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;GUI-Leonard&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/annika/Documents/Studieren/OTH/6_Semester/PA/Delta-Calculator&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
@@ -83,6 +167,7 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
+      <option name="SDK_NAME" value="Python 3.14 (20260617)" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
@@ -103,7 +188,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-python-sdk-2653e85de345-6d6dccd035ac-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-253.31033.139" />
+        <option value="bundled-python-sdk-c59985aa861c-c2ffad84badb-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-261.24374.152" />
       </set>
     </attachedChunks>
   </component>
@@ -261,15 +346,7 @@
       <option name="project" value="LOCAL" />
       <updated>1781436035848</updated>
     </task>
-    <task id="LOCAL-00019" summary="Precompute Arduino commands and reduce trajectory update rate">
-      <option name="closed" value="true" />
-      <created>1781439542937</created>
-      <option name="number" value="00019" />
-      <option name="presentableId" value="LOCAL-00019" />
-      <option name="project" value="LOCAL" />
-      <updated>1781439542937</updated>
-    </task>
-    <option name="localTasksCounter" value="20" />
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -305,16 +382,85 @@
     <MESSAGE value="Move plot data preparation out of PlotFrame" />
     <MESSAGE value="added Comments" />
     <MESSAGE value="Add serial status feedback for Arduino runs" />
-    <MESSAGE value="Precompute Arduino commands and reduce trajectory update rate" />
-    <option name="LAST_COMMIT_MESSAGE" value="Precompute Arduino commands and reduce trajectory update rate" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add serial status feedback for Arduino runs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/Oberflaeche/gui/tabs/tab_geometrie.py</url>
-          <line>1</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>7</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>8</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>9</line>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>11</line>
+          <option name="timeStamp" value="5" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>14</line>
+          <option name="timeStamp" value="6" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>36</line>
+          <option name="timeStamp" value="7" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>37</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>53</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>54</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>70</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>71</line>
+          <option name="timeStamp" value="12" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>15</line>
+          <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>16</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>17</line>
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Motor_Berechnung/robotconfig.py</url>
+          <line>18</line>
+          <option name="timeStamp" value="16" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
