@@ -30,6 +30,16 @@ class Curve:
 
         # "T": 0.2, "v0": 10.0, "v1": 0.0, "N": 200 Zeit, Anfangsgeschwindigkeit, Endgeschwindigkeit, Punktezahl
 
+        if typ == 'Wait':
+            # A wait segment doesn't move. We just return the stationary point 
+            if len(p) > 0:
+                return p[0]
+            else:
+                raise ValueError("Wait segment has no defined points. Ensure validate_path_continuity has been called.")
+            
+        else:
+            raise ValueError(f"Unknown curve type: {typ}")
+
 class Trajectory:
     def __init__(self, json_data, default_ppm=1000):
         self.segments = []

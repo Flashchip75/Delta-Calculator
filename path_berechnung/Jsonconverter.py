@@ -130,8 +130,7 @@ class UIProfileConverter:
         # ---- Wait ----
         if name == "Wait":
             return {
-                "type": "Line",
-                "pts": [[0, 0, 0], [0, 0, 0]],
+                "type": "Wait",
                 "N": 2,
                 "dynamik": {
                     "type": "warten",

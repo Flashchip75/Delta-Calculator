@@ -153,26 +153,24 @@ class exePath:
     @staticmethod
     def validate_path_continuity(j_data):
         """
-        Checks if all consecutive segments in j_data are physically connected.
-        Raises a ValueError if a gap is detected.
+        Checks if all consecutive physical segments in j_data are connected.
+        Skips 'Wait' segments for continuity, but injects stationary coordinates 
+        into them so downstream solvers don't crash.
         """
         def get_start_end(seg, idx):
             seg_type = seg.get("type")
             
-            # Handling types that explicitly define points
             if seg_type in ["Line", "Bezier"]:
                 if "pts" not in seg or len(seg["pts"]) < 2:
                     raise ValueError(f"Segment {idx} ({seg_type}) is missing 'pts' or has insufficient points.")
                 return seg["pts"][0], seg["pts"][-1]
             
-            # Handling Arc type (requires calculating start and end from angles)
             elif seg_type == "Arc":
                 try:
                     c, r = seg["c"], seg["r"]
                     u, v = seg["u"], seg["v"]
-                    angles = seg["a"]  # [start_angle, end_angle]
+                    angles = seg["a"] 
                     
-                    # Helper to calculate a 3D point on the arc given an angle
                     def calc_point(angle):
                         cos_a = math.cos(angle)
                         sin_a = math.sin(angle)
@@ -181,32 +179,42 @@ class exePath:
                     return calc_point(angles[0]), calc_point(angles[1])
                 except KeyError as e:
                     raise ValueError(f"Segment {idx} (Arc) is missing required parameter: {e}")
-            
+
             else:
                 raise ValueError(f"Unknown segment type '{seg_type}' at index {idx}.")
 
-        if not j_data or len(j_data) < 2:
-            print("Path continuity check skipped: less than 2 segments.")
-            return  # Nothing to compare
+        if not j_data:
+            return  
 
-        for i in range(len(j_data) - 1):
-            curr_seg = j_data[i]
-            next_seg = j_data[i + 1]
+        last_end = None
+        last_idx = None
+        last_type = None
+
+        for i, seg in enumerate(j_data):
+            seg_type = seg.get("type")
             
-            _, curr_end = get_start_end(curr_seg, i)
-            next_start, _ = get_start_end(next_seg, i + 1)
-            
-            # Compare coordinates using a small tolerance (1mm or 0.001 units depending on your scale)
-            is_connected = all(math.isclose(c, n, abs_tol=1e-3) for c, n in zip(curr_end, next_start))
-            
-            if not is_connected:
-                # Formatting points nicely for the error message
-                curr_end_str = [round(x, 3) for x in curr_end]
-                next_start_str = [round(x, 3) for x in next_start]
+            if seg_type == "Wait":
+                safe_pos = last_end if last_end is not None else [0.0, 0.0, 0.0]
                 
-                raise ValueError(
-                    f"Path discontinuity detected between segment {i} ({curr_seg['type']}) "
-                    f"and segment {i+1} ({next_seg['type']}).\n"
-                    f"  Segment {i} ends at:   {curr_end_str}\n"
-                    f"  Segment {i+1} starts at: {next_start_str}"
-                )
+                seg["pts"] = [safe_pos, safe_pos]
+                continue
+                
+            curr_start, curr_end = get_start_end(seg, i)
+            
+            if last_end is not None:
+                is_connected = all(math.isclose(c, n, abs_tol=1e-3) for c, n in zip(last_end, curr_start))
+                
+                if not is_connected:
+                    last_end_str = [round(x, 3) for x in last_end]
+                    curr_start_str = [round(x, 3) for x in curr_start]
+                    
+                    raise ValueError(
+                        f"Path discontinuity detected between segment {last_idx} ({last_type}) "
+                        f"and segment {i} ({seg_type}).\n"
+                        f"  Segment {last_idx} ends at:   {last_end_str}\n"
+                        f"  Segment {i} starts at: {curr_start_str}"
+                    )
+            
+            last_end = curr_end
+            last_idx = i
+            last_type = seg_type
